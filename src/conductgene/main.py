@@ -8,6 +8,8 @@ import json
 import sys
 from pathlib import Path
 
+from conductgene.audit.gene_events import GeneAuditStore
+from conductgene.audit.store import AuditStore
 from conductgene.config import Settings
 from conductgene.eval.harness import compute_learn_eval_delta, run_eval_suite
 from conductgene.eval.scenarios import load_all_scenarios, load_scenario
@@ -45,6 +47,11 @@ def cli_main() -> None:
     eval_p = sub.add_parser("eval", help="Run synthetic scenario eval suite")
     eval_p.add_argument("--suite", default="all")
     eval_p.add_argument("--out", type=Path, default=Path("reports/eval_latest.json"))
+
+    audit_p = sub.add_parser("audit", help="Audit trail operations")
+    audit_sub = audit_p.add_subparsers(dest="audit_command", required=True)
+    export_p = audit_sub.add_parser("export", help="Export case + gene audit JSON")
+    export_p.add_argument("--out", type=Path, default=Path("reports/audit_export.json"))
 
     args = parser.parse_args()
     asyncio.run(_dispatch(args))
@@ -114,6 +121,17 @@ async def _dispatch(args: argparse.Namespace) -> None:
             failed = [c.case_id for c in resp.cases if not c.passed]
             print(f"Eval score {resp.score:.2%} — failed: {failed}", file=sys.stderr)
             sys.exit(1)
+
+    elif args.command == "audit" and args.audit_command == "export":
+        audit = AuditStore(settings.audit_store_path)
+        gene_audit = GeneAuditStore(settings.gene_audit_store_path)
+        payload = {
+            "cases": audit.export_all(),
+            "gene_events": gene_audit.export_all(),
+        }
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        print(json.dumps(payload, indent=2))
 
 
 def _read_input(args: argparse.Namespace) -> tuple[str, str | None]:

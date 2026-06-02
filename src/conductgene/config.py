@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     scenarios_dir: Path = Field(default=Path("data/scenarios"))
     rerank_min_score: float = 0.25
     rerank_top_n: int = 8
+    ui_use_api: bool = False
+    api_base_url: str = "http://127.0.0.1:8090"
 
     def resolve_paths(self, base: Path | None = None) -> None:
         root = base or Path.cwd()

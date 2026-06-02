@@ -1,12 +1,22 @@
 # ConductGene Swarm
 
+[![CI](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/ci.yml)
+[![Docker Smoke](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/docker-smoke.yml/badge.svg)](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/docker-smoke.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/FUYOH666/conductgene-swarm)](https://github.com/FUYOH666/conductgene-swarm/releases)
+
 **Human-approved AI conduct QA that remembers supervisor corrections safely.**
 
 Multi-agent conduct QA for regulated industries. Prosecutor, Defender, and Arbiter agents review call transcripts with evidence-grounded citations. When a supervisor corrects the verdict, the system stores a **supervisor-approved Policy Gene** — auditable, rollbackable institutional memory.
 
-Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGENT track. Built on prior RAG, citation, and evaluation patterns from my portfolio.
+Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGENT track.
 
-[![CI](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/ci.yml)
+<p align="center">
+  <a href="docs/assets/architecture.png">
+    <img src="docs/assets/architecture.png" alt="ConductGene Swarm architecture" width="720"/>
+  </a>
+</p>
 
 ## Problem → Solution
 
@@ -22,16 +32,16 @@ Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGENT track. Built on
 |--------|-------|
 | Scenario pass rate | 16/16 (100%) |
 | Citation coverage | 100% |
-| Abstain rate | ~6.7% (CASE-007) |
+| Abstain rate | ~6.3% (CASE-007) |
 | Gene learning (CASE-002 → CASE-005) | `escalation_offered`: needs_review → pass |
 
-Run `./scripts/verify_all.sh` to reproduce locally.
+Run `./scripts/verify_all.sh` or `./scripts/qa_matrix.sh` to reproduce locally.
 
-## Demo cycle
-
-1. Transcript → 2. Evidence → 3. Prosecutor → 4. Defender → 5. Arbiter verdict → 6. Supervisor override → 7. Policy Gene stored → 8. Better result on similar case
+## Quick start
 
 ```bash
+git clone https://github.com/FUYOH666/conductgene-swarm.git
+cd conductgene-swarm
 cp .env.example .env
 uv sync --extra dev --extra ui
 ./scripts/verify_all.sh    # full virtual verification
@@ -39,11 +49,16 @@ uv sync --extra dev --extra ui
 uv run conductgene-ui     # 5-panel Streamlit demo
 ```
 
-**Docker (optional):**
+**Docker:**
 
 ```bash
 docker compose up --build
 ```
+
+## Demo video
+
+<!-- Add YouTube/Loom URL after recording — see docs/demo-video-guide.md -->
+Recording guide: [docs/demo-video-guide.md](docs/demo-video-guide.md)
 
 ## API
 
@@ -70,6 +85,7 @@ uv run conductgene-serve   # http://127.0.0.1:8090/docs
 uv run conductgene demo
 uv run conductgene eval --suite all
 uv run conductgene analyze --file data/scenarios/collections/case_002.json
+uv run conductgene audit export --out reports/audit_export.json
 ```
 
 ## Docs
@@ -79,8 +95,10 @@ uv run conductgene analyze --file data/scenarios/collections/case_002.json
 - [Demo video guide](docs/demo-video-guide.md)
 - [Pitch deck](docs/pitch-deck.md)
 - [UCWS registration](docs/UCWS_REGISTRATION.md)
+- [Submission checklist](docs/SUBMISSION.md)
 - [Governance (IMDA MGF)](docs/governance.md)
 - [Architecture](docs/architecture.md)
+- [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Releases](https://github.com/FUYOH666/conductgene-swarm/releases)
 
 ## License
 

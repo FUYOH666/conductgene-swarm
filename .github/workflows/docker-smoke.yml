@@ -1,0 +1,31 @@
+name: Docker Smoke
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  docker-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build API image
+        run: docker compose build api
+
+      - name: Start API and probe healthz
+        run: |
+          docker compose up -d api
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8090/healthz; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose logs api
+          exit 1
+
+      - name: Shutdown
+        if: always()
+        run: docker compose down -v

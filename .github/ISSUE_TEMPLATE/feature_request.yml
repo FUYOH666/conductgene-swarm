@@ -1,0 +1,46 @@
+name: Feature request
+description: Suggest an enhancement or new capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What problem does this solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like it to work?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - agents / swarm
+        - policy genes
+        - audit / governance
+        - eval harness
+        - API / CLI
+        - Streamlit UI
+        - documentation
+        - other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: governance
+    attributes:
+      label: Governance alignment
+      options:
+        - label: Feature preserves supervisor approval for Policy Genes
+          required: false
+        - label: Feature includes audit trail or rollback path
+          required: false

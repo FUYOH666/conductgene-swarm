@@ -16,11 +16,23 @@ from conductgene.eval.scenarios import load_all_scenarios
 from conductgene.evolution.genes import GeneStore
 from conductgene.kb.memory import MemoryKnowledgeBase
 from conductgene.pipeline.swarm import swarm_analyze
-from conductgene.schemas import GeneLearnRequest, SwarmAnalyzeRequest
+from conductgene.schemas import GeneLearnRequest, SwarmAnalyzeRequest, SwarmAnalyzeResult
 
 
 def _root() -> Path:
     return Path.cwd()
+
+
+def _api_client(settings: Settings):
+    from conductgene.ui.client import ConductGeneClient
+
+    return ConductGeneClient(base_url=settings.api_base_url)
+
+
+def _result_from_api(payload: dict) -> SwarmAnalyzeResult | None:
+    if not payload.get("ok") or not payload.get("result"):
+        return None
+    return SwarmAnalyzeResult.model_validate(payload["result"])
 
 
 def _init_state() -> tuple[Settings, MemoryKnowledgeBase, GeneStore, AuditStore, GeneAuditStore]:
@@ -43,7 +55,12 @@ def main() -> None:
     scenario_map = {s.id: s for s in scenarios}
 
     mode_label = "Deterministic Demo Mode" if settings.mode == "mock" else "Live Mode"
-    st.info(f"**{mode_label}** — reproducible eval without external LLM dependency.")
+    backend = "REST API" if settings.ui_use_api else "in-process"
+    st.info(
+        f"**{mode_label}** ({backend}) — reproducible eval without external LLM dependency."
+    )
+    if settings.ui_use_api:
+        st.caption(f"API backend: `{settings.api_base_url}` — start with `uv run conductgene-serve`")
 
     if "last_result" not in st.session_state:
         st.session_state.last_result = None
@@ -74,21 +91,37 @@ def main() -> None:
             st.info("Run analyze to retrieve policy evidence.")
 
     if run and transcript.strip():
-        result = asyncio.run(
-            swarm_analyze(
-                settings=settings,
-                kb=kb,
-                gene_store=genes,
-                audit_store=audit,
-                request=SwarmAnalyzeRequest(
+        if settings.ui_use_api:
+            client = _api_client(settings)
+            payload = client.analyze(
+                SwarmAnalyzeRequest(
                     transcript=transcript,
                     case_id=case_id,
                     apply_genes=True,
-                ),
+                )
             )
-        )
-        st.session_state.last_result = result
-        st.session_state.last_transcript = transcript
+            result = _result_from_api(payload)
+            if result is None:
+                st.error(payload.get("error") or "Analyze failed")
+            else:
+                st.session_state.last_result = result
+                st.session_state.last_transcript = transcript
+        else:
+            result = asyncio.run(
+                swarm_analyze(
+                    settings=settings,
+                    kb=kb,
+                    gene_store=genes,
+                    audit_store=audit,
+                    request=SwarmAnalyzeRequest(
+                        transcript=transcript,
+                        case_id=case_id,
+                        apply_genes=True,
+                    ),
+                )
+            )
+            st.session_state.last_result = result
+            st.session_state.last_transcript = transcript
 
     result = st.session_state.last_result
 
@@ -131,25 +164,35 @@ def main() -> None:
                     case_id=result.case_id,
                     chunk_ids=[e.chunk_id for e in result.evidence[:3]],
                 )
-                before, after, heldout = asyncio.run(
-                    compute_learn_eval_delta(
-                        settings=settings,
-                        kb=kb,
-                        scenarios_dir=settings.scenarios_dir,
-                        request=learn_req,
+                if settings.ui_use_api:
+                    client = _api_client(settings)
+                    gene_body = client.learn_gene(learn_req)
+                    before = gene_body.get("eval_score_before")
+                    after = gene_body.get("eval_score_after")
+                    st.success(
+                        f"Policy Gene stored via API: {gene_body['id']} "
+                        f"(held-out eval {before} → {after})"
                     )
-                )
-                gene = genes.learn_from_correction(
-                    learn_req,
-                    eval_before=before,
-                    eval_after=after,
-                    heldout_cases=heldout,
-                )
-                gene_audit.append_learned(gene, learn_req, eval_before=before, eval_after=after)
-                st.success(
-                    f"Policy Gene stored: {gene.id} "
-                    f"(held-out eval {before:.2f} → {after:.2f})"
-                )
+                else:
+                    before, after, heldout = asyncio.run(
+                        compute_learn_eval_delta(
+                            settings=settings,
+                            kb=kb,
+                            scenarios_dir=settings.scenarios_dir,
+                            request=learn_req,
+                        )
+                    )
+                    gene = genes.learn_from_correction(
+                        learn_req,
+                        eval_before=before,
+                        eval_after=after,
+                        heldout_cases=heldout,
+                    )
+                    gene_audit.append_learned(gene, learn_req, eval_before=before, eval_after=after)
+                    st.success(
+                        f"Policy Gene stored: {gene.id} "
+                        f"(held-out eval {before:.2f} → {after:.2f})"
+                    )
     else:
         st.info("Complete an analysis to approve a Policy Gene.")
 

@@ -29,6 +29,17 @@
 - Invalid citation ID test
 - Persona matrix parametrized test (5 personas)
 - Streamlit import smoke test
+- Harmony tests (version sync, manifest, doc consistency)
+- Docker smoke CI workflow
+
+### Repository
+
+- GitHub community files (SECURITY, CONTRIBUTING, CODE_OF_CONDUCT)
+- Issue and PR templates, Dependabot
+- Release v0.2.1, social preview asset
+- `scripts/qa_matrix.sh` integration scorecard
+- CLI `conductgene audit export`
+- Streamlit optional API mode (`CONDUCTGENE_UI_USE_API`)
 
 ## [0.2.0] - 2026-06-01
 
