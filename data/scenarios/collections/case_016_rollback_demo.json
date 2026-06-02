@@ -1,0 +1,11 @@
+{
+  "id": "CASE-016",
+  "persona": "rollback_operator",
+  "transcript": "Agent: ABC Collections. Your account is past due.\nCustomer: I need help with repayment.\nAgent: I can connect you with a supervisor to discuss a repayment path.",
+  "golden": {
+    "threat_language": "pass",
+    "escalation_offered": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "rollback_demo", "persona_matrix"]
+}

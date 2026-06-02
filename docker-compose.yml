@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8090:8090"
+    environment:
+      CONDUCTGENE_MODE: mock
+      CONDUCTGENE_HOST: 0.0.0.0
+      CONDUCTGENE_PORT: 8090
+    volumes:
+      - gene_data:/app/data/evolution
+      - audit_data:/app/data/audit
+
+  ui:
+    build: .
+    command: ["uv", "run", "streamlit", "run", "src/conductgene/ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    ports:
+      - "8501:8501"
+    environment:
+      CONDUCTGENE_MODE: mock
+    depends_on:
+      - api
+
+volumes:
+  gene_data:
+  audit_data:

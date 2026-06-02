@@ -1,0 +1,9 @@
+{
+  "id": "CASE-007",
+  "persona": "strict_compliance",
+  "transcript": "xyzzy foobar qwerty zzz nothing matching knowledge base content here",
+  "golden": {
+    "abstain": true
+  },
+  "tags": ["edge", "abstain"]
+}

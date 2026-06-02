@@ -1,0 +1,12 @@
+{
+  "id": "CASE-008",
+  "persona": "linear_qa_analyst",
+  "transcript": "Agent: Hello, this is ABC Collections calling from the customer service department about your account.\nCustomer: Yes?\nAgent: We are following up on your balance. Would you like to make a payment today?",
+  "golden": {
+    "threat_language": "pass",
+    "company_disclosure": "pass",
+    "escalation_offered": "needs_review",
+    "abstain": false
+  },
+  "tags": ["collections", "disclosure"]
+}

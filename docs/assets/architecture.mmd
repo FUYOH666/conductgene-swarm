@@ -1,0 +1,40 @@
+flowchart TB
+  subgraph input [Input]
+    Transcript[Call Transcript]
+    KB[Policy KB]
+  end
+
+  subgraph retrieval [Retrieval]
+    Evidence[Evidence Pool]
+  end
+
+  subgraph swarm [Multi-Agent Swarm]
+    Prosecutor[Prosecutor]
+    Defender[Defender]
+    Arbiter[Arbiter]
+  end
+
+  subgraph governance [Governance]
+    Supervisor[Supervisor Approval]
+    GeneStore[Policy Gene Store]
+    Audit[Case + Gene Audit]
+  end
+
+  subgraph eval [Verification]
+    Harness[Eval Harness 16 cases]
+    HeldOut[Held-out CASE-005]
+  end
+
+  Transcript --> Evidence
+  KB --> Evidence
+  Evidence --> Prosecutor
+  Evidence --> Defender
+  Prosecutor --> Arbiter
+  Defender --> Arbiter
+  GeneStore --> Arbiter
+  Arbiter --> Supervisor
+  Supervisor --> GeneStore
+  Arbiter --> Audit
+  GeneStore --> Audit
+  GeneStore --> HeldOut
+  Harness --> HeldOut

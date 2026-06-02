@@ -1,0 +1,11 @@
+{
+  "id": "CASE-013",
+  "persona": "adversarial_caller",
+  "transcript": "Agent: ABC Collections. Payment due.\nCustomer: OK.",
+  "golden": {
+    "threat_language": "pass",
+    "escalation_offered": "needs_review",
+    "abstain": false
+  },
+  "tags": ["edge", "minimal"]
+}

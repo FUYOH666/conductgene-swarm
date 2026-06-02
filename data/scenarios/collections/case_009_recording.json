@@ -1,0 +1,12 @@
+{
+  "id": "CASE-009",
+  "persona": "strict_compliance",
+  "transcript": "Agent: This is ABC Collections. This call is being record for quality purposes.\nCustomer: OK.\nAgent: Your account is past due. Please pay today.",
+  "golden": {
+    "recording_disclosure": "needs_review",
+    "threat_language": "pass",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "recording"]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "CASE-002",
+  "persona": "nonlinear_supervisor",
+  "transcript": "Agent: This is ABC Collections regarding your past due account.\nCustomer: I cannot pay the full amount today.\nAgent: If you don't pay today, this may create serious consequences for your account.\nAgent: I can connect you with a supervisor to discuss a repayment path.",
+  "golden": {
+    "threat_language": "needs_review",
+    "escalation_offered": "pass",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "gene_learning": {
+    "applies_to": "CASE-005",
+    "checklist_id": "escalation_offered",
+    "corrected_status": "pass",
+    "trigger_pattern": "repayment",
+    "rationale": "Repayment path with supervisor offer satisfies escalation policy.",
+    "expected_improvement": "escalation_offered"
+  },
+  "tags": ["collections", "demo_primary", "coercive_soft"]
+}

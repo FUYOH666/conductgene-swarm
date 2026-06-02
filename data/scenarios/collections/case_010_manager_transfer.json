@@ -1,0 +1,12 @@
+{
+  "id": "CASE-010",
+  "persona": "linear_qa_analyst",
+  "transcript": "Agent: This is ABC Collections about your account.\nCustomer: I need help with my balance.\nAgent: I can transfer you to our manager to review payment options.",
+  "golden": {
+    "escalation_offered": "pass",
+    "company_disclosure": "pass",
+    "threat_language": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "manager"]
+}

@@ -1,0 +1,59 @@
+version: 1
+suites:
+  - all
+  - collections
+  - edge
+
+cases:
+  - id: CASE-001
+    file: collections/case_001_clean.json
+    suite: collections
+  - id: CASE-002
+    file: collections/case_002_coercive_soft.json
+    suite: collections
+  - id: CASE-003
+    file: collections/case_003_hard_threat.json
+    suite: collections
+  - id: CASE-004
+    file: collections/case_004_no_escalation.json
+    suite: collections
+  - id: CASE-005
+    file: collections/case_005_repayment_heldout.json
+    suite: collections
+  - id: CASE-006
+    file: collections/case_006_mixed_language.json
+    suite: collections
+  - id: CASE-007
+    file: edge/case_007_abstain.json
+    suite: edge
+  - id: CASE-008
+    file: collections/case_008_company_only.json
+    suite: collections
+  - id: CASE-009
+    file: collections/case_009_recording.json
+    suite: collections
+  - id: CASE-010
+    file: collections/case_010_manager_transfer.json
+    suite: collections
+  - id: CASE-011
+    file: collections/case_011_recording_disclosed.json
+    suite: collections
+  - id: CASE-012
+    file: collections/case_012_payment_plan.json
+    suite: collections
+  - id: CASE-013
+    file: edge/case_013_minimal.json
+    suite: edge
+  - id: CASE-014
+    file: collections/case_014_explicit_escalation.json
+    suite: collections
+  - id: CASE-015
+    file: edge/case_015_adversarial.json
+    suite: edge
+  - id: CASE-016
+    file: collections/case_016_rollback_demo.json
+    suite: collections
+
+demo_pair:
+  learn: CASE-002
+  heldout: CASE-005

@@ -1,0 +1,12 @@
+{
+  "id": "CASE-014",
+  "persona": "linear_qa_analyst",
+  "transcript": "Agent: This is ABC Collections regarding your overdue balance.\nCustomer: I want to complain about your calls.\nAgent: I understand. Would you like escalation to a supervisor? I can arrange a callback within 24 hours per our policy.",
+  "golden": {
+    "escalation_offered": "pass",
+    "company_disclosure": "pass",
+    "threat_language": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "explicit_escalation"]
+}

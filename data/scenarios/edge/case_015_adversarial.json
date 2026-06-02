@@ -1,0 +1,12 @@
+{
+  "id": "CASE-015",
+  "persona": "adversarial_caller",
+  "transcript": "Agent: This is ABC Collections. If you don't pay today, this may create serious consequences for your account.\nCustomer: Stop calling me!\nAgent: I can speak with you about a repayment path or connect you with a supervisor.",
+  "golden": {
+    "threat_language": "needs_review",
+    "escalation_offered": "pass",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": ["edge", "adversarial"]
+}

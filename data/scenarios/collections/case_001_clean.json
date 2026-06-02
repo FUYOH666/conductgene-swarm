@@ -1,0 +1,12 @@
+{
+  "id": "CASE-001",
+  "persona": "linear_qa_analyst",
+  "transcript": "Agent: This is ABC Collections calling about your account balance.\nCustomer: Hello.\nAgent: I'm calling to remind you of your payment due date next week.\nCustomer: Thank you, I will pay on Friday.\nAgent: Thank you for your time. Have a good day.",
+  "golden": {
+    "threat_language": "pass",
+    "escalation_offered": "needs_review",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "clean"]
+}

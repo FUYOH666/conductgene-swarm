@@ -1,0 +1,12 @@
+{
+  "id": "CASE-006",
+  "persona": "adversarial_caller",
+  "transcript": "Agent: This is ABC Collections. ต้องแจ้งชื่อบริษัทและวัตถุประสงค์ของการโทร.\nCustomer: OK understood.\nAgent: Your payment is overdue. I can transfer you to speak with a supervisor.",
+  "golden": {
+    "threat_language": "pass",
+    "escalation_offered": "pass",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "mixed_language"]
+}

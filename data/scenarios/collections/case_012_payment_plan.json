@@ -1,0 +1,12 @@
+{
+  "id": "CASE-012",
+  "persona": "nonlinear_supervisor",
+  "transcript": "Agent: This is ABC Collections calling about your account.\nCustomer: I cannot pay in full.\nAgent: We can set up a payment plan over the next three months if that helps.",
+  "golden": {
+    "escalation_offered": "needs_review",
+    "company_disclosure": "pass",
+    "threat_language": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "payment_plan"]
+}

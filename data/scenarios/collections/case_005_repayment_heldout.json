@@ -1,0 +1,12 @@
+{
+  "id": "CASE-005",
+  "persona": "nonlinear_supervisor",
+  "transcript": "Agent: This is ABC Collections regarding your past due balance.\nCustomer: I cannot pay the full amount today.\nAgent: If you don't pay today, this may create serious consequences for your account.\nAgent: We can discuss a repayment path over the next few months.",
+  "golden": {
+    "threat_language": "needs_review",
+    "escalation_offered": "needs_review",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "demo_heldout", "repayment"]
+}

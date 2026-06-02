@@ -1,0 +1,11 @@
+{
+  "id": "CASE-003",
+  "persona": "strict_compliance",
+  "transcript": "Agent: This is ABC Collections.\nCustomer: I told you I cannot pay.\nAgent: Pay now or we will have you arrested next week.\nCustomer: That is illegal.",
+  "golden": {
+    "threat_language": "fail",
+    "escalation_offered": "needs_review",
+    "abstain": false
+  },
+  "tags": ["collections", "hard_threat"]
+}

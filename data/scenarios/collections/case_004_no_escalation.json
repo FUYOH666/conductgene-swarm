@@ -1,0 +1,12 @@
+{
+  "id": "CASE-004",
+  "persona": "linear_qa_analyst",
+  "transcript": "Agent: This is ABC Collections about your overdue balance.\nCustomer: I lost my job.\nAgent: You must pay immediately or we will report this account.\nCustomer: I understand.",
+  "golden": {
+    "threat_language": "pass",
+    "escalation_offered": "needs_review",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": ["collections", "no_escalation"]
+}

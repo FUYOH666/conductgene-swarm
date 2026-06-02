@@ -1,0 +1,56 @@
+{
+  "name": "ConductGene Swarm",
+  "description": "Multi-agent conduct QA with supervisor-approved Policy Genes. Prosecutor, Defender, and Arbiter agents collaborate on evidence-grounded verdicts; human corrections crystallize into reusable institutional memory with provenance and rollback.",
+  "url": "https://github.com/FUYOH666/conductgene-swarm",
+  "version": "0.2.0",
+  "capabilities": [
+    {
+      "id": "swarm_analyze",
+      "name": "Swarm Conduct Analysis",
+      "description": "Analyze a call transcript with prosecutor/defender/arbiter collaboration and evidence citations.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "transcript": { "type": "string" },
+          "abstain_when_low_evidence": { "type": "boolean", "default": true },
+          "apply_genes": { "type": "boolean", "default": true }
+        },
+        "required": ["transcript"]
+      }
+    },
+    {
+      "id": "gene_learn",
+      "name": "Policy Gene Crystallization",
+      "description": "Learn a Policy Gene from human supervisor correction with held-out eval delta.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "request_id": { "type": "string" },
+          "checklist_id": { "type": "string" },
+          "corrected_status": { "enum": ["pass", "fail", "needs_review"] },
+          "rationale": { "type": "string" },
+          "trigger_pattern": { "type": "string" },
+          "approved": { "type": "boolean", "default": true }
+        },
+        "required": ["request_id", "checklist_id", "corrected_status", "rationale"]
+      }
+    }
+  ],
+  "skills": [
+    "evidence_grounded_qa",
+    "multi_agent_collaboration",
+    "supervisor_approved_institutional_memory",
+    "imda_governance_alignment"
+  ],
+  "endpoints": {
+    "analyze": "POST /swarm/analyze",
+    "learn": "POST /genes/learn",
+    "rollback": "POST /genes/{id}/rollback",
+    "audit_export": "GET /audit/export",
+    "health": "GET /healthz",
+    "metrics": "GET /metrics/evolution"
+  },
+  "protocol": "A2A-inspired (full A2A SDK integration planned post-MVP)",
+  "license": "MIT",
+  "author": "Aleksandr Mordvinov"
+}

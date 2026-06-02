@@ -1,0 +1,12 @@
+{
+  "id": "CASE-011",
+  "persona": "linear_qa_analyst",
+  "transcript": "Agent: This is ABC Collections. Please note this call may be recorded and I need to inform you of that before we continue.\nCustomer: Understood.\nAgent: Your payment is due. Would you like to pay today?",
+  "golden": {
+    "threat_language": "pass",
+    "company_disclosure": "pass",
+    "escalation_offered": "needs_review",
+    "abstain": false
+  },
+  "tags": ["collections", "recording_ok"]
+}
