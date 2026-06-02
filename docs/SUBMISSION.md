@@ -31,8 +31,8 @@ Track submission assets for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGE
 Follow [demo-video-guide.md](demo-video-guide.md):
 
 ```bash
-uv run conductgene-ui
-# Record: CASE-002 → approve gene → CASE-005
+./scripts/record_demo_helper.sh   # terminal path with pauses
+uv run conductgene-ui             # Streamlit path
 ```
 
 - [ ] Video recorded
@@ -42,6 +42,10 @@ uv run conductgene-ui
 ### 3. Pitch deck PDF
 
 Export [pitch-deck.md](pitch-deck.md) to Google Slides / Keynote / PDF (10 slides).
+
+```bash
+./scripts/export_pitch_deck.sh   # requires pandoc; or manual export
+```
 
 - [ ] PDF exported for Demo Day
 
