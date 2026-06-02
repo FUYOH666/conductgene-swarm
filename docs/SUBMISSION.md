@@ -2,6 +2,22 @@
 
 Track submission assets for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGENT track.
 
+## Portal assets (ready to upload)
+
+All files in [`submission/`](submission/):
+
+| Asset | File | Status |
+|-------|------|--------|
+| Logo 512×512 | [logo-512.png](submission/logo-512.png) | Ready |
+| Screenshot 1 | [screenshot-1-swarm.png](submission/screenshot-1-swarm.png) | Ready |
+| Screenshot 2 | [screenshot-2-agents.png](submission/screenshot-2-agents.png) | Ready |
+| Screenshot 3 | [screenshot-3-gene-learning.png](submission/screenshot-3-gene-learning.png) | Ready |
+| Demo video (WebM) | [conductgene-demo.webm](submission/conductgene-demo.webm) | Ready — upload to YouTube |
+| Form copy-paste | [portal-copy.md](submission/portal-copy.md) | Ready |
+| Video end card | [video-end-card.png](submission/video-end-card.png) | Optional overlay |
+
+Regenerate: `./scripts/capture_submission_assets.sh --with-video`
+
 ## Automated (done in repo)
 
 - [x] Public GitHub repository: https://github.com/FUYOH666/conductgene-swarm
@@ -10,51 +26,44 @@ Track submission assets for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGE
 - [x] README with eval metrics, architecture, quick start
 - [x] `./scripts/verify_all.sh` and `./scripts/qa_matrix.sh`
 - [x] Pitch deck markdown: [pitch-deck.md](pitch-deck.md)
-- [x] Architecture PNG: [assets/architecture.png](assets/architecture.png)
-- [x] A2A agent card: [a2a-agent-card.json](a2a-agent-card.json)
-- [x] Governance doc: [governance.md](governance.md)
+- [x] Portal submission folder with logo + 3 screenshots + demo WebM
+- [x] [portal-copy.md](submission/portal-copy.md) for all text fields
 
-## Manual (your action)
+## Manual (your action — ~30 min)
 
-### 1. UCWS portal registration
+### 1. YouTube upload → Demo URL
+
+1. Upload [conductgene-demo.webm](submission/conductgene-demo.webm) to YouTube (**Unlisted**)
+2. Follow [youtube-upload.md](submission/youtube-upload.md)
+3. Paste URL into [portal-copy.md](submission/portal-copy.md) and README
+
+- [x] Video recorded (WebM in repo)
+- [ ] Uploaded to YouTube (unlisted)
+- [ ] URL in README and portal form
+
+### 2. UCWS portal registration
 
 1. Go to [evol.epicconnector.ai](https://evol.epicconnector.ai)
-2. Register **ConductGene Swarm** for AGENT track
-3. Submit repo URL: `https://github.com/FUYOH666/conductgene-swarm`
-4. Add short description from [product-spec.md](product-spec.md)
+2. Copy fields from [portal-copy.md](submission/portal-copy.md)
+3. Upload logo + 3 screenshots from `docs/submission/`
 
 - [ ] Registration submitted
 - [ ] Confirmation email received
 
-### 2. Demo video (90 seconds)
-
-Follow [demo-video-guide.md](demo-video-guide.md):
+### 3. Pitch deck PDF (optional for portal)
 
 ```bash
-./scripts/record_demo_helper.sh   # terminal path with pauses
-uv run conductgene-ui             # Streamlit path
+./scripts/export_pitch_deck.sh
 ```
 
-- [ ] Video recorded
-- [ ] Uploaded (YouTube unlisted or Loom)
-- [ ] URL added to README «Demo video» section
-
-### 3. Pitch deck PDF
-
-Export [pitch-deck.md](pitch-deck.md) to Google Slides / Keynote / PDF (10 slides).
-
-```bash
-./scripts/export_pitch_deck.sh   # requires pandoc; or manual export
-```
-
-- [ ] PDF exported for Demo Day
+- [ ] PDF or Google Slides link in Demo File Link field
 
 ## Pre-Demo Day rehearsal
 
 - [ ] `./scripts/qa_matrix.sh` — 4/4 PASS locally
 - [ ] Offline demo rehearsed (mock mode, no network)
 - [ ] 5-minute pitch from [pitch-deck-outline.md](pitch-deck-outline.md)
-- [ ] Q&A prep (LLM? governance? gene rollback?)
+- [ ] Ask 5+ people to vote (Community Vote 40%)
 
 ## Contacts
 

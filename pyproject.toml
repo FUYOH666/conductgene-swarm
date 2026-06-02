@@ -30,6 +30,9 @@ ui = [
     "streamlit>=1.40.0",
     "pandas>=2.2.0",
 ]
+submission = [
+    "playwright>=1.49.0",
+]
 
 [project.scripts]
 conductgene = "conductgene.main:cli_main"

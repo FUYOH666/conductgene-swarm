@@ -34,12 +34,9 @@
 
 ### Repository
 
-- GitHub community files (SECURITY, CONTRIBUTING, CODE_OF_CONDUCT)
-- Issue and PR templates, Dependabot
-- Release v0.2.1, social preview asset
-- `scripts/qa_matrix.sh` integration scorecard
-- CLI `conductgene audit export`
-- Streamlit optional API mode (`CONDUCTGENE_UI_USE_API`)
+- `docs/submission/` portal assets (logo, screenshots, demo WebM, portal-copy)
+- Playwright capture scripts for screenshots and demo video
+- Optional `[submission]` extra with playwright
 
 ## [0.2.0] - 2026-06-01
 

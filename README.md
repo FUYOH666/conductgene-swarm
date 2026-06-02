@@ -57,8 +57,19 @@ docker compose up --build
 
 ## Demo video
 
-<!-- Add YouTube/Loom URL after recording — see docs/demo-video-guide.md -->
-Recording guide: [docs/demo-video-guide.md](docs/demo-video-guide.md)
+**Local recording:** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) (auto-generated, ~90s)
+
+**YouTube (portal Demo URL):** upload unlisted, then paste link here:
+
+<!-- https://www.youtube.com/watch?v=YOUR_VIDEO_ID -->
+
+Regenerate assets:
+
+```bash
+./scripts/capture_submission_assets.sh --with-video
+```
+
+Upload guide: [docs/submission/youtube-upload.md](docs/submission/youtube-upload.md) · Portal copy: [docs/submission/portal-copy.md](docs/submission/portal-copy.md)
 
 ## API
 
@@ -96,6 +107,7 @@ uv run conductgene audit export --out reports/audit_export.json
 - [Pitch deck](docs/pitch-deck.md)
 - [UCWS registration](docs/UCWS_REGISTRATION.md)
 - [Submission checklist](docs/SUBMISSION.md)
+- [Portal copy-paste](docs/submission/portal-copy.md)
 - [Governance (IMDA MGF)](docs/governance.md)
 - [Architecture](docs/architecture.md)
 - [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Releases](https://github.com/FUYOH666/conductgene-swarm/releases)
