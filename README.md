@@ -10,7 +10,7 @@
 
 Multi-agent conduct QA for regulated industries. Prosecutor, Defender, and Arbiter agents review call transcripts with evidence-grounded citations. When a supervisor corrects the verdict, the system stores a **supervisor-approved Policy Gene** — auditable, rollbackable institutional memory.
 
-Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGENT track.
+Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) — **AGENT** track (dual submission with [AttestRWA](https://github.com/FUYOH666/attestrwa) on **APPLICATION** track). See [UCWS dual-track guide](docs/UCWS_DUAL_TRACK.md).
 
 <p align="center">
   <a href="docs/assets/architecture.png">
@@ -59,9 +59,7 @@ docker compose up --build
 
 **Local recording:** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) (auto-generated, ~90s)
 
-**YouTube (portal Demo URL):** upload unlisted, then paste link here:
-
-<!-- https://www.youtube.com/watch?v=YOUR_VIDEO_ID -->
+**YouTube (portal Demo URL):** [youtu.be/5wIBi-HkK9Y](https://youtu.be/5wIBi-HkK9Y)
 
 Regenerate assets:
 
@@ -70,6 +68,8 @@ Regenerate assets:
 ```
 
 Upload guide: [docs/submission/youtube-upload.md](docs/submission/youtube-upload.md) · Portal copy: [docs/submission/portal-copy.md](docs/submission/portal-copy.md)
+
+AttestRWA demo (APPLICATION track, same portal entry): [youtube.com/shorts/BipB2qPzZz0](https://youtube.com/shorts/BipB2qPzZz0)
 
 ## API
 
@@ -105,9 +105,11 @@ uv run conductgene audit export --out reports/audit_export.json
 - [90-second demo script](docs/demo-script.md)
 - [Demo video guide](docs/demo-video-guide.md)
 - [Pitch deck](docs/pitch-deck.md)
+- [UCWS dual-track guide](docs/UCWS_DUAL_TRACK.md)
 - [UCWS registration](docs/UCWS_REGISTRATION.md)
 - [Submission checklist](docs/SUBMISSION.md)
-- [Portal copy-paste](docs/submission/portal-copy.md)
+- [Portal copy-paste (AGENT + APPLICATION)](docs/submission/portal-copy.md)
+- [Resubmit checklist](docs/submission/resubmit-checklist.md)
 - [Governance (IMDA MGF)](docs/governance.md)
 - [Architecture](docs/architecture.md)
 - [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Releases](https://github.com/FUYOH666/conductgene-swarm/releases)

@@ -1,10 +1,12 @@
 # UCWS Submission Checklist
 
-Track submission assets for [UCWS Singapore 2026](https://luma.com/UCWS2026) AGENT track.
+[UCWS Singapore 2026](https://luma.com/UCWS2026) — **one portal entry**, tracks **AGENT + APPLICATION**.
 
-## Portal assets (ready to upload)
+Overview: [UCWS_DUAL_TRACK.md](UCWS_DUAL_TRACK.md)
 
-All files in [`submission/`](submission/):
+## Portal assets (ConductGene — upload to form)
+
+Files in [`submission/`](submission/):
 
 | Asset | File | Status |
 |-------|------|--------|
@@ -13,57 +15,45 @@ All files in [`submission/`](submission/):
 | Screenshot 2 | [screenshot-2-agents.png](submission/screenshot-2-agents.png) | Ready |
 | Screenshot 3 | [screenshot-3-gene-learning.png](submission/screenshot-3-gene-learning.png) | Ready |
 | Demo video (WebM) | [conductgene-demo.webm](submission/conductgene-demo.webm) | Ready — upload to YouTube |
-| Form copy-paste | [portal-copy.md](submission/portal-copy.md) | Ready |
-| Video end card | [video-end-card.png](submission/video-end-card.png) | Optional overlay |
+| Unified form copy | [portal-copy.md](submission/portal-copy.md) | Ready |
+| Resubmit steps | [resubmit-checklist.md](submission/resubmit-checklist.md) | Ready |
 
-Regenerate: `./scripts/capture_submission_assets.sh --with-video`
+Regenerate ConductGene assets: `./scripts/capture_submission_assets.sh --with-video`
 
-## Automated (done in repo)
+## Agent track — ConductGene Swarm
 
-- [x] Public GitHub repository: https://github.com/FUYOH666/conductgene-swarm
-- [x] CI + Docker smoke workflows green
-- [x] Release v0.2.1 with CHANGELOG
-- [x] README with eval metrics, architecture, quick start
+- [x] Public repo: https://github.com/FUYOH666/conductgene-swarm
+- [x] CI + Docker smoke green
+- [x] Release v0.2.1
 - [x] `./scripts/verify_all.sh` and `./scripts/qa_matrix.sh`
-- [x] Pitch deck markdown: [pitch-deck.md](pitch-deck.md)
-- [x] Portal submission folder with logo + 3 screenshots + demo WebM
-- [x] [portal-copy.md](submission/portal-copy.md) for all text fields
+- [x] YouTube demo: https://youtu.be/5wIBi-HkK9Y → primary **Demo URL** on portal
+- [ ] Listed as **TRACK 1: AGENT** in portal Description
 
-## Manual (your action — ~30 min)
+## Application track — AttestRWA
 
-### 1. YouTube upload → Demo URL
+- [x] Public repo: https://github.com/FUYOH666/attestrwa
+- [x] Demo video: https://youtube.com/shorts/BipB2qPzZz0
+- [x] One-command demo: `./scripts/demo-mode.sh`
+- [ ] Listed as **TRACK 2: APPLICATION** in portal Description (same form)
 
-1. Upload [conductgene-demo.webm](submission/conductgene-demo.webm) to YouTube (**Unlisted**)
-2. Follow [youtube-upload.md](submission/youtube-upload.md)
-3. Paste URL into [portal-copy.md](submission/portal-copy.md) and README
+## Portal registration (manual)
 
-- [x] Video recorded (WebM in repo)
-- [ ] Uploaded to YouTube (unlisted)
-- [ ] URL in README and portal form
+1. [evol.epicconnector.ai](https://evol.epicconnector.ai) → Edit project
+2. Tracks: **AGENT** + **APPLICATION** (not Deep Research)
+3. Paste from [portal-copy.md](submission/portal-copy.md)
+4. Upload logo + 3 screenshots
+5. **Resubmit for review**
 
-### 2. UCWS portal registration
-
-1. Go to [evol.epicconnector.ai](https://evol.epicconnector.ai)
-2. Copy fields from [portal-copy.md](submission/portal-copy.md)
-3. Upload logo + 3 screenshots from `docs/submission/`
-
-- [ ] Registration submitted
-- [ ] Confirmation email received
-
-### 3. Pitch deck PDF (optional for portal)
-
-```bash
-./scripts/export_pitch_deck.sh
-```
-
-- [ ] PDF or Google Slides link in Demo File Link field
+- [ ] Registration / resubmit complete
+- [ ] Organizer approval pending
 
 ## Pre-Demo Day rehearsal
 
 - [ ] `./scripts/qa_matrix.sh` — 4/4 PASS locally
-- [ ] Offline demo rehearsed (mock mode, no network)
+- [ ] ConductGene offline demo (mock mode)
+- [ ] AttestRWA `./scripts/e2e_rwa_flow.sh` (optional second demo path)
 - [ ] 5-minute pitch from [pitch-deck-outline.md](pitch-deck-outline.md)
-- [ ] Ask 5+ people to vote (Community Vote 40%)
+- [ ] Community vote outreach (40% of score)
 
 ## Contacts
 

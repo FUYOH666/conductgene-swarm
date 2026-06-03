@@ -47,13 +47,20 @@ git clone https://github.com/FUYOH666/conductgene-swarm.git
 ./scripts/verify_all.sh
 ```
 
-## After upload
+## AttestRWA demo (APPLICATION track)
+
+Already published — **do not re-upload** for portal unless you want a refresh:
+
+- URL: https://youtube.com/shorts/BipB2qPzZz0
+- Paste this link **inside portal Description** (TRACK 2), not the primary Demo URL field
+
+## After upload (ConductGene)
 
 1. Copy watch URL: `https://www.youtube.com/watch?v=XXXXXXXX`
-2. Update [portal-copy.md](portal-copy.md) Demo URL
+2. Update [portal-copy.md](portal-copy.md) — Description TRACK 1 + Demo URL field
 3. Update README «Demo video» section
 4. Test link in incognito window
-5. Submit portal form
+5. Resubmit portal form (AGENT + APPLICATION tracks)
 
 ## Portal Demo URL field
 

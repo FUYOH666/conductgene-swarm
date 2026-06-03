@@ -11,13 +11,13 @@
 - [x] Single product narrative (Idea B/C archived in `docs/_archive/`)
 - [x] Push to GitHub [FUYOH666/conductgene-swarm](https://github.com/FUYOH666/conductgene-swarm)
 - [x] GitHub About: description, topics, community files, release v0.2.1
-- [ ] Register project on [evol.epicconnector.ai](https://evol.epicconnector.ai) — see [SUBMISSION.md](SUBMISSION.md)
+- [ ] Dual-track resubmit on [evol.epicconnector.ai](https://evol.epicconnector.ai) (AGENT + APPLICATION) — see [resubmit-checklist.md](submission/resubmit-checklist.md)
 
 ## Polish (June 4–12)
 
 ### P0 — Must have
 
-- [ ] Demo video (90s–3 min) — see [demo-video-guide.md](demo-video-guide.md)
+- [x] Demo video — [youtu.be/5wIBi-HkK9Y](https://youtu.be/5wIBi-HkK9Y) (AttestRWA: [Shorts](https://youtube.com/shorts/BipB2qPzZz0))
 - [x] Pitch deck (10 slides) — see [pitch-deck.md](pitch-deck.md) (export PDF manually)
 - [x] Evolution metrics in README (eval table)
 - [x] Architecture diagram — [assets/architecture.png](assets/architecture.png)

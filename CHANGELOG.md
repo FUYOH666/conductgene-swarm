@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.2] - 2026-06-01
+
+### Added
+
+- UCWS dual-track portal copy (one entry: AGENT ConductGene + APPLICATION AttestRWA)
+- [docs/UCWS_DUAL_TRACK.md](docs/UCWS_DUAL_TRACK.md) — single submission, two repos
+- [docs/submission/resubmit-checklist.md](docs/submission/resubmit-checklist.md) — post-rejection resubmit steps
+
+### Changed
+
+- [docs/submission/portal-copy.md](docs/submission/portal-copy.md) — unified Description with TRACK 1 / TRACK 2 blocks; explicit no MiroMind API
+- [docs/UCWS_REGISTRATION.md](docs/UCWS_REGISTRATION.md), [docs/SUBMISSION.md](docs/SUBMISSION.md) — dual-track model
+- README — dual-track UCWS links; ConductGene demo https://youtu.be/5wIBi-HkK9Y
+
 ## [0.2.1] - 2026-06-02
 
 ### Added

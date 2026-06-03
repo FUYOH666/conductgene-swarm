@@ -1,10 +1,28 @@
-# UCWS Portal — Copy-Paste Fields
+# UCWS Portal — Copy-Paste Fields (Dual Track)
 
-Fill [evol.epicconnector.ai](https://evol.epicconnector.ai) submission form. Replace `YOUR_VIDEO_ID` after YouTube upload.
+**One portal entry**, tracks **AGENT + APPLICATION**. Fill [evol.epicconnector.ai](https://evol.epicconnector.ai).
+
+ConductGene demo: https://youtu.be/5wIBi-HkK9Y
+
+---
+
+## Tracks (checkboxes)
+
+- [x] **AGENT**
+- [x] **APPLICATION**
+- [ ] Deep Research — **do not select** (requires MiroMind API; we do not use it)
 
 ---
 
 ## Project Name (max 100)
+
+**Recommended** (both products visible to reviewers):
+
+```
+ConductGene Swarm & AttestRWA
+```
+
+Alternative (ConductGene-only title; AttestRWA only in Description):
 
 ```
 ConductGene Swarm
@@ -15,59 +33,105 @@ ConductGene Swarm
 ## Tagline (max 200)
 
 ```
-Supervisor-approved institutional memory for AI conduct QA — multi-agent review with evidence citations, Policy Genes, and rollback.
+Dual-track UCWS submission: multi-agent conduct QA (AGENT) + RWA settlement attestation app (APPLICATION). Open source, reproducible demos.
 ```
 
-Character count: ~130
+Character count: ~115
 
 ---
 
 ## Description (max 2000)
 
 ```
-ConductGene Swarm helps regulated QA teams (collections, fintech, insurance) scale call review without losing supervisor knowledge.
+UCWS Singapore 2026 — dual-track submission: AGENT + APPLICATION.
+This submission does NOT use the MiroMind Deep Research API.
 
-Problem: Static rules miss nuance. Solo LLMs hallucinate policy. Human corrections are repeated every week.
+Two open-source projects, one compliance portfolio for regulated finance in SEA:
 
-Solution: Three collaborating agents — Prosecutor, Defender, and Arbiter — review each transcript with evidence-grounded citations. When a supervisor approves a correction, the system stores a Policy Gene: auditable, rollbackable institutional memory with held-out eval proof.
+━━━ TRACK 1: AGENT — ConductGene Swarm ━━━
+Multi-agent conduct QA with supervisor-approved Policy Genes. Prosecutor, Defender, and Arbiter agents review call transcripts with evidence citations. Human corrections become auditable, rollbackable institutional memory with held-out eval proof (16/16 scenarios, 100% citation coverage). Reproducible demo — no API key required.
+• Repo: https://github.com/FUYOH666/conductgene-swarm
+• Demo: https://youtu.be/5wIBi-HkK9Y
+• Run: ./scripts/verify_all.sh
 
-Key features:
-• Multi-agent collaboration (not a single chatbot)
-• Evidence citations + abstain when confidence is low
-• Supervisor approval gate for every Policy Gene
-• Append-only case and gene audit trails
-• 16/16 synthetic eval scenarios, 100% citation coverage
-• Reproducible demo — no external LLM or API key required
+━━━ TRACK 2: APPLICATION — AttestRWA ━━━
+Settlement Attestation Layer for RWA — on-chain compliance bridge for stablecoin real-world-asset settlements. EAS attestations on Base Sepolia + programmable escrow: USDC releases only when the attester validates developer feed, payee authority, and RAG-assisted evidence. Happy-path release and payee-mismatch reject demos included.
+• Repo: https://github.com/FUYOH666/attestrwa
+• Demo: https://youtube.com/shorts/BipB2qPzZz0
+• Run: ./scripts/demo-mode.sh
 
-Built for UCWS Singapore 2026 AGENT track. Open source (MIT).
+Shared theme: accountable AI and compliance infrastructure — agents that collaborate and learn with proof (ConductGene), and applications that enforce verification before money moves (AttestRWA).
 
-Try it: clone the repo and run ./scripts/verify_all.sh or watch the demo video.
+Author: Aleksandr Mordvinov · Open source (MIT / Apache-2.0)
+```
+
+Character count: ~1,464 / 2000
+
+### ASCII-safe variant (paste if Unicode dividers break in the form)
+
+```
+UCWS Singapore 2026 — dual-track submission: AGENT + APPLICATION.
+This submission does NOT use the MiroMind Deep Research API.
+
+Two open-source projects, one compliance portfolio for regulated finance in SEA:
+
+--- TRACK 1: AGENT — ConductGene Swarm ---
+Multi-agent conduct QA with supervisor-approved Policy Genes. Prosecutor, Defender, and Arbiter agents review call transcripts with evidence citations. Human corrections become auditable, rollbackable institutional memory with held-out eval proof (16/16 scenarios, 100% citation coverage). Reproducible demo — no API key required.
+• Repo: https://github.com/FUYOH666/conductgene-swarm
+• Demo: https://youtu.be/5wIBi-HkK9Y
+• Run: ./scripts/verify_all.sh
+
+--- TRACK 2: APPLICATION — AttestRWA ---
+Settlement Attestation Layer for RWA — on-chain compliance bridge for stablecoin real-world-asset settlements. EAS attestations on Base Sepolia + programmable escrow: USDC releases only when the attester validates developer feed, payee authority, and RAG-assisted evidence. Happy-path release and payee-mismatch reject demos included.
+• Repo: https://github.com/FUYOH666/attestrwa
+• Demo: https://youtube.com/shorts/BipB2qPzZz0
+• Run: ./scripts/demo-mode.sh
+
+Shared theme: accountable AI and compliance infrastructure — agents that collaborate and learn with proof (ConductGene), and applications that enforce verification before money moves (AttestRWA).
+
+Author: Aleksandr Mordvinov · Open source (MIT / Apache-2.0)
 ```
 
 ---
 
-## Demo URL
+## Field mapping (single-form limits)
 
-```
-https://www.youtube.com/watch?v=YOUR_VIDEO_ID
-```
-
-After upload, use unlisted link from [youtube-upload.md](youtube-upload.md).
+| Portal field | Value | Notes |
+|--------------|-------|-------|
+| Tracks | AGENT + APPLICATION | Not Deep Research |
+| Repo URL | `https://github.com/FUYOH666/conductgene-swarm` | Primary repo field |
+| Demo URL | `https://youtu.be/5wIBi-HkK9Y` | Primary demo (ConductGene) |
+| AttestRWA repo + demo | In Description only | Second GitHub / YouTube links in body |
+| Logo + screenshots | ConductGene assets below | AttestRWA UI in attestrwa README |
 
 ---
 
-## Repo URL (GitHub only)
+## Demo URL (primary — ConductGene)
+
+```
+https://youtu.be/5wIBi-HkK9Y
+```
+
+AttestRWA demo (in Description only): `https://youtube.com/shorts/BipB2qPzZz0`
+
+Upload guide: [youtube-upload.md](youtube-upload.md)
+
+---
+
+## Repo URL (primary — ConductGene)
 
 ```
 https://github.com/FUYOH666/conductgene-swarm
 ```
 
+AttestRWA: `https://github.com/FUYOH666/attestrwa` (in Description)
+
 ---
 
-## Tech Stack (comma-separated)
+## Tech Stack (comma-separated, both projects)
 
 ```
-Python, FastAPI, Streamlit, Pydantic, uv, pytest, multi-agent systems, RAG, governance, audit trail, Docker
+Python, FastAPI, Streamlit, Pydantic, uv, pytest, multi-agent systems, Policy Genes, governance, audit trail, Solidity, Foundry, EAS, Base Sepolia, Next.js, RAG, Qdrant, stablecoin escrow, Docker
 ```
 
 ---
@@ -85,6 +149,8 @@ Upload: [`logo-512.png`](logo-512.png) (512×512 PNG)
 3. [`screenshot-3-gene-learning.png`](screenshot-3-gene-learning.png) — Policy Gene + CASE-005 improvement
 
 Generate with: `./scripts/capture_submission_assets.sh`
+
+AttestRWA UI screenshots: see [attestrwa README](https://github.com/FUYOH666/attestrwa).
 
 ---
 
@@ -105,3 +171,15 @@ Or export: `./scripts/export_pitch_deck.sh`
 ```
 https://linkedin.com/in/YOUR_PROFILE
 ```
+
+---
+
+## Resubmit after rejection
+
+If rejected for Deep Research track mismatch:
+
+1. Tracks: **AGENT + APPLICATION** only (remove Deep Research)
+2. Description: first lines must state dual-track + **no MiroMind API**
+3. Save → **Resubmit for review**
+
+Full checklist: [resubmit-checklist.md](resubmit-checklist.md)
