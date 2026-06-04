@@ -11,8 +11,9 @@ Transcript → Evidence → Prosecutor + Defender → Arbiter → Supervisor app
 | Module | Responsibility |
 |--------|----------------|
 | `agents/roles.py` | Prosecutor, Defender, Arbiter (deterministic demo mode) |
-| `agents/live.py` | Live mode stub (OpenAI-compatible gateway hooks) |
-| `retrieval.py` | In-memory KB evidence ranking |
+| `agents/live.py` | Live LLM hooks (v0.4+) |
+| `retrieval/` | memory, BGE, Qdrant retrieval factory |
+| `services/discovery.py` | Service health probes |
 | `pipeline/swarm.py` | Orchestration + audit persistence |
 | `evolution/genes.py` | Supervisor-approved Policy Gene store |
 | `audit/store.py` | Append-only case provenance |
@@ -34,10 +35,24 @@ Transcript → Evidence → Prosecutor + Defender → Arbiter → Supervisor app
 
 ## Modes
 
-- **mock** (default): deterministic agents, no external LLM — labeled "Deterministic Demo Mode" in UI
-- **live**: stub hooks in `agents/live.py`; install with `uv sync --extra live`
+- **mock** (default): deterministic agents, in-memory retrieval — labeled "Deterministic Demo Mode" in UI
+- **live** (v0.4+): LLM providers via `CONDUCTGENE_LLM_PROVIDER` — stub hooks in [`agents/live.py`](../src/conductgene/agents/live.py)
+
+## Retrieval (v0.3+)
+
+| Mode | Description |
+|------|-------------|
+| `memory` | Keyword overlap on `data/synthetic/kb` (CI default) |
+| `qdrant` | BGE embeddings + Qdrant vector search |
+| `qdrant_rerank` | Qdrant + BGE reranker when `ENABLE_RERANKER=true` |
+
+Modules: [`retrieval/`](../src/conductgene/retrieval/) · [`services/discovery.py`](../src/conductgene/services/discovery.py)
+
+See [qdrant-retrieval.md](qdrant-retrieval.md) and [ROADMAP.md](ROADMAP.md).
 
 ## API notes
+
+- `GET /healthz/services` — probe BGE, Qdrant, optional LLM endpoints
 
 - `GET /metrics/evolution` uses cached eval result; pass `?refresh=true` to re-run suite
 - `GET /audit/export` returns case records + gene events for compliance review

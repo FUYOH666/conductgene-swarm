@@ -1,6 +1,6 @@
 [project]
 name = "conductgene-swarm"
-version = "0.2.1"
+version = "0.3.0"
 description = "Supervisor-approved conduct QA with auditable Policy Genes — UCWS Singapore 2026"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -32,6 +32,9 @@ ui = [
 ]
 submission = [
     "playwright>=1.49.0",
+]
+retrieval = [
+    "qdrant-client>=1.12.0",
 ]
 
 [project.scripts]

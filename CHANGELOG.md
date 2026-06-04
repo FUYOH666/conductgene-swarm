@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0] - 2026-06-03
+
+### Added
+
+- Live retrieval scaffolding: `retrieval/` package (memory, BGE client, Qdrant store, factory)
+- `scripts/discover_services.py` and `GET /healthz/services` for service probes
+- `scripts/ingest_qdrant.py` for BGE → Qdrant policy KB ingest
+- Extended settings: `llm_provider`, `retrieval_mode`, OpenRouter/LM Studio/Qdrant env vars
+- Optional `[retrieval]` extra (`qdrant-client`)
+- Docs: [ROADMAP.md](docs/ROADMAP.md), [qdrant-retrieval.md](docs/qdrant-retrieval.md), [live-simulation.md](docs/live-simulation.md)
+- Tests: config, retrieval fallback, discovery mocks
+
+### Changed
+
+- `retrieve_evidence()` now accepts `Settings`; qdrant modes degrade to memory when configured
+- Version 0.3.0
+
 ## [0.2.2] - 2026-06-01
 
 ### Added

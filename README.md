@@ -37,6 +37,17 @@ Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) — **AGENT** track (
 
 Run `./scripts/verify_all.sh` or `./scripts/qa_matrix.sh` to reproduce locally.
 
+**Live retrieval (v0.3+, optional — test with Services-BGE tomorrow):**
+
+```bash
+uv sync --extra dev --extra retrieval
+uv run python scripts/discover_services.py
+uv run python scripts/ingest_qdrant.py   # requires BGE + Qdrant
+CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank CONDUCTGENE_ENABLE_RERANKER=true uv run conductgene-ui
+```
+
+See [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/qdrant-retrieval.md](docs/qdrant-retrieval.md)
+
 ## Quick start
 
 ```bash
@@ -80,6 +91,7 @@ uv run conductgene-serve   # http://127.0.0.1:8090/docs
 | Endpoint | Description |
 |----------|-------------|
 | `GET /healthz` | Liveness |
+| `GET /healthz/services` | BGE / Qdrant / LLM service probes |
 | `GET /readyz` | Readiness |
 | `POST /swarm/analyze` | Swarm review + audit record |
 | `POST /genes/learn` | Store supervisor-approved Policy Gene |
@@ -106,6 +118,9 @@ uv run conductgene audit export --out reports/audit_export.json
 - [Demo video guide](docs/demo-video-guide.md)
 - [Pitch deck](docs/pitch-deck.md)
 - [UCWS dual-track guide](docs/UCWS_DUAL_TRACK.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Qdrant retrieval setup](docs/qdrant-retrieval.md)
+- [Live simulation guide](docs/live-simulation.md)
 - [UCWS registration](docs/UCWS_REGISTRATION.md)
 - [Submission checklist](docs/SUBMISSION.md)
 - [Portal copy-paste (AGENT + APPLICATION)](docs/submission/portal-copy.md)

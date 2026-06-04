@@ -61,6 +61,7 @@ async def swarm_analyze(
     transcript = request.transcript.strip()
 
     evidence, top_score = retrieve_evidence(
+        settings,
         kb,
         transcript,
         top_n=settings.rerank_top_n,
@@ -133,6 +134,7 @@ async def swarm_analyze(
                 "checklist_items": len(checklist),
                 "genes_applied": genes_applied,
                 "mode": settings.mode,
+                "retrieval_mode": settings.retrieval_mode,
             }
         },
     )

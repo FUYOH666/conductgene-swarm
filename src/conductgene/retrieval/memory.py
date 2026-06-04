@@ -1,4 +1,4 @@
-"""Simple retrieval over in-memory KB (keyword overlap scoring)."""
+"""Keyword overlap retrieval over in-memory KB."""
 
 from __future__ import annotations
 
@@ -25,11 +25,10 @@ def _chunk_match_score(query_tokens: set[str], chunk_text: str) -> float:
     hits = max(overlap, substring_hits)
     if hits == 0:
         return 0.0
-    # Cap denominator so long transcripts do not dilute relevance scores.
     return hits / max(min(len(query_tokens), 8), 1)
 
 
-def retrieve_evidence(
+def retrieve_from_memory(
     kb: MemoryKnowledgeBase,
     query: str,
     *,

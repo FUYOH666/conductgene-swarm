@@ -26,9 +26,12 @@ from conductgene.schemas import (
     PolicyGene,
     ReadyResponse,
     RollbackResponse,
+    ServiceProbeRow,
+    ServicesHealthResponse,
     SwarmAnalyzeRequest,
     SwarmAnalyzeResponse,
 )
+from conductgene.services.discovery import discover_services
 
 _settings: Settings | None = None
 _kb: MemoryKnowledgeBase | None = None
@@ -110,6 +113,29 @@ app = FastAPI(
 @app.get("/healthz", response_model=HealthResponse)
 async def healthz() -> HealthResponse:
     return HealthResponse(ok=True, service="conductgene-swarm", version=__version__)
+
+
+@app.get("/healthz/services", response_model=ServicesHealthResponse)
+async def healthz_services() -> ServicesHealthResponse:
+    s = get_settings()
+    probes = discover_services(s)
+    rows = [
+        ServiceProbeRow(
+            service=p.service,
+            status=p.status,
+            endpoint=p.endpoint,
+            details=p.details,
+            recommended_next_step=p.recommended_next_step,
+        )
+        for p in probes
+    ]
+    ok = all(p.status in ("ok", "skipped") for p in probes)
+    return ServicesHealthResponse(
+        ok=ok,
+        retrieval_mode=s.retrieval_mode,
+        llm_provider=s.llm_provider,
+        services=rows,
+    )
 
 
 @app.get("/readyz", response_model=ReadyResponse)

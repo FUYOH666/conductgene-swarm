@@ -36,7 +36,7 @@
 
 - [ ] GitHub Pages landing
 - [ ] Live LLM mode (beyond stub)
-- [ ] BGE + Qdrant retrieval port
+- [ ] BGE + Qdrant retrieval port — scaffolding in v0.3; live test on MacBook tomorrow
 
 ## Demo Day logistics
 

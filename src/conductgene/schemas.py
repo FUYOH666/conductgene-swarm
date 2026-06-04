@@ -129,6 +129,21 @@ class HealthResponse(BaseModel):
     version: str
 
 
+class ServiceProbeRow(BaseModel):
+    service: str
+    status: str
+    endpoint: str | None = None
+    details: str
+    recommended_next_step: str
+
+
+class ServicesHealthResponse(BaseModel):
+    ok: bool
+    retrieval_mode: str
+    llm_provider: str
+    services: list[ServiceProbeRow]
+
+
 class ReadyResponse(BaseModel):
     ready: bool
     mode: str
