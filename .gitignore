@@ -10,6 +10,9 @@ build/
 *.log
 reports/
 outputs/
+docs/submission/video-slides/
+docs/submission/.capture-slides/
+docs/submission/.slideshow_concat.txt
 data/evolution/*.jsonl
 data/audit/*.jsonl
 .DS_Store

@@ -155,3 +155,101 @@ def assert_live_banner(page: Page) -> None:
     main.get_by_text("Live Mode").wait_for(state="visible", timeout=10_000)
     main.get_by_text("lmstudio").wait_for(state="visible", timeout=10_000)
     main.get_by_text("qdrant_rerank").wait_for(state="visible", timeout=10_000)
+
+
+def snap(page: Page, path: Path) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(path), full_page=True)
+    return path
+
+
+def run_demo_flow(
+    page: Page,
+    timeouts: CaptureTimeouts,
+    profile: Profile,
+    slides_dir: Path,
+) -> list[Path]:
+    """Walk the UCWS demo path and capture a screenshot after each visible step."""
+    slides: list[Path] = []
+    page.goto(URL, wait_until="networkidle")
+    page.wait_for_timeout(timeouts.page_load_ms)
+
+    if profile == "live":
+        assert_live_banner(page)
+        page.get_by_text("Model Jury").scroll_into_view_if_needed()
+        page.wait_for_timeout(timeouts.between_steps_ms)
+
+    slides.append(snap(page, slides_dir / "01_live_mode.png"))
+
+    select_scenario(page, "CASE-002", timeouts)
+    slides.append(snap(page, slides_dir / "02_case002_selected.png"))
+
+    page.get_by_role("button", name="Run swarm analyze").click()
+    slides.append(snap(page, slides_dir / "03_analyze_running.png"))
+
+    page.get_by_text("No analysis yet.").wait_for(state="hidden", timeout=timeouts.analyze_ms)
+    page.wait_for_timeout(timeouts.between_steps_ms)
+    slides.append(snap(page, slides_dir / "04_case002_results.png"))
+
+    page.get_by_text("3. Agent swarm").scroll_into_view_if_needed()
+    page.wait_for_timeout(timeouts.between_steps_ms)
+    slides.append(snap(page, slides_dir / "05_agent_swarm.png"))
+
+    page.get_by_text("4. Supervisor override").scroll_into_view_if_needed()
+    page.wait_for_timeout(timeouts.between_steps_ms)
+    slides.append(snap(page, slides_dir / "06_supervisor_form.png"))
+
+    page.get_by_role("button", name="Approve Policy Gene").click()
+    page.get_by_text("Policy Gene stored").wait_for(state="visible", timeout=timeouts.gene_approve_ms)
+    page.wait_for_timeout(timeouts.between_steps_ms)
+    slides.append(snap(page, slides_dir / "07_gene_stored.png"))
+
+    select_scenario(page, "CASE-005", timeouts)
+    slides.append(snap(page, slides_dir / "08_case005_selected.png"))
+
+    page.get_by_role("button", name="Run swarm analyze").click()
+    page.get_by_text("No analysis yet.").wait_for(state="hidden", timeout=timeouts.analyze_ms)
+    page.wait_for_timeout(timeouts.between_steps_ms)
+
+    page.get_by_text("5. Policy Genes + audit").scroll_into_view_if_needed()
+    page.wait_for_timeout(timeouts.between_steps_ms)
+    slides.append(snap(page, slides_dir / "09_gene_learning.png"))
+
+    return slides
+
+
+def build_slideshow_webm(slide_paths: list[Path], dest: Path, seconds_per_slide: float = 4.0) -> None:
+    """Stitch step screenshots into a WebM (avoids Playwright static-frame video bug)."""
+    if not slide_paths:
+        raise ValueError("no slides to encode")
+
+    concat_file = dest.parent / ".slideshow_concat.txt"
+    lines: list[str] = []
+    for slide in slide_paths:
+        lines.append(f"file '{slide.resolve()}'")
+        lines.append(f"duration {seconds_per_slide}")
+    lines.append(f"file '{slide_paths[-1].resolve()}'")
+    concat_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-f",
+        "concat",
+        "-safe",
+        "0",
+        "-i",
+        str(concat_file),
+        "-vf",
+        "scale=1280:900:force_original_aspect_ratio=decrease,"
+        "pad=1280:900:(ow-iw)/2:(oh-ih)/2:color=0x0f172a",
+        "-c:v",
+        "libvpx-vp9",
+        "-pix_fmt",
+        "yuv420p",
+        str(dest),
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"ffmpeg slideshow failed: {result.stderr[-500:]}")
+    concat_file.unlink(missing_ok=True)

@@ -94,7 +94,7 @@ docker compose up --build
 
 ## Demo video
 
-**Local recording (v0.5.2):** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) — live LM Studio + `qdrant_rerank` (~3 min, Playwright)
+**Local recording (v0.5.3):** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) — live LM Studio + `qdrant_rerank` (~36s slideshow from step screenshots)
 
 **YouTube (portal Demo URL):** [youtu.be/5wIBi-HkK9Y](https://youtu.be/5wIBi-HkK9Y) — re-upload after regenerating live WebM (see below)
 

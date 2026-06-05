@@ -13,7 +13,9 @@ uv run python scripts/ingest_qdrant.py --rebuild
 ./scripts/capture_submission_assets.sh --with-video --profile live
 ```
 
-Output: `docs/submission/conductgene-demo.webm` + 3 portal screenshots.
+Output: `docs/submission/conductgene-demo.webm` (~36s slideshow from 9 step screenshots) + 3 portal screenshots.
+
+Note: raw Playwright screen recording stays static during long LM Studio waits; we stitch step screenshots with ffmpeg instead.
 
 **Manual:**
 

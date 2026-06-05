@@ -3,25 +3,22 @@
 
 from __future__ import annotations
 
+import shutil
 import sys
 from pathlib import Path
 
 from capture_ui_common import (
     ROOT,
     TIMEOUTS,
-    approve_policy_gene,
-    assert_live_banner,
     build_streamlit_env,
     parse_profile_args,
-    run_analyze,
-    select_scenario,
+    run_demo_flow,
     start_streamlit,
     stop_streamlit,
     wait_for_server,
 )
 
 OUT = ROOT / "docs" / "submission"
-URL = "http://127.0.0.1:8501"
 
 
 def main() -> int:
@@ -39,29 +36,19 @@ def main() -> int:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1440, "height": 1200})
-            page.goto(URL, wait_until="networkidle")
-            page.wait_for_timeout(timeouts.page_load_ms)
-
-            if profile == "live":
-                assert_live_banner(page)
-
-            select_scenario(page, "CASE-002", timeouts)
-            run_analyze(page, timeouts)
-            page.screenshot(path=str(OUT / "screenshot-1-swarm.png"), full_page=True)
-
-            page.get_by_text("3. Agent swarm").scroll_into_view_if_needed()
-            page.wait_for_timeout(timeouts.between_steps_ms)
-            page.screenshot(path=str(OUT / "screenshot-2-agents.png"), full_page=True)
-
-            approve_policy_gene(page, timeouts)
-
-            select_scenario(page, "CASE-005", timeouts)
-            run_analyze(page, timeouts)
-            page.get_by_text("5. Policy Genes + audit").scroll_into_view_if_needed()
-            page.wait_for_timeout(timeouts.between_steps_ms)
-            page.screenshot(path=str(OUT / "screenshot-3-gene-learning.png"), full_page=True)
-
+            slides = run_demo_flow(page, timeouts, profile, OUT / ".capture-slides")
             browser.close()
+
+        mapping = {
+            "04_case002_results.png": "screenshot-1-swarm.png",
+            "05_agent_swarm.png": "screenshot-2-agents.png",
+            "09_gene_learning.png": "screenshot-3-gene-learning.png",
+        }
+        for src_name, dest_name in mapping.items():
+            src = OUT / ".capture-slides" / src_name
+            if src.exists():
+                shutil.copy2(src, OUT / dest_name)
+
         print(f"Captured 3 screenshots in {OUT} (profile={profile})")
         return 0
     finally:

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.3] - 2026-06-05
+
+### Fixed
+
+- Demo video recording — slideshow from step screenshots via ffmpeg (Playwright raw WebM was static during LM Studio waits)
+
 ## [0.5.2] - 2026-06-05
 
 ### Added
