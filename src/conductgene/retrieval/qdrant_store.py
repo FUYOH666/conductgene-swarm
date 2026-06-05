@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import uuid
 from typing import Any
 
 from conductgene.config import Settings
@@ -15,7 +16,8 @@ logger = get_logger(__name__)
 
 def stable_chunk_id(chunk: KbChunk) -> str:
     raw = f"{chunk.doc_id}:{chunk.section or ''}:{chunk.text[:200]}"
-    return hashlib.sha256(raw.encode()).hexdigest()[:16]
+    digest = hashlib.sha256(raw.encode()).hexdigest()
+    return str(uuid.UUID(digest[:32]))
 
 
 def chunk_payload(chunk: KbChunk, *, version: str = "1") -> dict[str, Any]:
@@ -64,6 +66,14 @@ class QdrantRetriever:
         )
         logger.info("qdrant collection created", extra={"meta": {"collection": name}})
 
+    def recreate_collection(self) -> None:
+        name = self._settings.qdrant_collection
+        collections = self._client.get_collections().collections
+        if any(c.name == name for c in collections):
+            self._client.delete_collection(collection_name=name)
+            logger.info("qdrant collection deleted", extra={"meta": {"collection": name}})
+        self.ensure_collection()
+
     def upsert_chunks(self, ids: list[str], vectors: list[list[float]], payloads: list[dict]) -> int:
         qmodels = self._qmodels
         points = [
@@ -79,13 +89,13 @@ class QdrantRetriever:
         *,
         top_n: int = 8,
     ) -> list[EvidenceSnippet]:
-        hits = self._client.search(
+        response = self._client.query_points(
             collection_name=self._settings.qdrant_collection,
-            query_vector=query_vector,
+            query=query_vector,
             limit=top_n,
         )
         evidence: list[EvidenceSnippet] = []
-        for hit in hits:
+        for hit in response.points:
             payload = hit.payload or {}
             evidence.append(
                 EvidenceSnippet(

@@ -9,7 +9,7 @@ COPY src ./src
 COPY data ./data
 COPY scripts ./scripts
 
-RUN uv sync --extra dev --extra ui
+RUN uv sync --extra dev --extra ui --extra retrieval --extra live
 
 ENV CONDUCTGENE_MODE=mock
 ENV CONDUCTGENE_HOST=0.0.0.0

@@ -9,6 +9,7 @@ dist/
 build/
 *.log
 reports/
+outputs/
 data/evolution/*.jsonl
 data/audit/*.jsonl
 .DS_Store

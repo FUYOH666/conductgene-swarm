@@ -1,0 +1,15 @@
+{
+  "id": "CASE-017",
+  "persona": "strict_compliance",
+  "transcript": "Agent: Good morning, this is Horizon Insurance calling about your policy renewal.\nAgent: This call may be recorded for quality assurance.\nCustomer: I want to speak to someone about my coverage.\nAgent: I can transfer you to a licensed supervisor now.",
+  "golden": {
+    "recording_disclosure": "pass",
+    "escalation_offered": "pass",
+    "company_disclosure": "pass",
+    "abstain": false
+  },
+  "tags": [
+    "insurance",
+    "synth"
+  ]
+}

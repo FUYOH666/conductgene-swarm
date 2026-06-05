@@ -33,6 +33,19 @@ def cli_main() -> None:
     analyze_p.add_argument("transcript", nargs="?", help="Transcript or @file")
     analyze_p.add_argument("--file", "-f", type=Path, help="Scenario JSON or transcript file")
     analyze_p.add_argument("--case-id", default=None)
+    analyze_p.add_argument(
+        "--provider",
+        choices=["mock", "openrouter", "lmstudio", "instruct"],
+        default=None,
+        help="Override CONDUCTGENE_LLM_PROVIDER",
+    )
+    analyze_p.add_argument("--model", default=None, help="Override LLM model name")
+    analyze_p.add_argument(
+        "--mode",
+        choices=["mock", "live"],
+        default=None,
+        help="Override CONDUCTGENE_MODE",
+    )
 
     learn_p = sub.add_parser("learn", help="Store supervisor-approved Policy Gene")
     learn_p.add_argument("--request-id", required=True)
@@ -57,14 +70,40 @@ def cli_main() -> None:
     asyncio.run(_dispatch(args))
 
 
+def _apply_cli_overrides(settings: Settings, args: argparse.Namespace) -> Settings:
+    overrides: dict = {}
+    if getattr(args, "provider", None):
+        overrides["llm_provider"] = args.provider
+    if getattr(args, "mode", None):
+        overrides["mode"] = args.mode
+    provider = overrides.get("llm_provider", settings.llm_provider)
+    if getattr(args, "model", None):
+        if provider == "openrouter":
+            overrides["openrouter_models"] = args.model
+        elif provider == "lmstudio":
+            overrides["lmstudio_model"] = args.model
+        else:
+            overrides["llm_model"] = args.model
+    if overrides:
+        return settings.model_copy(update=overrides)
+    return settings
+
+
 async def _dispatch(args: argparse.Namespace) -> None:
     settings = Settings()
     settings.resolve_paths(_root())
+    if args.command == "analyze":
+        settings = _apply_cli_overrides(settings, args)
     kb = MemoryKnowledgeBase(settings.kb_dir)
     genes = GeneStore(settings.gene_store_path)
 
     if args.command == "analyze":
         text, case_id = _read_input(args)
+        from conductgene.providers.llm import resolve_llm_config
+
+        model_override = getattr(args, "model", None)
+        if settings.llm_provider != "mock" and settings.mode == "live":
+            resolve_llm_config(settings, model_override=model_override)
         result = await swarm_analyze(
             settings=settings,
             kb=kb,

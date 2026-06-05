@@ -35,13 +35,20 @@
 ### P2 — Nice to have
 
 - [ ] GitHub Pages landing
-- [ ] Live LLM mode (beyond stub)
-- [ ] BGE + Qdrant retrieval port — scaffolding in v0.3; live test on MacBook tomorrow
+- [x] Live LLM mode — `providers/llm.py`, LM Studio + OpenRouter (v0.5)
+- [x] BGE + Qdrant retrieval — validated MacBook; `ingest_qdrant.py --rebuild`
+
+### Singapore live rehearsal (June 4–12)
+
+- [ ] `./scripts/run_simulation_matrix.sh` — S1–S6 PASS (LM Studio primary)
+- [ ] Rehearse 90s path — [singapore-demo-runbook.md](singapore-demo-runbook.md)
+- [ ] `discover_services` green: embedding, reranker, qdrant, lmstudio
+- [ ] Streamlit Model Jury: `MODE=live`, `LLM_PROVIDER=lmstudio`, `qdrant_rerank`
 
 ## Demo Day logistics
 
 - [ ] Confirm top-20 status / travel
-- [x] Prepare offline demo (mock mode, no Tailscale dependency)
+- [x] Prepare offline demo — LM Studio + qdrant_rerank (no cloud required)
 - [ ] 5-min pitch rehearsed
 - [ ] Q&A prep — see pitch-deck-outline.md
 

@@ -6,6 +6,12 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 export CONDUCTGENE_MODE=mock
+export CONDUCTGENE_LLM_PROVIDER=mock
+export CONDUCTGENE_RETRIEVAL_MODE=memory
+export CONDUCTGENE_EMBEDDING_BASE_URL=
+export CONDUCTGENE_RERANKER_BASE_URL=
+export CONDUCTGENE_QDRANT_URL=
+export CONDUCTGENE_ENABLE_RERANKER=false
 export CONDUCTGENE_GENE_STORE_PATH="${ROOT}/reports/.verify_genes.jsonl"
 export CONDUCTGENE_AUDIT_STORE_PATH="${ROOT}/reports/.verify_audit.jsonl"
 export CONDUCTGENE_GENE_AUDIT_STORE_PATH="${ROOT}/reports/.verify_gene_events.jsonl"
@@ -14,7 +20,7 @@ rm -f "$CONDUCTGENE_GENE_STORE_PATH" "$CONDUCTGENE_AUDIT_STORE_PATH" "$CONDUCTGE
 mkdir -p reports
 
 echo "==> Sync dependencies"
-uv sync --extra dev --extra ui
+uv sync --extra dev --extra ui --extra retrieval --extra live
 
 echo ""
 echo "==> Ruff"

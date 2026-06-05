@@ -20,10 +20,12 @@ def project_root() -> Path:
 
 def test_manifest_loads_sixteen_cases(project_root: Path):
     manifest = yaml.safe_load((project_root / "data/scenarios/manifest.yaml").read_text())
-    case_ids = [c["id"] for c in manifest["cases"]]
-    assert len(case_ids) == 16
+    all_entries = manifest["cases"]
+    core_entries = [c for c in all_entries if c.get("suite") != "synth"]
+    assert len(core_entries) == 16
     scenarios = load_all_scenarios(project_root / "data/scenarios")
-    assert {s.id for s in scenarios} == set(case_ids)
+    assert len(scenarios) == 16
+    assert {s.id for s in scenarios} == {c["id"] for c in core_entries}
 
 
 @pytest.mark.parametrize(

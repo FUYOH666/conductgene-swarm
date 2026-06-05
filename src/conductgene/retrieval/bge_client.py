@@ -28,7 +28,7 @@ class BgeClient:
             data = resp.json()
         vectors: list[list[float]] = []
         for item in sorted(data.get("data", []), key=lambda x: x.get("index", 0)):
-            emb = item.get("embedding")
+            emb = item.get("embedding") or item.get("dense_embedding")
             if emb is None:
                 raise RuntimeError("embedding response missing dense vector")
             vectors.append(emb)
@@ -51,5 +51,8 @@ class BgeClient:
             results = resp.json().get("results", [])
         ranked: list[tuple[int, float]] = []
         for row in results:
-            ranked.append((int(row["index"]), float(row["score"])))
+            score = row.get("score", row.get("relevance_score"))
+            if score is None:
+                raise RuntimeError("rerank response missing score field")
+            ranked.append((int(row["index"]), float(score)))
         return ranked

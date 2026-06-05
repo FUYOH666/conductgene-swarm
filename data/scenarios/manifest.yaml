@@ -53,6 +53,12 @@ cases:
   - id: CASE-016
     file: collections/case_016_rollback_demo.json
     suite: collections
+  - id: CASE-017
+    file: collections/case_017.json
+    suite: synth
+  - id: CASE-018
+    file: collections/case_018.json
+    suite: synth
 
 demo_pair:
   learn: CASE-002

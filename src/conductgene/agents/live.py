@@ -1,17 +1,22 @@
-"""Live LLM agent mode — OpenAI-compatible instruct gateway."""
+"""Live LLM agent mode — OpenAI-compatible providers."""
 
 from __future__ import annotations
 
+from conductgene.agents.prompts import (
+    arbiter_messages,
+    defender_messages,
+    prosecutor_messages,
+)
 from conductgene.config import Settings
-from conductgene.logutil import get_logger
+from conductgene.providers.llm import chat_completion_json
 from conductgene.schemas import AgentOpinion, EvidenceSnippet, PolicyGene
-
-logger = get_logger(__name__)
 
 
 def ensure_live_mode(settings: Settings) -> None:
     if settings.mode != "live":
         raise RuntimeError("Live mode requested but CONDUCTGENE_MODE is not 'live'")
+    if settings.llm_provider == "mock":
+        raise RuntimeError("Live agents require CONDUCTGENE_LLM_PROVIDER != mock")
 
 
 async def run_prosecutor_live(
@@ -20,13 +25,11 @@ async def run_prosecutor_live(
     evidence: list[EvidenceSnippet],
 ) -> AgentOpinion:
     ensure_live_mode(settings)
-    logger.warning(
-        "live mode prosecutor not yet wired; falling back to mock agents",
-        extra={"meta": {"llm_base_url": settings.llm_base_url}},
+    return await chat_completion_json(
+        settings,
+        prosecutor_messages(transcript, evidence),
+        expected_role="prosecutor",
     )
-    from conductgene.agents.roles import run_prosecutor
-
-    return run_prosecutor(transcript, evidence)
 
 
 async def run_defender_live(
@@ -35,9 +38,11 @@ async def run_defender_live(
     evidence: list[EvidenceSnippet],
 ) -> AgentOpinion:
     ensure_live_mode(settings)
-    from conductgene.agents.roles import run_defender
-
-    return run_defender(transcript, evidence)
+    return await chat_completion_json(
+        settings,
+        defender_messages(transcript, evidence),
+        expected_role="defender",
+    )
 
 
 async def run_arbiter_live(
@@ -49,6 +54,8 @@ async def run_arbiter_live(
     genes: list[PolicyGene],
 ) -> AgentOpinion:
     ensure_live_mode(settings)
-    from conductgene.agents.roles import run_arbiter
-
-    return run_arbiter(transcript, prosecutor, defender, evidence, genes)
+    return await chat_completion_json(
+        settings,
+        arbiter_messages(transcript, prosecutor, defender, evidence, genes),
+        expected_role="arbiter",
+    )

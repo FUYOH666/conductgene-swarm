@@ -19,6 +19,12 @@ logger = get_logger(__name__)
 
 
 def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Ingest KB into Qdrant")
+    parser.add_argument("--rebuild", action="store_true", help="Recreate collection from scratch")
+    cli_args = parser.parse_args()
+
     setup_logging()
     settings = Settings()
     settings.resolve_paths(ROOT)
@@ -38,7 +44,10 @@ def main() -> int:
     bge = BgeClient(settings)
     sample_vec = bge.embed_dense(["dimension probe"])[0]
     store = QdrantRetriever(settings, vector_size=len(sample_vec))
-    store.ensure_collection()
+    if cli_args.rebuild:
+        store.recreate_collection()
+    else:
+        store.ensure_collection()
 
     chunks = kb.chunks
     texts = [c.text for c in chunks]

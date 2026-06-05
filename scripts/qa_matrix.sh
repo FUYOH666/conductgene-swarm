@@ -34,6 +34,9 @@ else
 fi
 
 echo "==> 2/4 conductgene demo (held-out eval line)"
+export CONDUCTGENE_MODE=mock
+export CONDUCTGENE_LLM_PROVIDER=mock
+export CONDUCTGENE_RETRIEVAL_MODE=memory
 export CONDUCTGENE_GENE_STORE_PATH="${ROOT}/reports/.qa_demo_genes.jsonl"
 rm -f "$CONDUCTGENE_GENE_STORE_PATH"
 uv run conductgene demo > /tmp/cg_demo.log 2>&1 || true
@@ -93,12 +96,27 @@ else
   record "API smoke (9 routes)" "FAIL" "see /tmp/cg_api.log"
 fi
 
-echo "==> 4/4 CLI audit export"
+echo "==> 4/5 CLI audit export"
 OUT="${ROOT}/reports/.qa_audit_export.json"
 if uv run conductgene audit export --out "$OUT" > /dev/null 2>&1; then
   record "CLI audit export" "PASS" "$OUT"
 else
   record "CLI audit export" "FAIL" ""
+fi
+
+echo "==> 5/5 Live preflight (optional, non-blocking)"
+if [[ "${QA_SKIP_LIVE:-false}" == "true" ]]; then
+  record "Live discovery" "PASS" "skipped QA_SKIP_LIVE=true"
+else
+  docker start qdrant >/dev/null 2>&1 || true
+  uv run python scripts/discover_services.py > /tmp/cg_qa_live.log 2>&1 || true
+  if grep -qE "embedding\s+\|\s+ok" /tmp/cg_qa_live.log \
+    && grep -qE "reranker\s+\|\s+ok" /tmp/cg_qa_live.log \
+    && grep -qE "lmstudio\s+\|\s+ok" /tmp/cg_qa_live.log; then
+    record "Live discovery" "PASS" "embedding+reranker+lmstudio ok"
+  else
+    record "Live discovery" "FAIL" "see /tmp/cg_qa_live.log"
+  fi
 fi
 
 total=$((pass + fail))

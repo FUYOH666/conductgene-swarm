@@ -84,3 +84,30 @@ def test_bge_embed_dense():
     vecs = client.embed_dense(["hello"])
     assert route.called
     assert vecs == [[0.1, 0.2, 0.3]]
+
+
+@respx.mock
+def test_bge_embed_dense_embedding_alias():
+    settings = Settings(embedding_base_url="http://127.0.0.1:9001")
+    respx.post("http://127.0.0.1:9001/v1/embeddings").mock(
+        return_value=httpx.Response(
+            200,
+            json={"data": [{"index": 0, "dense_embedding": [0.4, 0.5]}]},
+        )
+    )
+    client = BgeClient(settings)
+    assert client.embed_dense(["hello"]) == [[0.4, 0.5]]
+
+
+@respx.mock
+def test_bge_rerank_relevance_score_alias():
+    settings = Settings(reranker_base_url="http://127.0.0.1:9002")
+    respx.post("http://127.0.0.1:9002/v1/rerank").mock(
+        return_value=httpx.Response(
+            200,
+            json={"results": [{"index": 0, "relevance_score": 0.9}, {"index": 1, "relevance_score": 0.1}]},
+        )
+    )
+    client = BgeClient(settings)
+    ranked = client.rerank("query", ["a", "b"])
+    assert ranked == [(0, 0.9), (1, 0.1)]

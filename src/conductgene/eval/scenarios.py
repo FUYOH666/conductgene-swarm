@@ -52,8 +52,10 @@ def load_all_scenarios(scenarios_dir: Path, suite: str = "all") -> list[Scenario
 
     manifest = load_manifest(manifest_path)
     case_entries = manifest.get("cases", [])
-    if suite != "all":
-        case_entries = [c for c in case_entries if c.get("suite") == suite or c.get("id")]
+    if suite == "all":
+        case_entries = [c for c in case_entries if c.get("suite") != "synth"]
+    else:
+        case_entries = [c for c in case_entries if c.get("suite") == suite]
 
     scenarios: list[Scenario] = []
     for entry in case_entries:

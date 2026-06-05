@@ -1,0 +1,41 @@
+# Live profile: Qdrant in Docker; BGE + LM Studio on host via host.docker.internal
+# Usage: docker compose -f docker-compose.yml -f docker-compose.live.yml up --build
+
+services:
+  qdrant:
+    image: qdrant/qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  api:
+    environment:
+      CONDUCTGENE_RETRIEVAL_MODE: qdrant_rerank
+      CONDUCTGENE_ENABLE_RERANKER: "true"
+      CONDUCTGENE_EMBEDDING_BASE_URL: http://host.docker.internal:9001
+      CONDUCTGENE_RERANKER_BASE_URL: http://host.docker.internal:9002
+      CONDUCTGENE_QDRANT_URL: http://qdrant:6333
+      CONDUCTGENE_LMSTUDIO_BASE_URL: http://host.docker.internal:1234/v1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - qdrant
+
+  ui:
+    environment:
+      CONDUCTGENE_RETRIEVAL_MODE: qdrant_rerank
+      CONDUCTGENE_ENABLE_RERANKER: "true"
+      CONDUCTGENE_EMBEDDING_BASE_URL: http://host.docker.internal:9001
+      CONDUCTGENE_RERANKER_BASE_URL: http://host.docker.internal:9002
+      CONDUCTGENE_QDRANT_URL: http://qdrant:6333
+      CONDUCTGENE_UI_USE_API: "false"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - api
+      - qdrant
+
+volumes:
+  qdrant_data:

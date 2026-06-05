@@ -215,7 +215,7 @@ def _probe_openrouter(client: httpx.Client, settings: Settings) -> ServiceProbeR
                 status="ok",
                 endpoint=settings.openrouter_base_url,
                 details="models endpoint reachable",
-                recommended_next_step="Set CONDUCTGENE_LLM_PROVIDER=openrouter (v0.4)",
+                recommended_next_step="Set CONDUCTGENE_LLM_PROVIDER=openrouter",
             )
         return ServiceProbeResult(
             service="openrouter",
@@ -235,39 +235,85 @@ def _probe_openrouter(client: httpx.Client, settings: Settings) -> ServiceProbeR
 
 
 def _probe_lmstudio(client: httpx.Client, settings: Settings) -> ServiceProbeResult:
-    if settings.llm_provider != "lmstudio":
-        return ServiceProbeResult(
-            service="lmstudio",
-            status="skipped",
-            endpoint=settings.lmstudio_base_url,
-            details="CONDUCTGENE_LLM_PROVIDER is not lmstudio",
-            recommended_next_step="Set llm_provider=lmstudio to probe (v0.4)",
-        )
     base = settings.lmstudio_base_url.rstrip("/")
     try:
         resp = client.get(f"{base}/models", timeout=5.0)
         if resp.status_code == 200:
+            models = resp.json().get("data", [])
+            model_hint = models[0].get("id", "") if models else "no model loaded"
             return ServiceProbeResult(
                 service="lmstudio",
                 status="ok",
                 endpoint=base,
-                details="OpenAI-compatible /models OK",
-                recommended_next_step="Set CONDUCTGENE_LLM_PROVIDER=lmstudio (v0.4)",
+                details=f"OpenAI-compatible /models OK ({model_hint})",
+                recommended_next_step="Set CONDUCTGENE_LLM_PROVIDER=lmstudio",
             )
         return ServiceProbeResult(
             service="lmstudio",
             status="degraded",
             endpoint=base,
             details=f"HTTP {resp.status_code}",
-            recommended_next_step="Start LM Studio local server",
+            recommended_next_step="Start LM Studio local server on :1234",
         )
     except httpx.HTTPError as exc:
         return ServiceProbeResult(
             service="lmstudio",
-            status="skipped",
+            status="error",
             endpoint=base,
             details=str(exc),
-            recommended_next_step="Optional local LLM (v0.4)",
+            recommended_next_step="Start LM Studio and enable Local Server",
+        )
+
+
+def _probe_instruct(client: httpx.Client, settings: Settings) -> ServiceProbeResult:
+    base = settings.llm_base_url.rstrip("/")
+    if "your-llm-host" in base:
+        return ServiceProbeResult(
+            service="instruct",
+            status="skipped",
+            endpoint=base,
+            details="CONDUCTGENE_LLM_BASE_URL is placeholder",
+            recommended_next_step="Set instruct gateway URL in .env",
+        )
+    headers = {}
+    if settings.llm_api_key:
+        headers["Authorization"] = f"Bearer {settings.llm_api_key}"
+    try:
+        health = client.get(f"{base.replace('/v1', '')}/healthz", timeout=5.0)
+        if health.status_code == 200:
+            return ServiceProbeResult(
+                service="instruct",
+                status="ok",
+                endpoint=base,
+                details="instruct gateway /healthz OK",
+                recommended_next_step="Set CONDUCTGENE_LLM_PROVIDER=instruct",
+            )
+    except httpx.HTTPError:
+        pass
+    try:
+        resp = client.get(f"{base}/models", headers=headers, timeout=5.0)
+        if resp.status_code == 200:
+            return ServiceProbeResult(
+                service="instruct",
+                status="ok",
+                endpoint=base,
+                details="instruct gateway /v1/models OK",
+                recommended_next_step="Set CONDUCTGENE_LLM_PROVIDER=instruct",
+            )
+        return ServiceProbeResult(
+            service="instruct",
+            status="degraded",
+            endpoint=base,
+            details=f"HTTP {resp.status_code}",
+            recommended_next_step="Check instruct gateway on :8002",
+        )
+    except httpx.HTTPError as exc:
+        return ServiceProbeResult(
+            service="instruct",
+            status="error",
+            endpoint=base,
+            details=str(exc),
+            recommended_next_step="Verify TailScale instruct gateway",
         )
 
 
@@ -280,6 +326,7 @@ def discover_services(settings: Settings) -> list[ServiceProbeResult]:
         results.append(_probe_qdrant(client, settings))
         results.append(_probe_openrouter(client, settings))
         results.append(_probe_lmstudio(client, settings))
+        results.append(_probe_instruct(client, settings))
     return results
 
 

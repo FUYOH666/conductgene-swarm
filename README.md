@@ -37,16 +37,42 @@ Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) — **AGENT** track (
 
 Run `./scripts/verify_all.sh` or `./scripts/qa_matrix.sh` to reproduce locally.
 
-**Live retrieval (v0.3+, optional — test with Services-BGE tomorrow):**
+**Live stack (v0.5 — BGE + Qdrant + LLM providers):**
 
 ```bash
-uv sync --extra dev --extra retrieval
+cp .env.example .env   # add CONDUCTGENE_OPENROUTER_API_KEY for cloud LLM
+uv sync --extra dev --extra retrieval --extra live --extra ui
+
+# Start Qdrant + Services-BGE (embedding :9001, reranker :9002)
+docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
 uv run python scripts/discover_services.py
-uv run python scripts/ingest_qdrant.py   # requires BGE + Qdrant
+uv run python scripts/synth_data.py          # optional: extend KB
+uv run python scripts/ingest_qdrant.py --rebuild
+
+# Live retrieval + mock agents (CI-safe default)
 CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank CONDUCTGENE_ENABLE_RERANKER=true uv run conductgene-ui
+
+# Full live LLM swarm (OpenRouter / LM Studio / instruct gateway)
+CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=openrouter uv run python scripts/run_live_simulation.py
+uv run python scripts/bench_models.py --provider openrouter --limit 4
 ```
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/qdrant-retrieval.md](docs/qdrant-retrieval.md)
+**Docker live profile** (Qdrant in compose; BGE/LM Studio on host):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.live.yml up --build
+```
+
+**Singapore pre-flight:**
+
+```bash
+./scripts/run_simulation_matrix.sh          # full scorecard → reports/simulation_matrix.md
+SKIP_LIVE=true ./scripts/run_simulation_matrix.sh   # offline only (CI gate)
+```
+
+Primary booth demo: [docs/singapore-demo-runbook.md](docs/singapore-demo-runbook.md) (LM Studio + qdrant_rerank).
+
+See [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/qdrant-retrieval.md](docs/qdrant-retrieval.md) · [docs/live-simulation.md](docs/live-simulation.md)
 
 ## Quick start
 

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import uuid
 
+from conductgene.agents.dispatch import (
+    run_arbiter_agent,
+    run_defender_agent,
+    run_prosecutor_agent,
+)
 from conductgene.agents.roles import (
     apply_genes_to_checklist,
     run_arbiter,
@@ -95,9 +100,17 @@ async def swarm_analyze(
             audit_store.append(case_id=case_id, transcript=transcript, result=result)
         return result
 
-    prosecutor = run_prosecutor(transcript, evidence)
-    defender = run_defender(transcript, evidence)
-    arbiter = run_arbiter(prosecutor, defender, evidence)
+    active_genes = gene_store.list_active()
+    prosecutor = await run_prosecutor_agent(settings, transcript, evidence)
+    defender = await run_defender_agent(settings, transcript, evidence)
+    arbiter = await run_arbiter_agent(
+        settings,
+        transcript,
+        prosecutor,
+        defender,
+        evidence,
+        active_genes,
+    )
 
     checklist = list(arbiter.checklist)
     genes_applied: list[str] = []
@@ -105,7 +118,7 @@ async def swarm_analyze(
     if request.apply_genes:
         checklist, genes_applied = apply_genes_to_checklist(
             checklist,
-            gene_store.list_active(),
+            active_genes,
             transcript,
         )
 
@@ -134,6 +147,7 @@ async def swarm_analyze(
                 "checklist_items": len(checklist),
                 "genes_applied": genes_applied,
                 "mode": settings.mode,
+                "llm_provider": settings.llm_provider,
                 "retrieval_mode": settings.retrieval_mode,
             }
         },

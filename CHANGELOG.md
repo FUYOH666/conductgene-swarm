@@ -1,5 +1,55 @@
 # Changelog
 
+## [0.5.1] - 2026-06-05
+
+### Added
+
+- `scripts/run_simulation_matrix.sh` — Singapore pre-flight scorecard (S1–S10)
+- [`docs/singapore-demo-runbook.md`](docs/singapore-demo-runbook.md) — 90s LM Studio booth script
+- QA matrix step 5/5: optional live service discovery
+
+### Fixed
+
+- `bench_models.py` — `ScenarioGolden` comparison via `model_dump()`
+- `eval/scenarios.py` — suite filter for `synth` cases
+- `providers/llm.py` — `response_format` only for OpenRouter; LM Studio/instruct compatible
+- `agents/dispatch.py` — unified live/mock guard; abstain skips LLM calls
+- `docker-compose.live.yml` — in-process UI (`UI_USE_API=false`) for Model Jury
+- Staff review findings: architecture + demo-day docs updated
+
+### Validated (Singapore pre-flight)
+
+- LM Studio live: `run_live_simulation` CASE-005 escalation pass
+- OpenRouter live: `claude-sonnet-4` simulation pass (~47s)
+- Offline CI: 48 tests, 16/16 mock eval
+
+## [0.5.0] - 2026-06-05
+
+### Added
+
+- `providers/llm.py` — OpenAI-compatible client for OpenRouter, LM Studio, instruct gateway
+- `agents/prompts.py`, `agents/dispatch.py` — live LLM agent prompts and swarm dispatch
+- CLI flags: `conductgene analyze --provider`, `--model`, `--mode`
+- `scripts/synth_data.py` — extended policy KB (15 docs) + synth scenarios (CASE-017/018)
+- `scripts/run_live_simulation.py` — end-to-end judge path report
+- `scripts/bench_models.py` — model benchmark JSON/CSV/MD outputs
+- Streamlit **Model Jury** sidebar (provider, mode, retrieval, service probe)
+- `docker-compose.live.yml` — Qdrant + live retrieval via `host.docker.internal`
+- Discovery probes: instruct gateway, always-on LM Studio probe
+- Tests: `test_llm_provider.py`, `test_swarm_live.py`, BGE `dense_embedding` / rerank `relevance_score`
+
+### Fixed
+
+- BGE client: `dense_embedding` and `relevance_score` field aliases (Services-BGE API)
+- Qdrant: UUID point IDs, `query_points` API (qdrant-client 1.18+)
+- `verify_all.sh` forces offline env overrides (CI-safe with local `.env`)
+
+### Changed
+
+- `pipeline/swarm.py` dispatches live agents when `CONDUCTGENE_MODE=live` and provider != mock
+- Dockerfile includes `retrieval` + `live` extras
+- Version 0.5.0
+
 ## [0.3.0] - 2026-06-03
 
 ### Added

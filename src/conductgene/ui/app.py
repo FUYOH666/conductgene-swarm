@@ -54,11 +54,52 @@ def main() -> None:
     scenarios = load_all_scenarios(settings.scenarios_dir)
     scenario_map = {s.id: s for s in scenarios}
 
+    with st.sidebar:
+        st.subheader("Model Jury")
+        provider = st.selectbox(
+            "LLM provider",
+            ["mock", "openrouter", "lmstudio", "instruct"],
+            index=["mock", "openrouter", "lmstudio", "instruct"].index(settings.llm_provider),
+        )
+        mode = st.selectbox("Mode", ["mock", "live"], index=0 if settings.mode == "mock" else 1)
+        retrieval = st.selectbox(
+            "Retrieval",
+            ["memory", "qdrant", "qdrant_rerank"],
+            index=["memory", "qdrant", "qdrant_rerank"].index(settings.retrieval_mode),
+        )
+        model_name = st.text_input("Model override (optional)", value="")
+        settings = settings.model_copy(
+            update={
+                "llm_provider": provider,  # type: ignore[arg-type]
+                "mode": mode,  # type: ignore[arg-type]
+                "retrieval_mode": retrieval,  # type: ignore[arg-type]
+            }
+        )
+        if model_name.strip():
+            if provider == "openrouter":
+                settings = settings.model_copy(update={"openrouter_models": model_name.strip()})
+            elif provider == "lmstudio":
+                settings = settings.model_copy(update={"lmstudio_model": model_name.strip()})
+            else:
+                settings = settings.model_copy(update={"llm_model": model_name.strip()})
+
+        if st.button("Probe services"):
+            from conductgene.services.discovery import discover_services, format_service_table
+
+            probes = discover_services(settings)
+            st.code(format_service_table(probes))
+
     mode_label = "Deterministic Demo Mode" if settings.mode == "mock" else "Live Mode"
     backend = "REST API" if settings.ui_use_api else "in-process"
-    st.info(
-        f"**{mode_label}** ({backend}) — reproducible eval without external LLM dependency."
+    llm_note = (
+        f" | LLM: **{settings.llm_provider}**"
+        if settings.llm_provider != "mock"
+        else ""
     )
+    retrieval_note = f" | Retrieval: **{settings.retrieval_mode}**"
+    st.info(f"**{mode_label}** ({backend}){llm_note}{retrieval_note}")
+    if settings.retrieval_mode != "memory" and settings.retrieval_fallback_to_memory:
+        st.caption("Degraded retrieval falls back to memory with logged warning.")
     if settings.ui_use_api:
         st.caption(f"API backend: `{settings.api_base_url}` — start with `uv run conductgene-serve`")
 

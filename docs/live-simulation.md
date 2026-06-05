@@ -1,4 +1,4 @@
-# Live Simulation (roadmap)
+# Live Simulation
 
 End-to-end flow for judges and enterprise demos:
 
@@ -7,37 +7,50 @@ Transcript → policy retrieval → multi-agent review → supervisor correction
 → Policy Gene → held-out re-evaluation → metrics → audit export
 ```
 
-## Today (v0.3) — retrieval only
-
-Agents remain **deterministic mock**; retrieval can use BGE + Qdrant.
+## Quick start (v0.5)
 
 ```bash
-./scripts/discover_services.py
-uv run python scripts/ingest_qdrant.py
-CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank ./scripts/demo.sh
+cp .env.example .env
+# Set CONDUCTGENE_OPENROUTER_API_KEY for cloud LLM (optional for retrieval-only)
+
+uv sync --extra dev --extra retrieval --extra live
+docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
+
+uv run python scripts/discover_services.py
+uv run python scripts/synth_data.py
+uv run python scripts/ingest_qdrant.py --rebuild
+
+# Retrieval + mock agents
+CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank CONDUCTGENE_ENABLE_RERANKER=true \
+  uv run python scripts/run_live_simulation.py
+
+# Full live LLM (OpenRouter)
+CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=openrouter \
+  uv run python scripts/run_live_simulation.py
+
+# LM Studio (local :1234)
+CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=lmstudio \
+  CONDUCTGENE_LMSTUDIO_MODEL=<your-loaded-model> \
+  uv run conductgene analyze --file data/scenarios/collections/case_002_coercive_soft.json
+
+# Model benchmark
+uv run python scripts/bench_models.py --provider openrouter --limit 4
 ```
 
-## Tomorrow checklist (MacBook + services)
+## Outputs
 
-See [ROADMAP.md](ROADMAP.md) v0.3.0 «Tomorrow» section.
-
-## Future (v0.4–v0.5)
-
-| Step | Command (planned) |
-|------|-------------------|
-| Service discovery | `./scripts/discover_services.py` |
-| Ingest KB | `uv run python scripts/ingest_qdrant.py` |
-| Live LLM swarm | `CONDUCTGENE_LLM_PROVIDER=openrouter uv run python scripts/run_live_simulation.py` |
-| Model benchmark | `uv run python scripts/bench_models.py` |
+| Artifact | Path |
+|----------|------|
 | Judge report | `outputs/demo/live_simulation_report.md` |
+| Audit export | `reports/audit_export.json` |
+| Benchmarks | `outputs/benchmarks/bench_*.json` |
 
-## Judge demo path (target v0.5)
+## Judge demo path
 
-1. Start Services-BGE + Qdrant
-2. Add OpenRouter key to `.env` (optional for LLM)
-3. `discover_services.py` — all green or explicit degraded status
-4. `ingest_qdrant.py`
-5. `run_live_simulation.py` — CASE-002 → gene → CASE-005
-6. Open benchmark summary + audit export
+1. Start Services-BGE + Qdrant (+ LM Studio or OpenRouter key)
+2. `discover_services.py` — embedding/reranker/qdrant green (LLM optional)
+3. `ingest_qdrant.py --rebuild`
+4. `run_live_simulation.py` — CASE-002 → gene → CASE-005
+5. Open benchmark summary + Streamlit Model Jury panel (`uv run conductgene-ui`)
 
-Until v0.5 ships, use `./scripts/demo.sh` and Streamlit UI with mock agents.
+CI regression remains offline: `./scripts/verify_all.sh` (16/16 mock).

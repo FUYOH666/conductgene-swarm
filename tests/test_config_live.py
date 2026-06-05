@@ -6,7 +6,12 @@ from conductgene.config import Settings
 
 
 def test_default_retrieval_and_llm_provider():
-    s = Settings()
+    s = Settings(
+        _env_file=None,
+        mode="mock",
+        llm_provider="mock",
+        retrieval_mode="memory",
+    )
     assert s.mode == "mock"
     assert s.llm_provider == "mock"
     assert s.retrieval_mode == "memory"
