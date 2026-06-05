@@ -7,8 +7,8 @@ Master copy: [portal-copy.md](portal-copy.md) · Resubmit: [resubmit-checklist.m
 ## Quick workflow
 
 ```bash
-uv sync --extra dev --extra ui --extra submission
-./scripts/capture_submission_assets.sh   # logo check + 3 screenshots (ConductGene)
+uv sync --extra dev --extra ui --extra retrieval --extra live --extra submission
+./scripts/capture_submission_assets.sh --with-video --profile live   # Singapore path
 # Upload conductgene-demo.webm to YouTube → paste URL into portal-copy.md
 # AttestRWA demo already live: https://youtube.com/shorts/BipB2qPzZz0 (link in Description only)
 ```

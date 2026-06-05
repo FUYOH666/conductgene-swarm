@@ -94,14 +94,15 @@ docker compose up --build
 
 ## Demo video
 
-**Local recording:** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) (auto-generated, ~90s)
+**Local recording (v0.5.2):** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) — live LM Studio + `qdrant_rerank` (~3 min, Playwright)
 
-**YouTube (portal Demo URL):** [youtu.be/5wIBi-HkK9Y](https://youtu.be/5wIBi-HkK9Y)
+**YouTube (portal Demo URL):** [youtu.be/5wIBi-HkK9Y](https://youtu.be/5wIBi-HkK9Y) — re-upload after regenerating live WebM (see below)
 
 Regenerate assets:
 
 ```bash
-./scripts/capture_submission_assets.sh --with-video
+./scripts/capture_submission_assets.sh --with-video --profile live   # Singapore path
+./scripts/capture_submission_assets.sh --with-video --profile mock   # deterministic fallback
 ```
 
 Upload guide: [docs/submission/youtube-upload.md](docs/submission/youtube-upload.md) · Portal copy: [docs/submission/portal-copy.md](docs/submission/portal-copy.md)

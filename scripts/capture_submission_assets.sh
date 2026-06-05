@@ -1,33 +1,44 @@
 #!/usr/bin/env bash
-# Capture logo check + Streamlit screenshots for UCWS portal
+# Capture logo + Streamlit screenshots (+ optional WebM) for UCWS portal
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 OUT="${ROOT}/docs/submission"
+PROFILE="live"
+WITH_VIDEO=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --with-video) WITH_VIDEO=true; shift ;;
+    --profile) PROFILE="${2:?}"; shift 2 ;;
+    --profile=*) PROFILE="${1#*=}"; shift ;;
+    *) echo "Unknown arg: $1"; exit 1 ;;
+  esac
+done
+
 mkdir -p "$OUT" reports
 
-echo "==> Sync submission extras (playwright)"
-uv sync --extra dev --extra ui --extra submission
+echo "==> Sync extras (ui, retrieval, live, submission)"
+uv sync --extra dev --extra ui --extra retrieval --extra live --extra submission
 
-if [[ ! -f "${OUT}/logo-512.png" ]]; then
-  echo "Missing ${OUT}/logo-512.png — generate or copy manually"
-  exit 1
-fi
+echo "==> Ensure portal logo"
+uv run python scripts/generate_logo.py
 
 echo "==> Install Playwright Chromium (first run only)"
 uv run playwright install chromium
 
-echo "==> Capture Streamlit screenshots"
-uv run python scripts/capture_submission_assets.py
+echo "==> Capture Streamlit screenshots (profile=${PROFILE})"
+uv run python scripts/capture_submission_assets.py --profile "${PROFILE}"
 
-if [[ "${1:-}" == "--with-video" ]]; then
-  echo "==> Record demo video (WebM)"
-  uv run python scripts/record_submission_video.py
+if [[ "${WITH_VIDEO}" == "true" ]]; then
+  echo "==> Record demo video (WebM, profile=${PROFILE})"
+  uv run python scripts/record_submission_video.py --profile "${PROFILE}"
 fi
 
 echo ""
 echo "Done. Upload from docs/submission/:"
 ls -lh "${OUT}"/logo-512.png "${OUT}"/screenshot-*.png 2>/dev/null || true
+[[ -f "${OUT}/conductgene-demo.webm" ]] && ls -lh "${OUT}/conductgene-demo.webm"
 echo ""
-echo "Next: record demo video → docs/submission/youtube-upload.md"
+echo "Next: upload conductgene-demo.webm → docs/submission/youtube-upload.md"

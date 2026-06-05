@@ -4,9 +4,22 @@ Record a screen capture following this script. Upload unlisted to YouTube/Loom a
 
 ## Setup
 
+**Automated (recommended):**
+
+```bash
+uv sync --extra dev --extra ui --extra retrieval --extra live --extra submission
+uv run python scripts/discover_services.py
+uv run python scripts/ingest_qdrant.py --rebuild
+./scripts/capture_submission_assets.sh --with-video --profile live
+```
+
+Output: `docs/submission/conductgene-demo.webm` + 3 portal screenshots.
+
+**Manual:**
+
 ```bash
 uv sync --extra dev --extra ui
-uv run conductgene-ui
+CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=lmstudio CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank uv run conductgene-ui
 ```
 
 Open browser at `http://localhost:8501`.
@@ -33,8 +46,19 @@ Open browser at `http://localhost:8501`.
 
 Uses CASE-002 → gene learn → CASE-005 with printed JSON output.
 
+## Live LM Studio shot list (Singapore primary)
+
+| Time | Action | Voiceover |
+|------|--------|-----------|
+| 0:00 | Model Jury sidebar: live / lmstudio / qdrant_rerank | "Offline live stack — local LLM and vector retrieval." |
+| 0:10 | CASE-002 analyze | "Evidence from BGE rerank over Qdrant policy KB." |
+| 0:40 | Agent swarm tabs | "Prosecutor and Defender with structured JSON opinions." |
+| 1:00 | Approve Policy Gene | "Supervisor correction with held-out eval gate." |
+| 1:30 | CASE-005 held-out | "Gene applied — escalation passes on similar case." |
+| 2:00 | Policy Genes + audit | "Auditable institutional memory." |
+
 ## Recording tips
 
-- Use **Deterministic Demo Mode** banner visible (mock mode default)
+- **Live Mode** banner + Model Jury visible for Singapore demo; use mock profile for deterministic fallback
 - Zoom browser to 125% for readability
 - Keep mouse movements slow; pause 2s on key results

@@ -2,7 +2,7 @@
 
 **One portal entry**, tracks **AGENT + APPLICATION**. Fill [evol.epicconnector.ai](https://evol.epicconnector.ai).
 
-ConductGene demo: https://youtu.be/5wIBi-HkK9Y
+ConductGene demo: https://youtu.be/5wIBi-HkK9Y (re-upload `conductgene-demo.webm` v0.5.2 live — update URL after upload)
 
 ---
 

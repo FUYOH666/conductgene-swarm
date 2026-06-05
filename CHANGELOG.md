@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.2] - 2026-06-05
+
+### Added
+
+- `scripts/capture_ui_common.py` — shared Playwright helpers (profile, selectors, live timeouts)
+- `scripts/generate_logo.py` — portal logo generator
+- `--profile live|mock` on capture scripts and `capture_submission_assets.sh`
+
+### Fixed
+
+- Playwright `select_scenario()` — targets main-panel Load scenario, not Model Jury sidebar
+- Live capture waits for swarm completion (up to 7 min per analyze step)
+
+### Validated
+
+- Live demo WebM + 3 portal screenshots (LM Studio + qdrant_rerank, Playwright)
+
 ## [0.5.1] - 2026-06-05
 
 ### Added

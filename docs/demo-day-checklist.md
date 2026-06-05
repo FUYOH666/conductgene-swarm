@@ -40,10 +40,12 @@
 
 ### Singapore live rehearsal (June 4–12)
 
-- [ ] `./scripts/run_simulation_matrix.sh` — S1–S6 PASS (LM Studio primary)
+- [x] `./scripts/run_simulation_matrix.sh` — S1–S8 PASS (LM Studio + OpenRouter validation)
+- [x] Live demo WebM — `./scripts/capture_submission_assets.sh --with-video --profile live`
+- [ ] Re-upload YouTube from `docs/submission/conductgene-demo.webm` (replace youtu.be/5wIBi-HkK9Y)
 - [ ] Rehearse 90s path — [singapore-demo-runbook.md](singapore-demo-runbook.md)
-- [ ] `discover_services` green: embedding, reranker, qdrant, lmstudio
-- [ ] Streamlit Model Jury: `MODE=live`, `LLM_PROVIDER=lmstudio`, `qdrant_rerank`
+- [x] `discover_services` green: embedding, reranker, qdrant, lmstudio
+- [x] Streamlit Model Jury: `MODE=live`, `LLM_PROVIDER=lmstudio`, `qdrant_rerank`
 
 ## Demo Day logistics
 
@@ -67,7 +69,7 @@ Target numbers for compelling narrative:
 | `active_genes` | ≥ 1 after demo |
 | Held-out improvement | CASE-005 escalation pass after gene |
 | Demo cases | 16 synthetic transcripts |
-| QA scorecard | 4/4 PASS |
+| QA scorecard | 5/5 PASS |
 
 ## Contacts
 

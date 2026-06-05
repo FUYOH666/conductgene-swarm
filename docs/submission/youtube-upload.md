@@ -6,10 +6,18 @@
 
 Upload [`conductgene-demo.webm`](conductgene-demo.webm) directly to YouTube.
 
-**Option B — re-record:**
+**Option B — re-record (live LM Studio, v0.5.2+):**
 
 ```bash
-./scripts/capture_submission_assets.sh --with-video
+uv run python scripts/discover_services.py
+uv run python scripts/ingest_qdrant.py --rebuild
+./scripts/capture_submission_assets.sh --with-video --profile live
+```
+
+**Option B2 — mock deterministic:**
+
+```bash
+./scripts/capture_submission_assets.sh --with-video --profile mock
 ```
 
 **Option C — manual screen capture:**
@@ -37,7 +45,7 @@ QuickTime → File → New Screen Recording → select window → Record.
 ```
 ConductGene Swarm — supervisor-approved institutional memory for AI conduct QA.
 
-Multi-agent conduct review (Prosecutor, Defender, Arbiter) with evidence citations and Policy Genes. Deterministic demo mode — no API key required.
+Multi-agent conduct review (Prosecutor, Defender, Arbiter) with BGE+Qdrant evidence retrieval and Policy Genes. Recorded with LM Studio (offline) — Singapore demo path.
 
 GitHub: https://github.com/FUYOH666/conductgene-swarm
 UCWS Singapore 2026 AGENT track
