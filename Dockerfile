@@ -28,6 +28,10 @@ COPY --chown=conductgene:conductgene src ./src
 COPY --chown=conductgene:conductgene data ./data
 COPY --chown=conductgene:conductgene scripts ./scripts
 
+# Runtime store dirs must exist and be writable before volumes mount over them
+# (a fresh git checkout has no data/evolution or data/audit — contents are gitignored).
+RUN mkdir -p data/evolution data/audit && chown -R conductgene:conductgene data
+
 # Package is installed non-editable (site-packages), so data paths must be
 # absolute — they cannot be derived from the package location.
 ENV PATH="/app/.venv/bin:$PATH" \
