@@ -7,6 +7,7 @@ import argparse
 import asyncio
 import csv
 import json
+import logging
 import sys
 import tempfile
 import time
@@ -27,6 +28,12 @@ from conductgene.providers.llm import resolve_llm_config
 from conductgene.schemas import SwarmAnalyzeRequest
 
 OUTPUT_DIR = ROOT / "outputs" / "benchmarks"
+
+logger = logging.getLogger("conductgene.bench")
+
+# Each case triggers 3 agent calls (prosecutor, defender, arbiter).
+CALLS_PER_CASE = 3
+EST_TOKENS_PER_CALL = 1500
 
 # Rough USD per 1M tokens (dev estimates for cost cap display)
 COST_PER_1M = {
@@ -137,6 +144,37 @@ async def run(args: argparse.Namespace) -> int:
     if args.limit:
         case_ids = case_ids[: args.limit]
 
+    # Pre-flight cost caps: abort before spending anything.
+    planned_requests = len(models) * len(case_ids) * CALLS_PER_CASE
+    est_cost_usd = sum(
+        len(case_ids) * CALLS_PER_CASE * EST_TOKENS_PER_CALL / 1_000_000
+        * COST_PER_1M.get(m, 1.0)
+        for m in models
+    )
+    if args.max_requests is not None and planned_requests > args.max_requests:
+        logger.error(
+            "cost_cap_exceeded planned_requests=%d max_requests=%d — "
+            "reduce --limit or model list",
+            planned_requests,
+            args.max_requests,
+        )
+        return 1
+    if args.max_cost_usd is not None and est_cost_usd > args.max_cost_usd:
+        logger.error(
+            "cost_cap_exceeded est_cost_usd=%.4f max_cost_usd=%.4f — "
+            "reduce --limit or model list",
+            est_cost_usd,
+            args.max_cost_usd,
+        )
+        return 1
+    logger.info(
+        "bench_plan models=%d cases=%d planned_requests=%d est_cost_usd=%.4f",
+        len(models),
+        len(case_ids),
+        planned_requests,
+        est_cost_usd,
+    )
+
     results = []
     for model in models:
         print(f"Benchmarking {model} on {len(case_ids)} cases...")
@@ -186,6 +224,18 @@ def main() -> int:
     parser.add_argument("--provider", default="openrouter", choices=["openrouter", "lmstudio", "instruct"])
     parser.add_argument("--models", nargs="*", help="Model ids to benchmark")
     parser.add_argument("--limit", type=int, default=4, help="Max scenarios (cost cap)")
+    parser.add_argument(
+        "--max-requests",
+        type=int,
+        default=None,
+        help="Abort if planned LLM requests (models x cases x 3 agents) exceed this",
+    )
+    parser.add_argument(
+        "--max-cost-usd",
+        type=float,
+        default=None,
+        help="Abort if estimated benchmark cost exceeds this (USD)",
+    )
     return asyncio.run(run(parser.parse_args()))
 
 

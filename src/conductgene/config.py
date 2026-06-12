@@ -49,6 +49,10 @@ class Settings(BaseSettings):
 
     host: str = "127.0.0.1"
     port: int = 8090
+    # API auth: when set, all endpoints except health/readiness require X-API-Key.
+    api_key: str | None = None
+    # Requests per minute per client on heavy endpoints; 0 disables limiting.
+    rate_limit_rpm: int = 0
     gene_store_path: Path = Field(default=Path("data/evolution/genes.jsonl"))
     audit_store_path: Path = Field(default=Path("data/audit/cases.jsonl"))
     gene_audit_store_path: Path = Field(default=Path("data/audit/gene_events.jsonl"))

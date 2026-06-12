@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.6.0] - 2026-06-12
+
+### Added
+
+- API key auth (opt-in): `CONDUCTGENE_API_KEY` requires `X-API-Key` on all endpoints except `/healthz*` and `/readyz`; explicit "auth disabled" warning at startup when unset
+- Per-client rate limiting (opt-in): `CONDUCTGENE_RATE_LIMIT_RPM` on `/swarm/analyze` and `/eval/run`
+- Cost caps in `scripts/bench_models.py`: `--max-requests`, `--max-cost-usd` pre-flight guards abort before any spend
+- Structured per-run traces: `trace_id` in `SwarmAnalyzeResult` + stage events (retrieval → prosecutor → defender → arbiter → verdict) with durations; correlates verdicts with logs and audit records
+- `conductgene genes export-skill --out <dir>` — export active Policy Genes as portable `SKILL.md`
+- CI gate: mypy (clean on 36 source files) and pytest coverage (fail-under 74%, ratchet up) in `scripts/verify_all.sh`
+- Dependabot now also tracks Python deps (`uv` ecosystem)
+- Tests: `test_api_auth.py`, `test_observability.py`, `test_skill_export.py` (56 → 69 collected)
+
+### Fixed
+
+- Type errors surfaced by mypy: OpenAI fallback kwargs, Qdrant timeout int, eval gene-learning dict typing, metrics endpoint typing, stale `type: ignore` comments
+- `SECURITY.md` supported versions updated (was stale at 0.2.x)
+
 ## [0.5.3] - 2026-06-05
 
 ### Fixed

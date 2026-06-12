@@ -55,7 +55,14 @@ def cli_main() -> None:
     learn_p.add_argument("--trigger", default="repayment")
     learn_p.add_argument("--supervisor-id", default="supervisor-001")
 
-    sub.add_parser("genes", help="List active Policy Genes")
+    genes_p = sub.add_parser("genes", help="List or export active Policy Genes")
+    genes_sub = genes_p.add_subparsers(dest="genes_command")
+    export_skill_p = genes_sub.add_parser(
+        "export-skill", help="Export active genes as portable SKILL.md"
+    )
+    export_skill_p.add_argument(
+        "--out", type=Path, default=Path("reports/skill"), help="Output directory"
+    )
     sub.add_parser("demo", help="Demo: CASE-002 → learn → CASE-005")
     eval_p = sub.add_parser("eval", help="Run synthetic scenario eval suite")
     eval_p.add_argument("--suite", default="all")
@@ -140,7 +147,16 @@ async def _dispatch(args: argparse.Namespace) -> None:
         print(json.dumps(gene.model_dump(mode="json"), indent=2))
 
     elif args.command == "genes":
-        print(json.dumps([g.model_dump(mode="json") for g in genes.list_active()], indent=2))
+        if getattr(args, "genes_command", None) == "export-skill":
+            from conductgene import __version__
+            from conductgene.evolution.skill_export import export_skill_md
+
+            path = export_skill_md(
+                genes.list_active(), args.out, source_version=__version__
+            )
+            print(f"Wrote {path}")
+        else:
+            print(json.dumps([g.model_dump(mode="json") for g in genes.list_active()], indent=2))
 
     elif args.command == "demo":
         await _run_demo(settings, kb, genes)

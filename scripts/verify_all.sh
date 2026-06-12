@@ -27,8 +27,12 @@ echo "==> Ruff"
 uv run ruff check src tests
 
 echo ""
-echo "==> Pytest"
-uv run pytest -q
+echo "==> Mypy"
+uv run mypy
+
+echo ""
+echo "==> Pytest (with coverage, fail-under from pyproject)"
+uv run pytest -q --cov --cov-report=term
 
 echo ""
 echo "==> Eval suite"

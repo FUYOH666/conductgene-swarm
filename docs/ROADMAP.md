@@ -56,12 +56,23 @@ Env: `CONDUCTGENE_MODE=live`, `CONDUCTGENE_LLM_PROVIDER=openrouter|lmstudio|inst
 
 ---
 
-## v1.0 — Production hardening (planned)
+## v0.6.0 — Production hardening — Done (2026-06-12)
 
-- API authentication for non-local deploys
-- Rate limits + cost caps on OpenRouter bench
-- Observability (structured traces per swarm run)
-- Policy Gene export as SKILL.md / MCP stub
+| Item | Status | Notes |
+|------|--------|-------|
+| API authentication for non-local deploys | Done | `CONDUCTGENE_API_KEY` → `X-API-Key`; health/readiness stay open |
+| Rate limits + cost caps on OpenRouter bench | Done | `CONDUCTGENE_RATE_LIMIT_RPM`; `bench_models.py --max-requests / --max-cost-usd` |
+| Observability (structured traces per swarm run) | Done | `trace_id` + per-stage duration logs; stdlib logging, no OTel dependency yet |
+| Policy Gene export as SKILL.md | Done | `conductgene genes export-skill --out <dir>` |
+| Type-check + coverage CI | Done | mypy + pytest-cov in `verify_all.sh` (coverage ratchet from 74%) |
+
+---
+
+## v1.0 — Remaining (planned)
+
+- Live-stack CI job (Qdrant + LM Studio path, currently manual)
+- OpenTelemetry traces (current: structured stdlib logging)
+- Policy Gene MCP stub
 - Optional EAS attestation bridge (AttestRWA integration)
 
 ---

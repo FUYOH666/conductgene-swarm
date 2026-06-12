@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 from typing import Any, Literal
 
@@ -98,6 +99,8 @@ class GeneLearnRequest(BaseModel):
 
 class SwarmAnalyzeResult(BaseModel):
     request_id: str
+    # Correlates the verdict with per-stage structured logs of a single swarm run.
+    trace_id: str = Field(default_factory=lambda: uuid.uuid4().hex[:16])
     case_id: str | None = None
     abstained: bool
     abstain_reason: str | None = None

@@ -115,6 +115,13 @@ AttestRWA demo (APPLICATION track, same portal entry): [youtube.com/shorts/BipB2
 uv run conductgene-serve   # http://127.0.0.1:8090/docs
 ```
 
+Production hardening (optional, off by default for local demo):
+
+```bash
+CONDUCTGENE_API_KEY=your-secret        # require X-API-Key header (health/readiness stay open)
+CONDUCTGENE_RATE_LIMIT_RPM=30          # per-client limit on /swarm/analyze and /eval/run
+```
+
 | Endpoint | Description |
 |----------|-------------|
 | `GET /healthz` | Liveness |
@@ -136,6 +143,7 @@ uv run conductgene demo
 uv run conductgene eval --suite all
 uv run conductgene analyze --file data/scenarios/collections/case_002.json
 uv run conductgene audit export --out reports/audit_export.json
+uv run conductgene genes export-skill --out reports/skill   # Policy Genes → portable SKILL.md
 ```
 
 ## Docs

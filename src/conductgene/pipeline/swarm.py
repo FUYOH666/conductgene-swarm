@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 import uuid
 
 from conductgene.agents.dispatch import (
@@ -25,6 +26,20 @@ from conductgene.retrieval import retrieve_evidence
 from conductgene.schemas import SwarmAnalyzeRequest, SwarmAnalyzeResult
 
 logger = get_logger(__name__)
+
+
+def _trace_stage(trace_id: str, stage: str, started: float, **fields: object) -> float:
+    """Emit a structured per-stage trace event; returns a fresh stage timer."""
+    now = time.perf_counter()
+    suffix = "".join(f" {k}={v}" for k, v in fields.items())
+    logger.info(
+        "swarm_stage trace_id=%s stage=%s duration_ms=%.1f%s",
+        trace_id,
+        stage,
+        (now - started) * 1000,
+        suffix,
+    )
+    return now
 
 
 def _coaching_tips(checklist: list) -> list[str]:
@@ -62,8 +77,11 @@ async def swarm_analyze(
     audit_store: AuditStore | None = None,
 ) -> SwarmAnalyzeResult:
     rid = request_id or str(uuid.uuid4())
+    trace_id = uuid.uuid4().hex[:16]
     case_id = request.case_id or rid
     transcript = request.transcript.strip()
+    run_started = time.perf_counter()
+    stage_t = run_started
 
     evidence, top_score = retrieve_evidence(
         settings,
@@ -72,14 +90,31 @@ async def swarm_analyze(
         top_n=settings.rerank_top_n,
         min_score=settings.rerank_min_score,
     )
+    stage_t = _trace_stage(
+        trace_id,
+        "retrieval",
+        stage_t,
+        case_id=case_id,
+        snippets=len(evidence),
+        top_score=top_score,
+        retrieval_mode=settings.retrieval_mode,
+    )
 
     if request.abstain_when_low_evidence and (
         not evidence or (top_score is not None and top_score < settings.rerank_min_score)
     ):
         empty_prosecutor = run_prosecutor(transcript, evidence)
         empty_defender = run_defender(transcript, evidence)
+        _trace_stage(
+            trace_id,
+            "verdict",
+            run_started,
+            case_id=case_id,
+            abstained=True,
+        )
         result = SwarmAnalyzeResult(
             request_id=rid,
+            trace_id=trace_id,
             case_id=case_id,
             abstained=True,
             abstain_reason=(
@@ -102,7 +137,9 @@ async def swarm_analyze(
 
     active_genes = gene_store.list_active()
     prosecutor = await run_prosecutor_agent(settings, transcript, evidence)
+    stage_t = _trace_stage(trace_id, "prosecutor", stage_t, case_id=case_id)
     defender = await run_defender_agent(settings, transcript, evidence)
+    stage_t = _trace_stage(trace_id, "defender", stage_t, case_id=case_id)
     arbiter = await run_arbiter_agent(
         settings,
         transcript,
@@ -111,6 +148,7 @@ async def swarm_analyze(
         evidence,
         active_genes,
     )
+    stage_t = _trace_stage(trace_id, "arbiter", stage_t, case_id=case_id)
 
     checklist = list(arbiter.checklist)
     genes_applied: list[str] = []
@@ -124,6 +162,7 @@ async def swarm_analyze(
 
     result = SwarmAnalyzeResult(
         request_id=rid,
+        trace_id=trace_id,
         case_id=case_id,
         abstained=False,
         prosecutor=prosecutor,
@@ -138,19 +177,16 @@ async def swarm_analyze(
     )
     result.evolution_metrics = _extended_metrics(gene_store, abstained=False, result=result)
 
-    logger.info(
-        "swarm analyze completed",
-        extra={
-            "meta": {
-                "request_id": rid,
-                "case_id": case_id,
-                "checklist_items": len(checklist),
-                "genes_applied": genes_applied,
-                "mode": settings.mode,
-                "llm_provider": settings.llm_provider,
-                "retrieval_mode": settings.retrieval_mode,
-            }
-        },
+    _trace_stage(
+        trace_id,
+        "verdict",
+        run_started,
+        case_id=case_id,
+        abstained=False,
+        checklist_items=len(checklist),
+        genes_applied=len(genes_applied),
+        mode=settings.mode,
+        llm_provider=settings.llm_provider,
     )
 
     if audit_store:

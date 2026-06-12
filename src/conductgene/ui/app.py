@@ -70,9 +70,9 @@ def main() -> None:
         model_name = st.text_input("Model override (optional)", value="")
         settings = settings.model_copy(
             update={
-                "llm_provider": provider,  # type: ignore[arg-type]
-                "mode": mode,  # type: ignore[arg-type]
-                "retrieval_mode": retrieval,  # type: ignore[arg-type]
+                "llm_provider": provider,
+                "mode": mode,
+                "retrieval_mode": retrieval,
             }
         )
         if model_name.strip():

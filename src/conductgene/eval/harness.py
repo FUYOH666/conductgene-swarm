@@ -117,7 +117,7 @@ async def _eval_gene_learning(
     settings: Settings,
     kb: MemoryKnowledgeBase,
     scenarios_dir: Path,
-) -> dict[str, float | bool | None]:
+) -> dict[str, float | bool | str | None]:
     learn_case, heldout = get_demo_pair(scenarios_dir)
     if not learn_case or not heldout:
         return {"available": False}

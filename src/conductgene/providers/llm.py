@@ -138,12 +138,10 @@ async def chat_completion_json(
             resp = await client.chat.completions.create(**create_kwargs)
         except Exception as exc:
             if cfg.provider != "openrouter" and "response_format" in str(exc).lower():
-                resp = await client.chat.completions.create(
-                    model=cfg.model,
-                    messages=req_messages,
-                    temperature=0.1,
-                    extra_headers=headers or None,
-                )
+                fallback_kwargs = {
+                    k: v for k, v in create_kwargs.items() if k != "response_format"
+                }
+                resp = await client.chat.completions.create(**fallback_kwargs)
             else:
                 raise
         if not resp.choices:
@@ -154,7 +152,7 @@ async def chat_completion_json(
             data = json.loads(raw)
             opinion = AgentOpinion.model_validate(data)
             if opinion.role != expected_role:
-                opinion = opinion.model_copy(update={"role": expected_role})  # type: ignore[arg-type]
+                opinion = opinion.model_copy(update={"role": expected_role})
             return opinion
         except (json.JSONDecodeError, ValidationError) as exc:
             last_error = str(exc)

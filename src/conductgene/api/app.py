@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import logging
+import secrets
+import time
+from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 
 from conductgene import __version__
 from conductgene.audit.gene_events import GeneAuditStore
@@ -32,6 +37,14 @@ from conductgene.schemas import (
     SwarmAnalyzeResponse,
 )
 from conductgene.services.discovery import discover_services
+
+logger = logging.getLogger("conductgene.api")
+
+# Health/readiness endpoints stay open so probes work without credentials.
+_OPEN_PATHS = frozenset({"/healthz", "/healthz/services", "/readyz"})
+# Heavy endpoints subject to per-client rate limiting when enabled.
+_RATE_LIMITED_PATHS = frozenset({"/swarm/analyze", "/eval/run"})
+_rate_buckets: defaultdict[str, deque[float]] = defaultdict(deque)
 
 _settings: Settings | None = None
 _kb: MemoryKnowledgeBase | None = None
@@ -94,7 +107,12 @@ def _cache_eval_result(result: EvalRunResponse) -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    get_settings()
+    s = get_settings()
+    if s.api_key is None:
+        logger.warning(
+            "API authentication disabled (CONDUCTGENE_API_KEY not set) — "
+            "local demo mode; do not expose to the public internet"
+        )
     get_kb()
     get_gene_store()
     get_audit_store()
@@ -108,6 +126,36 @@ app = FastAPI(
     version=__version__,
     lifespan=lifespan,
 )
+
+
+@app.middleware("http")
+async def auth_and_rate_limit(request: Request, call_next):
+    s = get_settings()
+    path = request.url.path
+
+    if s.api_key is not None and path not in _OPEN_PATHS:
+        provided = request.headers.get("X-API-Key", "")
+        if not secrets.compare_digest(provided, s.api_key):
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Invalid or missing API key"},
+            )
+
+    if s.rate_limit_rpm > 0 and path in _RATE_LIMITED_PATHS:
+        client = request.client.host if request.client else "unknown"
+        now = time.monotonic()
+        bucket = _rate_buckets[client]
+        while bucket and now - bucket[0] > 60.0:
+            bucket.popleft()
+        if len(bucket) >= s.rate_limit_rpm:
+            logger.warning("rate_limit_exceeded client=%s path=%s", client, path)
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "Rate limit exceeded, retry later"},
+            )
+        bucket.append(now)
+
+    return await call_next(request)
 
 
 @app.get("/healthz", response_model=HealthResponse)
@@ -254,7 +302,7 @@ async def get_audit(case_id: str) -> CaseAuditRecord:
 @app.get("/metrics/evolution")
 async def evolution_metrics(refresh: bool = False) -> dict:
     store = get_gene_store()
-    metrics = store.compute_evolution_metrics()
+    metrics: dict[str, object] = dict(store.compute_evolution_metrics())
     global _eval_cache, _eval_cache_at
 
     if refresh or _eval_cache is None:

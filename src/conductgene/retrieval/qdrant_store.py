@@ -48,7 +48,7 @@ class QdrantRetriever:
         self._client = QdrantClient(
             url=settings.qdrant_url,
             api_key=settings.qdrant_api_key,
-            timeout=settings.service_timeout,
+            timeout=int(settings.service_timeout),
         )
 
     def ensure_collection(self) -> None:

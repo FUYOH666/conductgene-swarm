@@ -4,8 +4,9 @@
 
 | Version | Supported |
 |---------|-----------|
-| 0.2.x   | Yes       |
-| < 0.2   | No        |
+| 0.6.x   | Yes       |
+| 0.5.x   | Yes       |
+| < 0.5   | No        |
 
 ## Reporting a vulnerability
 
@@ -18,7 +19,8 @@ We aim to acknowledge reports within 72 hours.
 
 ## Design notes (hackathon / demo scope)
 
-- **No authentication** on the API — intentional for local demo. Do not expose `conductgene-serve` to the public internet without adding auth.
+- **API authentication is opt-in** — set `CONDUCTGENE_API_KEY` to require an `X-API-Key` header on all endpoints except `/healthz*` and `/readyz`. When unset, the server logs an explicit "auth disabled" warning at startup (local demo mode). Do not expose `conductgene-serve` to the public internet without setting a key.
+- **Rate limiting is opt-in** — set `CONDUCTGENE_RATE_LIMIT_RPM` (requests/minute per client) to throttle `/swarm/analyze` and `/eval/run`; `0` (default) disables it.
 - **Synthetic data only** — scenario corpus and KB contain no real PII.
 - **Local JSONL stores** — gene and audit files are append-only on disk; production deployments need encryption, access control, and retention policies.
 - **Mock mode default** — deterministic agents; live LLM mode requires your own gateway credentials via `.env`.
