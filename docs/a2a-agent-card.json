@@ -2,7 +2,7 @@
   "name": "ConductGene Swarm",
   "description": "Multi-agent conduct QA with supervisor-approved Policy Genes. Prosecutor, Defender, and Arbiter agents collaborate on evidence-grounded verdicts; human corrections crystallize into reusable institutional memory with provenance and rollback.",
   "url": "https://github.com/FUYOH666/conductgene-swarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "capabilities": [
     {
       "id": "swarm_analyze",

@@ -1,6 +1,6 @@
 [project]
 name = "conductgene-swarm"
-version = "1.0.0"
+version = "1.0.1"
 description = "Supervisor-approved conduct QA with auditable Policy Genes — UCWS Singapore 2026"
 readme = "README.md"
 requires-python = ">=3.12"

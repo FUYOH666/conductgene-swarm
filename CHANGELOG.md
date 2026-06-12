@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1] - 2026-06-12
+
+### Fixed
+
+- Docker image failed to start from a fresh git checkout: `data/evolution` and `data/audit` directories did not exist (contents are gitignored), so volumes mounted root-owned and the non-root user could not write runtime stores
+
 ## [1.0.0] - 2026-06-12
 
 Final open-source release. The project is reframed as a standalone product for
