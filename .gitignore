@@ -16,3 +16,4 @@ data/evolution/*.jsonl
 data/audit/*.jsonl
 .DS_Store
 LINKEDIN_POST.md
+linkedin-post-card.png
