@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Singapore simulation matrix — offline + live scorecard
+# Live simulation matrix — offline + live scorecard
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

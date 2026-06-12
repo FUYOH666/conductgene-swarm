@@ -22,7 +22,8 @@ Transcript → Evidence → Prosecutor + Defender → Arbiter → Supervisor app
 | `audit/store.py` | Append-only case provenance |
 | `audit/gene_events.py` | Gene learn + rollback audit events |
 | `eval/harness.py` | Synthetic scenario verification + held-out eval |
-| `api/app.py` | REST spine + cached metrics |
+| `evolution/skill_export.py` | Export active genes as portable `SKILL.md` |
+| `api/app.py` | REST spine + auth/rate-limit middleware + cached metrics |
 | `ui/app.py` | Streamlit 5-panel demo + Model Jury sidebar |
 | `ui/client.py` | Thin HTTP client for API-backed demos |
 
@@ -42,9 +43,9 @@ Transcript → Evidence → Prosecutor + Defender → Arbiter → Supervisor app
 |--------|----------------|--------|----------|
 | `mock` | `mock` | Rule-based | CI, offline fallback |
 | `mock` | any | Rule-based (warn if provider≠mock) | Misconfiguration guard |
-| `live` | `lmstudio` | Local LLM | **Singapore primary offline** |
+| `live` | `lmstudio` | Local LLM | Offline live demo (LM Studio on :1234) |
 | `live` | `openrouter` | Cloud LLM | Pre-flight validation / bench |
-| `live` | `instruct` | Remote gateway | Optional (TailScale) |
+| `live` | `instruct` | Remote gateway | Optional (self-hosted OpenAI-compatible) |
 
 ## Retrieval
 
@@ -61,19 +62,41 @@ Explicit fallback to memory when BGE/Qdrant unavailable (logged).
 - `GET /healthz/services` — probe embedding, reranker, qdrant, openrouter, lmstudio, instruct
 - `GET /metrics/evolution` — cached eval; `?refresh=true` to re-run
 - `GET /audit/export` — case + gene audit for compliance review
-- No auth — intentional for local hackathon demo
 
-**Streamlit Model Jury:** sidebar overrides apply in **in-process** mode (`CONDUCTGENE_UI_USE_API=false`). Docker live profile uses in-process UI for Singapore demos.
+**Streamlit Model Jury:** sidebar overrides apply in **in-process** mode (`CONDUCTGENE_UI_USE_API=false`). Docker live profile uses in-process UI.
+
+## Security
+
+- **Auth (opt-in):** `CONDUCTGENE_API_KEY` requires `X-API-Key` on all endpoints except `/healthz*` and `/readyz`. When unset, the server logs an explicit "auth disabled" warning at startup (local demo mode).
+- **Rate limiting (opt-in):** `CONDUCTGENE_RATE_LIMIT_RPM` throttles `/swarm/analyze` and `/eval/run` per client; `0` disables.
+
+## Observability
+
+Every swarm run gets a `trace_id` (returned in `SwarmAnalyzeResult` and stored in the audit record). Each stage emits a structured log event with duration:
+
+```
+swarm_stage trace_id=… stage=retrieval|prosecutor|defender|arbiter|verdict duration_ms=…
+```
+
+Stdlib logging by design — the offline CI spine stays dependency-free. OpenTelemetry export is a possible future layer (see [ROADMAP.md](ROADMAP.md)).
+
+## Portability
+
+Active Policy Genes export as a portable skill file for agent runtimes:
+
+```bash
+uv run conductgene genes export-skill --out reports/skill   # → SKILL.md
+```
 
 ## Verification
 
 ```bash
-./scripts/verify_all.sh              # offline CI gate (16/16)
+./scripts/verify_all.sh                # offline CI gate (ruff, mypy, pytest+cov, 16/16 eval, demo)
 ./scripts/qa_matrix.sh                 # integration scorecard
-./scripts/run_simulation_matrix.sh     # Singapore pre-flight (S1–S8)
+./scripts/run_simulation_matrix.sh     # live-stack pre-flight (S1–S10)
 ```
 
-See [singapore-demo-runbook.md](singapore-demo-runbook.md) · [qdrant-retrieval.md](qdrant-retrieval.md) · [ROADMAP.md](ROADMAP.md)
+See [demo-script.md](demo-script.md) · [qdrant-retrieval.md](qdrant-retrieval.md) · [ROADMAP.md](ROADMAP.md)
 
 ## Diagram
 

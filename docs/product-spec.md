@@ -37,10 +37,15 @@ Three evidence-grounded agents review each transcript. When a supervisor approve
 - Abstain on weak evidence
 - Rollback any active gene
 
-## Out of scope (MVP)
+## Production hardening (v0.6+)
+
+- Opt-in API key auth (`X-API-Key`) and per-client rate limiting
+- Structured per-run traces (`trace_id` + stage durations) correlated with the audit trail
+- Policy Gene export as portable `SKILL.md` for agent runtimes
+- CI gate: ruff, mypy, pytest with coverage ratchet, 16/16 eval suite, demo path
+
+## Out of scope
 
 - Autonomous rule mutation without supervisor
 - Live LLM as demo dependency (mock mode default)
 - On-chain attestation
-
-Built on prior RAG, citation, and evaluation patterns from my portfolio.

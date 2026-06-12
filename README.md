@@ -8,9 +8,9 @@
 
 **Human-approved AI conduct QA that remembers supervisor corrections safely.**
 
-Multi-agent conduct QA for regulated industries. Prosecutor, Defender, and Arbiter agents review call transcripts with evidence-grounded citations. When a supervisor corrects the verdict, the system stores a **supervisor-approved Policy Gene** — auditable, rollbackable institutional memory.
+Multi-agent conduct QA for regulated industries (collections, debt servicing, insurance). Prosecutor, Defender, and Arbiter agents review call transcripts with evidence-grounded citations and an explicit abstain path. When a supervisor corrects a verdict, the system stores a **supervisor-approved Policy Gene** — auditable, rollbackable institutional memory that improves future reviews.
 
-Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) — **AGENT** track (dual submission with [AttestRWA](https://github.com/FUYOH666/attestrwa) on **APPLICATION** track). See [UCWS dual-track guide](docs/UCWS_DUAL_TRACK.md).
+Originally built for the UCWS Singapore 2026 hackathon, now maintained as a standalone open-source project.
 
 <p align="center">
   <a href="docs/assets/architecture.png">
@@ -18,13 +18,38 @@ Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) — **AGENT** track (
   </a>
 </p>
 
-## Problem → Solution
+## Why
 
 | Problem | Solution |
 |---------|----------|
 | QA teams repeat the same corrections | Policy Genes preserve approved patterns |
 | LLMs hallucinate policy | Evidence-grounded citations + abstain |
-| Regulators need accountability | Supervisor approval, audit trail, rollback |
+| Regulators need accountability | Supervisor approval, audit trail, rollback, per-run traces |
+
+Four design ideas carry the system, each transferable to other agent stacks:
+
+1. **Adversarial review instead of a single judge** — disagreement between Prosecutor and Defender surfaces weak evidence before it becomes a wrong verdict.
+2. **No citation, no verdict** — every finding cites a specific policy passage, or the system abstains to a human.
+3. **Institutional memory with human sign-off** — corrections become small, auditable rules that only take effect after supervisor approval and can be rolled back at any time.
+4. **Determinism as the baseline** — the whole pipeline runs offline with rule-based agents in CI; live LLMs are an opt-in layer, so behavior changes are measurable.
+
+## Quick start
+
+```bash
+git clone https://github.com/FUYOH666/conductgene-swarm.git
+cd conductgene-swarm
+cp .env.example .env
+uv sync --extra dev --extra ui
+./scripts/verify_all.sh    # full offline gate: ruff, mypy, pytest+coverage, 16/16 eval, demo
+./scripts/demo.sh          # 90-second demo path (CASE-002 → gene → CASE-005)
+uv run conductgene-ui      # 5-panel Streamlit demo
+```
+
+**Docker:**
+
+```bash
+docker compose up --build
+```
 
 ## Eval metrics (mock mode, synthetic suite)
 
@@ -35,15 +60,15 @@ Built for [UCWS Singapore 2026](https://luma.com/UCWS2026) — **AGENT** track (
 | Abstain rate | ~6.3% (CASE-007) |
 | Gene learning (CASE-002 → CASE-005) | `escalation_offered`: needs_review → pass |
 
-Run `./scripts/verify_all.sh` or `./scripts/qa_matrix.sh` to reproduce locally.
+Reproduce locally with `./scripts/verify_all.sh` or `./scripts/qa_matrix.sh`.
 
-**Live stack (v0.5 — BGE + Qdrant + LLM providers):**
+## Live stack (BGE + Qdrant + LLM providers)
 
 ```bash
 cp .env.example .env   # add CONDUCTGENE_OPENROUTER_API_KEY for cloud LLM
 uv sync --extra dev --extra retrieval --extra live --extra ui
 
-# Start Qdrant + Services-BGE (embedding :9001, reranker :9002)
+# Start Qdrant + BGE services (embedding :9001, reranker :9002)
 docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
 uv run python scripts/discover_services.py
 uv run python scripts/synth_data.py          # optional: extend KB
@@ -54,7 +79,7 @@ CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank CONDUCTGENE_ENABLE_RERANKER=true uv run
 
 # Full live LLM swarm (OpenRouter / LM Studio / instruct gateway)
 CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=openrouter uv run python scripts/run_live_simulation.py
-uv run python scripts/bench_models.py --provider openrouter --limit 4
+uv run python scripts/bench_models.py --provider openrouter --limit 4 --max-cost-usd 1.0
 ```
 
 **Docker live profile** (Qdrant in compose; BGE/LM Studio on host):
@@ -63,51 +88,14 @@ uv run python scripts/bench_models.py --provider openrouter --limit 4
 docker compose -f docker-compose.yml -f docker-compose.live.yml up --build
 ```
 
-**Singapore pre-flight:**
+**Pre-flight scorecard:**
 
 ```bash
-./scripts/run_simulation_matrix.sh          # full scorecard → reports/simulation_matrix.md
+./scripts/run_simulation_matrix.sh                  # full scorecard → reports/simulation_matrix.md
 SKIP_LIVE=true ./scripts/run_simulation_matrix.sh   # offline only (CI gate)
 ```
 
-Primary booth demo: [docs/singapore-demo-runbook.md](docs/singapore-demo-runbook.md) (LM Studio + qdrant_rerank).
-
-See [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/qdrant-retrieval.md](docs/qdrant-retrieval.md) · [docs/live-simulation.md](docs/live-simulation.md)
-
-## Quick start
-
-```bash
-git clone https://github.com/FUYOH666/conductgene-swarm.git
-cd conductgene-swarm
-cp .env.example .env
-uv sync --extra dev --extra ui
-./scripts/verify_all.sh    # full virtual verification
-./scripts/demo.sh          # 90-second demo path
-uv run conductgene-ui     # 5-panel Streamlit demo
-```
-
-**Docker:**
-
-```bash
-docker compose up --build
-```
-
-## Demo video
-
-**Local recording (v0.5.3):** [`docs/submission/conductgene-demo.webm`](docs/submission/conductgene-demo.webm) — live LM Studio + `qdrant_rerank` (~36s slideshow from step screenshots)
-
-**YouTube (portal Demo URL):** [youtu.be/5wIBi-HkK9Y](https://youtu.be/5wIBi-HkK9Y) — re-upload after regenerating live WebM (see below)
-
-Regenerate assets:
-
-```bash
-./scripts/capture_submission_assets.sh --with-video --profile live   # Singapore path
-./scripts/capture_submission_assets.sh --with-video --profile mock   # deterministic fallback
-```
-
-Upload guide: [docs/submission/youtube-upload.md](docs/submission/youtube-upload.md) · Portal copy: [docs/submission/portal-copy.md](docs/submission/portal-copy.md)
-
-AttestRWA demo (APPLICATION track, same portal entry): [youtube.com/shorts/BipB2qPzZz0](https://youtube.com/shorts/BipB2qPzZz0)
+See [docs/qdrant-retrieval.md](docs/qdrant-retrieval.md) · [docs/live-simulation.md](docs/live-simulation.md)
 
 ## API
 
@@ -127,7 +115,7 @@ CONDUCTGENE_RATE_LIMIT_RPM=30          # per-client limit on /swarm/analyze and 
 | `GET /healthz` | Liveness |
 | `GET /healthz/services` | BGE / Qdrant / LLM service probes |
 | `GET /readyz` | Readiness |
-| `POST /swarm/analyze` | Swarm review + audit record |
+| `POST /swarm/analyze` | Swarm review + audit record (returns `trace_id`) |
 | `POST /genes/learn` | Store supervisor-approved Policy Gene |
 | `GET /genes` | List genes |
 | `POST /genes/{id}/rollback` | Deactivate gene (rollback) |
@@ -141,28 +129,40 @@ CONDUCTGENE_RATE_LIMIT_RPM=30          # per-client limit on /swarm/analyze and 
 ```bash
 uv run conductgene demo
 uv run conductgene eval --suite all
-uv run conductgene analyze --file data/scenarios/collections/case_002.json
+uv run conductgene analyze --file data/scenarios/collections/case_002_coercive_soft.json
 uv run conductgene audit export --out reports/audit_export.json
 uv run conductgene genes export-skill --out reports/skill   # Policy Genes → portable SKILL.md
 ```
 
+## MCP
+
+Expose learned Policy Genes to MCP-capable agent runtimes:
+
+```bash
+uv sync --extra mcp
+uv run conductgene-mcp     # stdio MCP server: list_genes, export_skill
+```
+
+## Observability
+
+Every swarm run emits structured stage traces correlated by `trace_id` (also stored in the audit record):
+
+```
+swarm_stage trace_id=0d10a721f2664b42 stage=retrieval duration_ms=0.2 case_id=CASE-005 ...
+swarm_stage trace_id=0d10a721f2664b42 stage=verdict duration_ms=0.4 abstained=False ...
+```
+
 ## Docs
 
+- [Architecture](docs/architecture.md)
 - [Product spec](docs/product-spec.md)
-- [90-second demo script](docs/demo-script.md)
-- [Demo video guide](docs/demo-video-guide.md)
-- [Pitch deck](docs/pitch-deck.md)
-- [UCWS dual-track guide](docs/UCWS_DUAL_TRACK.md)
+- [Demo script](docs/demo-script.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Qdrant retrieval setup](docs/qdrant-retrieval.md)
 - [Live simulation guide](docs/live-simulation.md)
-- [UCWS registration](docs/UCWS_REGISTRATION.md)
-- [Submission checklist](docs/SUBMISSION.md)
-- [Portal copy-paste (AGENT + APPLICATION)](docs/submission/portal-copy.md)
-- [Resubmit checklist](docs/submission/resubmit-checklist.md)
 - [Governance (IMDA MGF)](docs/governance.md)
-- [Architecture](docs/architecture.md)
 - [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Releases](https://github.com/FUYOH666/conductgene-swarm/releases)
+- Hackathon-era material: [docs/_archive/hackathon/](docs/_archive/hackathon/)
 
 ## License
 

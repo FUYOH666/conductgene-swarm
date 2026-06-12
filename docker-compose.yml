@@ -10,16 +10,25 @@ services:
     volumes:
       - gene_data:/app/data/evolution
       - audit_data:/app/data/audit
+    restart: unless-stopped
 
   ui:
     build: .
-    command: ["uv", "run", "streamlit", "run", "src/conductgene/ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    command: ["streamlit", "run", "src/conductgene/ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
     ports:
       - "8501:8501"
     environment:
       CONDUCTGENE_MODE: mock
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=4)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   gene_data:

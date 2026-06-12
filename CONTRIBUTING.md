@@ -1,6 +1,6 @@
 # Contributing to ConductGene Swarm
 
-Thank you for your interest in contributing. This project is built for the UCWS Singapore 2026 AGENT track and welcomes improvements to governance, eval coverage, and agent collaboration.
+Thank you for your interest in contributing. This open-source project welcomes improvements to governance, eval coverage, retrieval quality, and agent collaboration.
 
 ## Development setup
 

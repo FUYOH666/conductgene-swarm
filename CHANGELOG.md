@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.0.0] - 2026-06-12
+
+Final open-source release. The project is reframed as a standalone product for
+regulated-industry conduct QA; the UCWS Singapore 2026 hackathon remains as origin story.
+
+### Added
+
+- Qdrant integration CI: `tests/test_qdrant_integration.py` against a real Qdrant service container with a deterministic stub embedder (`.github/workflows/integration.yml`); skipped offline
+- Policy Gene MCP stub: `conductgene-mcp` stdio server (`list_genes`, `export_skill`), optional `mcp` extra
+- CLI tests (`tests/test_cli.py`): analyze / demo / learn / eval / genes / export-skill via in-process dispatch
+- Streamlit UI import smoke test; `.dockerignore` (runtime stores and local files stay out of images)
+
+### Changed
+
+- **Docker hardening**: multi-stage build (uv only in builder, non-editable install), non-root `conductgene` user, no dev tools in runtime, `HEALTHCHECK` on `/healthz`; compose got healthchecks, `depends_on: service_healthy`, and restart policies
+- **Docs overhaul**: hackathon material (submission, pitch decks, UCWS guides, runbooks) archived to `docs/_archive/hackathon/`; submission capture tooling and `playwright` extra removed; architecture/product-spec/governance refreshed with auth, rate limits, traces, and SKILL export; README rewritten as an open-source product page
+- Coverage ratchet raised 72% → 77% (suite at ~78%, 68 tests + 4 integration)
+
+### Fixed
+
+- README CLI example pointed to a non-existent scenario file (`case_002.json` → `case_002_coercive_soft.json`)
+- Docker image previously baked in local runtime gene/audit stores; now excluded, fresh state per volume
+
 ## [0.6.0] - 2026-06-12
 
 ### Added
@@ -9,7 +32,7 @@
 - Cost caps in `scripts/bench_models.py`: `--max-requests`, `--max-cost-usd` pre-flight guards abort before any spend
 - Structured per-run traces: `trace_id` in `SwarmAnalyzeResult` + stage events (retrieval → prosecutor → defender → arbiter → verdict) with durations; correlates verdicts with logs and audit records
 - `conductgene genes export-skill --out <dir>` — export active Policy Genes as portable `SKILL.md`
-- CI gate: mypy (clean on 36 source files) and pytest coverage (fail-under 74%, ratchet up) in `scripts/verify_all.sh`
+- CI gate: mypy (clean on 36 source files) and pytest coverage (fail-under 72%, ratchet up) in `scripts/verify_all.sh`
 - Dependabot now also tracks Python deps (`uv` ecosystem)
 - Tests: `test_api_auth.py`, `test_observability.py`, `test_skill_export.py` (56 → 69 collected)
 

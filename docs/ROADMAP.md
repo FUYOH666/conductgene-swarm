@@ -10,7 +10,7 @@ Supervisor-approved policy memory for regulated AI conduct QA.
 
 - UCWS dual-track portal submission (AGENT ConductGene + APPLICATION AttestRWA)
 - Unified portal copy, resubmit checklist, demo URLs
-- Docs: [UCWS_DUAL_TRACK.md](UCWS_DUAL_TRACK.md)
+- Docs: [_archive/hackathon/UCWS_DUAL_TRACK.md](_archive/hackathon/UCWS_DUAL_TRACK.md)
 
 ---
 
@@ -64,16 +64,29 @@ Env: `CONDUCTGENE_MODE=live`, `CONDUCTGENE_LLM_PROVIDER=openrouter|lmstudio|inst
 | Rate limits + cost caps on OpenRouter bench | Done | `CONDUCTGENE_RATE_LIMIT_RPM`; `bench_models.py --max-requests / --max-cost-usd` |
 | Observability (structured traces per swarm run) | Done | `trace_id` + per-stage duration logs; stdlib logging, no OTel dependency yet |
 | Policy Gene export as SKILL.md | Done | `conductgene genes export-skill --out <dir>` |
-| Type-check + coverage CI | Done | mypy + pytest-cov in `verify_all.sh` (coverage ratchet from 74%) |
+| Type-check + coverage CI | Done | mypy + pytest-cov in `verify_all.sh` (coverage ratchet from 72%) |
 
 ---
 
-## v1.0 — Remaining (planned)
+## v1.0.0 — Final open-source release — Done (2026-06-12)
 
-- Live-stack CI job (Qdrant + LM Studio path, currently manual)
-- OpenTelemetry traces (current: structured stdlib logging)
-- Policy Gene MCP stub
-- Optional EAS attestation bridge (AttestRWA integration)
+| Item | Status | Notes |
+|------|--------|-------|
+| Docs overhaul | Done | Hackathon material archived to `_archive/hackathon/`; product docs refreshed |
+| Docker hardening | Done | Multi-stage build, non-root user, no dev extras in runtime, `HEALTHCHECK` |
+| Live-stack CI (Qdrant) | Done | Integration tests against real Qdrant service container (stub embedder, no BGE in CI) |
+| Policy Gene MCP stub | Done | `conductgene-mcp` stdio server (`list_genes`, `export_skill`), optional `mcp` extra |
+| CLI test coverage | Done | `tests/test_cli.py` drives the dispatch path; coverage ratchet raised |
+
+The LM Studio live path stays a manual verification (`./scripts/run_simulation_matrix.sh`) by design — a local desktop LLM cannot run in hosted CI.
+
+---
+
+## Future (no committed date)
+
+- OpenTelemetry trace export (current: structured stdlib logging with `trace_id`)
+- Optional EAS attestation bridge (AttestRWA integration — external dependency)
+- Postgres / object-store backends for gene and audit stores (current: append-only JSONL)
 
 ---
 
@@ -81,11 +94,11 @@ Env: `CONDUCTGENE_MODE=live`, `CONDUCTGENE_LLM_PROVIDER=openrouter|lmstudio|inst
 
 | Profile | `MODE` | `RETRIEVAL_MODE` | `LLM_PROVIDER` | Use case |
 |---------|--------|------------------|----------------|----------|
-| CI / hackathon demo | mock | memory | mock | Default, offline |
-| MacBook RAG | mock | qdrant_rerank | mock | Evidence via BGE+Qdrant, agents still rules |
+| CI / offline demo | mock | memory | mock | Default, offline |
+| Local RAG | mock | qdrant_rerank | mock | Evidence via BGE+Qdrant, agents still rules |
 | Live LLM | live | qdrant_rerank | openrouter | Full simulation |
 | Local LLM | live | qdrant_rerank | lmstudio | LM Studio on :1234 |
-| Instruct gateway | live | qdrant_rerank | instruct | TailScale :8002 |
+| Instruct gateway | live | qdrant_rerank | instruct | Self-hosted OpenAI-compatible gateway |
 | Degraded | mock | qdrant | mock | Qdrant down → memory fallback (logged) |
 
 ---
@@ -94,5 +107,5 @@ Env: `CONDUCTGENE_MODE=live`, `CONDUCTGENE_LLM_PROVIDER=openrouter|lmstudio|inst
 
 - [Architecture](architecture.md)
 - [Qdrant retrieval setup](qdrant-retrieval.md)
-- [Live simulation (judge path)](live-simulation.md)
-- [UCWS dual-track](UCWS_DUAL_TRACK.md)
+- [Live simulation guide](live-simulation.md)
+- [Demo script](demo-script.md)

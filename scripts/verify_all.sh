@@ -20,7 +20,7 @@ rm -f "$CONDUCTGENE_GENE_STORE_PATH" "$CONDUCTGENE_AUDIT_STORE_PATH" "$CONDUCTGE
 mkdir -p reports
 
 echo "==> Sync dependencies"
-uv sync --extra dev --extra ui --extra retrieval --extra live
+uv sync --extra dev --extra ui --extra retrieval --extra live --extra mcp
 
 echo ""
 echo "==> Ruff"

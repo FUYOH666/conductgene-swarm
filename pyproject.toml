@@ -1,6 +1,6 @@
 [project]
 name = "conductgene-swarm"
-version = "0.6.0"
+version = "1.0.0"
 description = "Supervisor-approved conduct QA with auditable Policy Genes — UCWS Singapore 2026"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -32,21 +32,25 @@ ui = [
     "streamlit>=1.40.0",
     "pandas>=2.2.0",
 ]
-submission = [
-    "playwright>=1.49.0",
-]
 retrieval = [
     "qdrant-client>=1.12.0",
+]
+mcp = [
+    "mcp>=1.12.0",
 ]
 
 [project.scripts]
 conductgene = "conductgene.main:cli_main"
 conductgene-serve = "conductgene.__main__:serve"
 conductgene-ui = "conductgene.ui.app:main"
+conductgene-mcp = "conductgene.mcp.server:main"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "integration: requires real external services (e.g. Qdrant); skipped when env unset",
+]
 
 [tool.ruff]
 line-length = 100
@@ -66,9 +70,9 @@ source = ["src/conductgene"]
 omit = ["src/conductgene/ui/*"]
 
 [tool.coverage.report]
-# Baseline ratchet: offline CI cannot exercise live-stack modules (qdrant, discovery)
-# or the CLI subprocess path (main.py). Raise as live-path tests are added; do not lower.
-fail_under = 72
+# Baseline ratchet: offline CI cannot exercise live-stack modules (qdrant, discovery).
+# Raise as live-path tests are added; do not lower.
+fail_under = 77
 show_missing = false
 precision = 1
 

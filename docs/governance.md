@@ -6,10 +6,10 @@ ConductGene implements governance-by-design for regulated conduct QA.
 
 | MGF dimension | ConductGene control |
 |---------------|---------------------|
-| **Assess & bound risks** | Read-only agents; no shell/tools; abstain on weak evidence |
+| **Assess & bound risks** | Read-only agents; no shell/tools; abstain on weak evidence; per-client rate limiting |
 | **Human accountability** | Policy Genes require supervisor approval; agents recommend, humans decide |
-| **Technical controls** | Citations (chunk_ids), case audit trail, eval scores, rollback |
-| **End-user responsibility** | Coaching tips; clear abstain reasons; exportable audit reports |
+| **Technical controls** | Citations (chunk_ids), case audit trail, eval scores, rollback, opt-in API key auth, per-run `trace_id` correlating verdicts with logs |
+| **End-user responsibility** | Coaching tips; clear abstain reasons; exportable audit reports; portable `SKILL.md` export of learned policy memory |
 
 ## Key principles
 
@@ -18,7 +18,7 @@ ConductGene implements governance-by-design for regulated conduct QA.
 3. **Traceability** — every verdict links to evidence chunks and case_id
 4. **Rollback** — any active gene can be deactivated without data loss
 
-## Pitch language
+## Language guidance
 
 **Use:** supervisor-approved institutional memory, auditable Policy Gene, rollback-ready
 

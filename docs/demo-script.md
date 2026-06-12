@@ -39,7 +39,7 @@ Load **CASE-005** (similar call). Gene auto-applies. Eval metrics improve. Show 
 
 **1:20 — Close (10s)**
 
-> Human-approved. Evidence-grounded. Rollback-ready. ConductGene Swarm — UCWS Singapore 2026.
+> Human-approved. Evidence-grounded. Rollback-ready. ConductGene Swarm.
 
 ## Primary demo pair
 
@@ -48,10 +48,16 @@ Load **CASE-005** (similar call). Gene auto-applies. Eval metrics improve. Show 
 | CASE-002 | Learn gene from supervisor correction |
 | CASE-005 | Held-out similar case — gene improves result |
 
-## Backup
+## Backup (terminal-only)
 
 ```bash
 ./scripts/demo.sh
 ```
 
 Mock mode — no live LLM required.
+
+## Recording a demo video
+
+Use any screen recorder over `conductgene-ui` following the script above; the
+deterministic mock mode makes every take reproducible. For a live-LLM take,
+start LM Studio and run with `CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=lmstudio`.
