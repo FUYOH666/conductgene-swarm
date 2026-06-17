@@ -77,7 +77,7 @@ show_missing = false
 precision = 1
 
 [build-system]
-requires = ["setuptools>=75", "wheel"]
+requires = ["setuptools>=82.0.1", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
