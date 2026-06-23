@@ -19,7 +19,7 @@ jobs:
       CONDUCTGENE_QDRANT_URL: http://127.0.0.1:6333
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: astral-sh/setup-uv@v5
         with:
