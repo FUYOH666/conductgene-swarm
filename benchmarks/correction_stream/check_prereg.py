@@ -17,7 +17,9 @@ def main() -> int:
         chain_ok = store.verify().ok
         record = store.events()[0].payload
     pack = "".join(
-        p.read_text() for p in sorted((HERE / "pack").rglob("*")) if p.is_file() and p.name != "cases.jsonl"
+        p.read_text()
+        for p in sorted((HERE / "pack").rglob("*"))
+        if p.is_file() and p.name != "cases.jsonl"
     )
     sys.path.insert(0, str(HERE))
     import spec
@@ -25,9 +27,14 @@ def main() -> int:
     regen = "".join(json.dumps(r) + "\n" for r in spec.build())
     checks = {
         "event log chain intact": chain_ok,
-        "PREREGISTRATION.md matches its recorded hash": sha256_hex((HERE / "PREREGISTRATION.md").read_text()) == record["prereg_sha256"],
-        "frozen pack (policy + pack.yaml) matches its recorded hash": sha256_hex(pack) == record["pack_sha256"],
-        "specs.jsonl regenerates byte for byte from spec.py": regen == (HERE / "specs.jsonl").read_text(),
+        "PREREGISTRATION.md matches its recorded hash": sha256_hex(
+            (HERE / "PREREGISTRATION.md").read_text()
+        )
+        == record["prereg_sha256"],
+        "frozen pack (policy + pack.yaml) matches its recorded hash": sha256_hex(pack)
+        == record["pack_sha256"],
+        "specs.jsonl regenerates byte for byte from spec.py": regen
+        == (HERE / "specs.jsonl").read_text(),
     }
     for name, ok in checks.items():
         print(("✓ " if ok else "✗ ") + name)
