@@ -167,6 +167,34 @@ The log head they were cut from is anchored in the
 [v2.0.0 release notes](https://github.com/FUYOH666/precedent/releases/tag/v2.0.0). `precedent audit
 export` hands over the complete event population for sampling.
 
+## Run the gate on pull requests
+
+Rules are files, so a change to how your judge decides can be reviewed like any other change. The
+repository's own [`rules/`](rules/) directory is gated this way: a pull request that adds a rule gets
+the gate report as a comment and fails if the rule is blocked.
+
+```yaml
+# .github/workflows/rules.yml
+on:
+  pull_request:
+    paths: ["rules/**"]
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, pull-requests: write}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: FUYOH666/precedent@v2
+        with:
+          pack: path/to/your-pack          # or a built-in pack name
+          rules: rules/proposed/*.yaml
+          corrections: rules/corrections.yaml
+          active: rules/active
+          judge: replay:path/to/recorded-judge.jsonl   # recorded outputs; CI needs no model
+```
+
+Locally, the same check without an event log is `precedent check RULE.yaml --pack ... --corrections ...`.
+
 ## Results
 
 `collections-conduct` is a deliberately small pack: 28 synthetic calls, 9 held out, one annotator.

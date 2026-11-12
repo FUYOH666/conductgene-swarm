@@ -183,6 +183,41 @@ def cmd_gate(args: argparse.Namespace) -> int:
     return 0 if report.decision == "PASSED" else 1
 
 
+def _load_corrections(pack: Pack, path: str | None) -> list[Correction]:
+    if not path:
+        return []
+    import yaml
+
+    rows = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or []
+    out = []
+    for row in rows:
+        if "case_hash" not in row:
+            row = {**row, "case_hash": pack.case(row["case_id"]).hash}
+        out.append(Correction.model_validate({"pack": pack.id, **row}))
+    return out
+
+
+def cmd_check(args: argparse.Namespace) -> int:
+    """Stateless gate for CI: rule files in, verdicts and a Markdown summary out."""
+    pack = load_pack(args.pack)
+    outputs = _outputs(pack, args.judge, None)
+    corrections = _load_corrections(pack, args.corrections)
+    active = [load_rule(p) for p in sorted(Path(args.active).glob("*.yaml"))] if args.active else []
+    blocked = 0
+    sections = []
+    for path in args.rules:
+        rule = load_rule(path)
+        report = run_gate(pack, outputs, [r for r in active if r.id != rule.id], rule, corrections)
+        console.print(f"[cyan]{rule.key}[/] {rule_summary(rule)}  [dim]({path})[/]")
+        print_gate(console, report)
+        blocked += report.decision == "BLOCKED"
+        sections.append(gate_markdown(report, rule))
+    if args.summary:
+        with Path(args.summary).open("a", encoding="utf-8") as fh:
+            fh.write("\n\n---\n\n".join(sections) + "\n")
+    return 1 if blocked else 0
+
+
 def cmd_approve(args: argparse.Namespace) -> int:
     pack = load_pack(args.pack)
     db = Path(args.db)
@@ -381,6 +416,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--report", help="write the Markdown gate report here")
     judge_opt(p)
     p.set_defaults(func=cmd_gate)
+
+    p = sub.add_parser("check", help="gate rule files without an event log (for CI)")
+    p.add_argument("rules", nargs="+", help="rule YAML files")
+    p.add_argument("--pack", required=True)
+    p.add_argument("--corrections", help="YAML list of corrections the rules may cite")
+    p.add_argument("--active", help="directory of rules already in force")
+    p.add_argument("--summary", help="append the Markdown gate reports here")
+    judge_opt(p)
+    p.set_defaults(func=cmd_check)
 
     p = sub.add_parser("approve", help="re-run the gate and approve a rule that passed it")
     p.add_argument("rule_key")
