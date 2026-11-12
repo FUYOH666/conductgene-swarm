@@ -40,7 +40,9 @@ uvx --from git+https://github.com/FUYOH666/precedent precedent demo      # offli
 | v2: "a supervisor or team lead promised a callback" (the reviewer's actual reason) | **passed**, then a second person approves | 3 | 0 |
 
 <sub>On the keyword judge, 28 synthetic calls with 9 held out and one annotator: a test of the
-machinery, not a benchmark. A pre-registered 240-call benchmark is under way
+machinery, not a benchmark. The same two rules as real pull requests on this repository:
+<a href="https://github.com/FUYOH666/precedent/pull/14">#14 blocked</a> ·
+<a href="https://github.com/FUYOH666/precedent/pull/15">#15 passed</a>. A pre-registered 240-call benchmark is under way
 (<a href="benchmarks/correction_stream/PREREGISTRATION.md">design</a>).</sub>
 
 > **Running an LLM judge with human reviewers?** Send us a sample of the decisions they overrode.
@@ -173,6 +175,10 @@ Rules are files, so a change to how your judge decides can be reviewed like any 
 repository's own [`rules/active/`](rules/) directory is gated this way: a pull request that adds or
 edits a rule gets the gate report as a comment, fails if the rule is blocked, and the merge makes the
 rule active.
+
+See it on this repository:
+- [**#14**](https://github.com/FUYOH666/precedent/pull/14), the rule v1 learned: **blocked**, left open on purpose;
+- [**#15**](https://github.com/FUYOH666/precedent/pull/15), the same correction stated as its reason: **passed and merged**.
 
 ```yaml
 # .github/workflows/rules.yml
