@@ -16,13 +16,24 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - id: changed
+        name: Rules this pull request adds or changes
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          files=$(git diff --name-only --diff-filter=AM "$BASE" "$HEAD" -- 'rules/active/*.yaml' | tr '\n' ' ')
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo "changed rules: ${files:-none}"
       - id: gate
+        if: steps.changed.outputs.files != ''
         uses: ./ # zizmor: ignore[self-repository] -- the documented local-action form
         continue-on-error: true
         with:
           pack: collections-conduct
-          rules: rules/proposed/*.yaml
+          rules: ${{ steps.changed.outputs.files }}
           corrections: rules/corrections.yaml
           active: rules/active
       - name: Post the gate report on the pull request
