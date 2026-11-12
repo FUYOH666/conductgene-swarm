@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/pack.schema.json",
+  "title": "Precedent pack (pack.yaml)",
+  "$defs": {
+    "Condition": {
+      "properties": {
+        "predicate": {
+          "title": "Predicate",
+          "type": "string"
+        },
+        "equals": {
+          "default": "yes",
+          "enum": [
+            "yes",
+            "no"
+          ],
+          "title": "Equals",
+          "type": "string"
+        }
+      },
+      "required": [
+        "predicate"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
+    "HeuristicBranch": {
+      "properties": {
+        "when": {
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "title": "When",
+          "type": "array"
+        },
+        "then": {
+          "title": "Then",
+          "type": "string"
+        }
+      },
+      "required": [
+        "then"
+      ],
+      "title": "HeuristicBranch",
+      "type": "object"
+    },
+    "HeuristicSpec": {
+      "description": "Deterministic baseline judge: a test double and benchmark arm, not the product.",
+      "properties": {
+        "abstain_when": {
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "title": "Abstain When",
+          "type": "array"
+        },
+        "items": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/HeuristicBranch"
+            },
+            "type": "array"
+          },
+          "title": "Items",
+          "type": "object"
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "title": "HeuristicSpec",
+      "type": "object"
+    },
+    "LabelDef": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "meaning": {
+          "title": "Meaning",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "meaning"
+      ],
+      "title": "LabelDef",
+      "type": "object"
+    },
+    "PredicateDef": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "speaker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker"
+        },
+        "patterns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Patterns",
+          "type": "array"
+        },
+        "negation": {
+          "default": true,
+          "title": "Negation",
+          "type": "boolean"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "question"
+      ],
+      "title": "PredicateDef",
+      "type": "object"
+    },
+    "RubricItem": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "$ref": "#/$defs/LabelDef"
+          },
+          "title": "Labels",
+          "type": "array"
+        },
+        "default_label": {
+          "title": "Default Label",
+          "type": "string"
+        },
+        "evidence_required": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Required",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "labels",
+        "default_label"
+      ],
+      "title": "RubricItem",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "description": {
+      "default": "",
+      "title": "Description",
+      "type": "string"
+    },
+    "abstain_label": {
+      "default": "abstain",
+      "title": "Abstain Label",
+      "type": "string"
+    },
+    "review_label": {
+      "default": "needs_review",
+      "title": "Review Label",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/RubricItem"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "predicates": {
+      "items": {
+        "$ref": "#/$defs/PredicateDef"
+      },
+      "title": "Predicates",
+      "type": "array"
+    },
+    "heuristic": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HeuristicSpec"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "title",
+    "items",
+    "predicates"
+  ],
+  "type": "object"
+}

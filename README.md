@@ -101,7 +101,7 @@ id: escalation-callback
 version: 2
 item: escalation_offered
 when:
-  - {predicate: supervisor_contact_offered, equals: "yes"}
+  - {predicate: supervisor_callback_offered, equals: "yes"}
 then: pass
 source_corrections: [C-0001]
 examples: [CASE-019]

@@ -7,7 +7,7 @@ import pytest
 import yaml
 
 from precedent.pack import Pack, builtin_packs, dump_rule, load_pack, load_rule, parse_policy
-from precedent.stats import agreement, cohen_kappa, paired_bootstrap_delta
+from precedent.stats import agreement, cohen_kappa, mcnemar_exact, wilson
 
 
 def test_builtin_pack_is_complete(pack: Pack) -> None:
@@ -65,8 +65,10 @@ def test_stats() -> None:
     assert cohen_kappa([("a", "a")]) is None
     assert cohen_kappa([]) is None
     assert math.isnan(agreement([]))
-    delta, (lo, hi) = paired_bootstrap_delta([True, False, False], [True, True, False])
-    assert math.isclose(delta, 1 / 3) and lo <= delta <= hi
-    assert paired_bootstrap_delta([], []) == (0.0, (0.0, 0.0))
-    with pytest.raises(ValueError):
-        paired_bootstrap_delta([True], [])
+    lo, hi = wilson(33, 36)  # the advisor's worked example: 92%, 95% CI 78–97%
+    assert round(lo, 2) == 0.78 and round(hi, 2) == 0.97
+    assert wilson(0, 0) == (0.0, 1.0)
+    assert mcnemar_exact(0, 0) == 1.0
+    assert mcnemar_exact(3, 0) == 0.25
+    assert math.isclose(mcnemar_exact(2, 3), 1.0)
+    assert mcnemar_exact(10, 0) < 0.01

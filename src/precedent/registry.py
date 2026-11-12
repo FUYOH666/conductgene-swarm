@@ -38,7 +38,11 @@ class RuleRecord:
     gated_dataset: str | None = None
     gated_judge: str | None = None
     gated_corrections: str | None = None
+    gate_seq: int | None = None
+    gate_report: GateReport | None = None
+    gated_by: str | None = None
     approved_by: str | None = None
+    approval_rationale: str = ""
     history: list[str] = field(default_factory=list)
 
 
@@ -94,6 +98,10 @@ class Registry:
                 rec.gated_dataset = p.get("dataset_hash")
                 rec.gated_judge = p.get("judge_id")
                 rec.gated_corrections = p.get("corrections_hash")
+                rec.gate_seq = ev.seq
+                rec.gated_by = ev.actor
+                if "report" in p:
+                    rec.gate_report = GateReport.model_validate(p["report"])
                 if rec.status in ("proposed", "blocked", "passed"):
                     rec.status = "passed" if p["decision"] == "PASSED" else "blocked"
             elif ev.type == "rule.approved":
@@ -104,6 +112,7 @@ class Registry:
                         other.history.append(f"superseded by {rec.rule.key} (seq {ev.seq})")
                 rec.status = "active"
                 rec.approved_by = ev.actor
+                rec.approval_rationale = str(p.get("rationale", ""))
             elif ev.type == "rule.reverted":
                 st.rules[p["rule_key"]].status = "reverted"
             elif ev.type == "rule.rejected":
@@ -158,6 +167,11 @@ class Registry:
                 raise RegistryError("gate report was produced for different rule content")
             if rec.status not in ("proposed", "blocked", "passed"):
                 raise RegistryError(f"{report.rule_key} is {rec.status}; nothing to gate")
+            if actor == rec.proposed_by:
+                raise RegistryError(
+                    f"segregation of duties: {actor} proposed {report.rule_key} "
+                    "and cannot also record its gate"
+                )
             pack_corrections = [c for c in st.corrections.values() if c.pack == rec.rule.pack]
             self.store.append(
                 actor,
@@ -171,6 +185,7 @@ class Registry:
                     "judge_id": report.judge_id,
                     "corrections_hash": corrections_hash(pack_corrections),
                     "failed": failed,
+                    "report": report.model_dump(mode="json"),
                 },
             )
 
@@ -181,12 +196,16 @@ class Registry:
         *,
         dataset_hash: str | None = None,
         judge_id: str | None = None,
+        rationale: str = "",
+        rerun: GateReport | None = None,
     ) -> Rule:
         """Activate a rule that passed the gate.
 
         Refused if, since the gate ran, the active rules or the recorded
         corrections changed, or (when the caller passes them, as the CLI always
-        does) the labelled cases or the judge changed.
+        does) the labelled cases or the judge changed. ``rerun`` is the gate
+        re-performed by the approver; it must reproduce the recorded report
+        exactly, so a fabricated report cannot be approved.
         """
         with self.store.locked():
             st = self._checked_state()
@@ -198,6 +217,10 @@ class Registry:
             if actor == rec.proposed_by:
                 raise RegistryError(
                     f"four-eyes: {actor} proposed {rule_key} and cannot also approve it"
+                )
+            if rerun is not None and rerun.content_hash() != rec.gate_report_hash:
+                raise RegistryError(
+                    "re-running the gate does not reproduce the recorded report; refusing"
                 )
             current = ruleset_hash(st.active(rec.rule.pack))
             if rec.gated_against != current:
@@ -221,7 +244,15 @@ class Registry:
             self.store.append(
                 actor,
                 "rule.approved",
-                {"rule_key": rule_key, "ruleset_before": current, "judge_id": rec.gated_judge},
+                {
+                    "rule_key": rule_key,
+                    "ruleset_before": current,
+                    "judge_id": rec.gated_judge,
+                    "gate_seq": rec.gate_seq,
+                    "report_hash": rec.gate_report_hash,
+                    "reproduced": rerun is not None,
+                    "rationale": rationale,
+                },
             )
         return rec.rule
 

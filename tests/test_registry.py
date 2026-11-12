@@ -205,3 +205,48 @@ def test_a_damaged_log_stops_all_changes(
     conn.close()
     with pytest.raises(RegistryError, match="failed verification"):
         registry.propose("maria", rules["escalation-callback@2"])
+
+
+def test_the_author_cannot_record_the_gate(
+    registry: Registry,
+    pack: Pack,
+    outputs: dict[str, JudgeOutput],
+    rules: dict[str, Rule],
+    correction: Correction,
+) -> None:
+    registry.record_correction("maria", correction)
+    stored = registry.propose("maria", rules["escalation-callback@2"])
+    report = run_gate(pack, outputs, [], stored, [correction])
+    with pytest.raises(RegistryError, match="segregation of duties"):
+        registry.record_gate("maria", report)
+
+
+def test_approval_reproduces_the_gate_and_keeps_the_evidence(
+    registry: Registry,
+    pack: Pack,
+    outputs: dict[str, JudgeOutput],
+    rules: dict[str, Rule],
+    correction: Correction,
+) -> None:
+    registry.record_correction("maria", correction)
+    rule = registry.propose("maria", rules["escalation-callback@2"])
+    _gate(registry, pack, outputs, rule.key)
+    record = registry.state().rules[rule.key]
+    assert record.gate_report is not None  # the full report is in the log, not just its hash
+    assert record.gate_report.content_hash() == record.gate_report_hash
+
+    tampered = dict(outputs)
+    tampered["CASE-024"] = outputs["CASE-001"].model_copy(
+        update={"case_id": "CASE-024", "case_hash": pack.case("CASE-024").hash}
+    )
+    different = run_gate(pack, tampered, [], rule, [correction])
+    with pytest.raises(RegistryError, match="does not reproduce"):
+        registry.approve("alex", rule.key, rerun=different)
+
+    same = run_gate(pack, outputs, [], rule, [correction])
+    registry.approve("alex", rule.key, rerun=same, rationale="policy says callbacks count")
+    record = registry.state().rules[rule.key]
+    assert record.status == "active" and record.approval_rationale == "policy says callbacks count"
+    approved = [e for e in registry.store.events() if e.type == "rule.approved"][-1]
+    assert approved.payload["reproduced"] is True
+    assert approved.payload["report_hash"] == record.gate_report_hash

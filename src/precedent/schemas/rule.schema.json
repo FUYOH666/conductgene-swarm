@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/rule.schema.json",
+  "title": "Precedent rule",
+  "$defs": {
+    "Condition": {
+      "properties": {
+        "predicate": {
+          "title": "Predicate",
+          "type": "string"
+        },
+        "equals": {
+          "default": "yes",
+          "enum": [
+            "yes",
+            "no"
+          ],
+          "title": "Equals",
+          "type": "string"
+        }
+      },
+      "required": [
+        "predicate"
+      ],
+      "title": "Condition",
+      "type": "object"
+    }
+  },
+  "description": "A reviewable change to how one rubric item is decided.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "pack": {
+      "title": "Pack",
+      "type": "string"
+    },
+    "item": {
+      "title": "Item",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "when": {
+      "items": {
+        "$ref": "#/$defs/Condition"
+      },
+      "minItems": 1,
+      "title": "When",
+      "type": "array"
+    },
+    "then": {
+      "title": "Then",
+      "type": "string"
+    },
+    "clause_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Clause Refs",
+      "type": "array"
+    },
+    "source_corrections": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Corrections",
+      "type": "array"
+    },
+    "examples": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Examples",
+      "type": "array"
+    },
+    "counter_examples": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Counter Examples",
+      "type": "array"
+    },
+    "author": {
+      "default": "",
+      "title": "Author",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "pack",
+    "item",
+    "title",
+    "rationale",
+    "when",
+    "then"
+  ],
+  "type": "object"
+}

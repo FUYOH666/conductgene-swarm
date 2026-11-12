@@ -9,7 +9,6 @@ the numbers in docs/results.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 
@@ -19,38 +18,10 @@ from precedent.judge.cassette import ReplayJudge
 from precedent.judge.heuristic import HeuristicJudge
 from precedent.models import Correction, GateReport
 from precedent.pack import load_pack
+from precedent.theme import DARK, LIGHT, MONO, SANS, SERIF, Palette
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "docs" / "assets"
-
-SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
-MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
-
-
-@dataclass(frozen=True)
-class Palette:
-    name: str
-    bg: str
-    panel: str
-    ink: str
-    muted: str
-    faint: str
-    line: str
-    accent: str
-    green: str
-    green_bg: str
-    red: str
-    red_bg: str
-
-
-LIGHT = Palette(
-    "light", "#ffffff", "#f6f8fa", "#0b0d12", "#57606a", "#8c959f", "#d0d7de",
-    "#4f46e5", "#1a7f37", "#dafbe1", "#cf222e", "#ffebe9",
-)  # fmt: skip
-DARK = Palette(
-    "dark", "#0d1117", "#161b22", "#e6edf3", "#9198a1", "#6e7681", "#30363d",
-    "#8b8bff", "#3fb950", "#12261e", "#f85149", "#2d1517",
-)  # fmt: skip
 
 
 def svg(width: int, height: int, body: str, p: Palette, title: str) -> str:
@@ -114,7 +85,7 @@ def badge(x: float, y: float, ok: bool, p: Palette, size: float = 13) -> str:
 
 def banner(p: Palette, width: int = 1280, height: int = 400) -> str:
     b = mark(64, 74, 56, p)
-    b += text(140, 120, "precedent", size=64, fill=p.ink, weight=700, spacing=-1.5)
+    b += text(140, 122, "precedent", size=76, fill=p.ink, font=SERIF, weight=400, spacing=-1)
     b += text(66, 186, "Pull requests for AI judgment", size=32, fill=p.ink, weight=500)
     b += text(
         66,
@@ -142,7 +113,7 @@ def banner(p: Palette, width: int = 1280, height: int = 400) -> str:
     b += text(cx + 24, cy + 40, "one correction, two rules", size=14, fill=p.faint, font=MONO)
     rows = [
         ("v1", "when mentions_repayment", False, "fixes 2 · breaks 3"),
-        ("v2", "when supervisor_contact", True, "fixes 3 · breaks 0"),
+        ("v2", "when supervisor_callback", True, "fixes 3 · breaks 0"),
     ]
     for i, (ver, cond, ok, stats) in enumerate(rows):
         y = cy + 92 + i * 92
@@ -256,7 +227,7 @@ def gate_reports() -> list[tuple[str, str, GateReport]]:
     for jname, judge in judges:
         outputs = judge_all(judge, pack.cases)
         for key, label in (("escalation-callback@1", "v1 mentions_repayment"),
-                           ("escalation-callback@2", "v2 supervisor_contact")):  # fmt: skip
+                           ("escalation-callback@2", "v2 supervisor_callback")):  # fmt: skip
             out.append((jname, label, run_gate(pack, outputs, [], rules[key], [corr])))
     return out
 

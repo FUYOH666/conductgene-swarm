@@ -88,7 +88,7 @@ re-checking every rule against every case after any change takes milliseconds.
 
 The predicates are also the vocabulary in which a reviewer states a reason. "This
 should pass because the customer was offered a callback from a team lead" becomes
-`supervisor_contact_offered = yes`. Writing the reason down in that vocabulary is
+`supervisor_callback_offered = yes`. Writing the reason down in that vocabulary is
 most of the value: it separates the cause from the coincidence.
 
 ## What a small experiment already showed

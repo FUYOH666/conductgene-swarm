@@ -1,28 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img" aria-label="precedent — pull requests for AI judgment">
 <title>precedent — pull requests for AI judgment</title>
-<rect width="1280" height="400" fill="#0d1117"/>
-<rect x="64" y="74" width="56" height="23.52" rx="6.5856" fill="#2d1517" stroke="#f85149" stroke-width="2.24"/>
-<rect x="71.84" y="84.08" width="11.200000000000001" height="3.36" rx="1.68" fill="#f85149"/>
-<rect x="64" y="106.47999999999999" width="56" height="23.52" rx="6.5856" fill="#12261e" stroke="#3fb950" stroke-width="2.24"/>
-<rect x="71.84" y="116.55999999999999" width="11.200000000000001" height="3.36" rx="1.68" fill="#3fb950"/>
-<rect x="75.76" y="112.64" width="3.36" height="11.200000000000001" rx="1.68" fill="#3fb950"/>
-<text x="140" y="120" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="64" font-weight="700" fill="#e6edf3" text-anchor="start" letter-spacing="-1.5">precedent</text>
-<text x="66" y="186" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="500" fill="#e6edf3" text-anchor="start">Pull requests for AI judgment</text>
-<text x="66" y="232" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#9198a1" text-anchor="start">A human correction to an LLM judge becomes a scoped rule.</text>
-<text x="66" y="262" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#9198a1" text-anchor="start">It is tested on every case, approved by a second person, and reversible.</text>
-<text x="66" y="330" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#6e7681" text-anchor="start">gate · four-eyes · hash-chained log · offline</text>
-<rect x="760" y="70" width="456" height="260" rx="14" fill="#161b22" stroke="#30363d"/>
-<text x="784" y="110" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" font-weight="400" fill="#6e7681" text-anchor="start">one correction, two rules</text>
-<text x="784" y="162" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="#8b8bff" text-anchor="start">v1</text>
-<text x="824" y="162" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="400" fill="#e6edf3" text-anchor="start">when mentions_repayment</text>
-<text x="824" y="192" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="400" fill="#9198a1" text-anchor="start">→ escalation = pass</text>
-<rect x="1088" y="149.05" width="83.2" height="22.099999999999998" rx="11.049999999999999" fill="#2d1517" stroke="#f85149" stroke-width="1"/>
-<text x="1129.6" y="164" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#f85149" text-anchor="middle">✗ BLOCKED</text>
-<text x="1192" y="192" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#6e7681" text-anchor="end">fixes 2 · breaks 3</text>
-<text x="784" y="254" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="#8b8bff" text-anchor="start">v2</text>
-<text x="824" y="254" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="400" fill="#e6edf3" text-anchor="start">when supervisor_contact</text>
-<text x="824" y="284" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="400" fill="#9198a1" text-anchor="start">→ escalation = pass</text>
-<rect x="1088" y="241.05" width="83.2" height="22.099999999999998" rx="11.049999999999999" fill="#12261e" stroke="#3fb950" stroke-width="1"/>
-<text x="1129.6" y="256" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#3fb950" text-anchor="middle">✓ PASSED</text>
-<text x="1192" y="284" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#6e7681" text-anchor="end">fixes 3 · breaks 0</text>
+<rect width="1280" height="400" fill="#0f1115"/>
+<rect x="64" y="74" width="56" height="23.52" rx="6.5856" fill="#2c1513" stroke="#ff6b62" stroke-width="2.24"/>
+<rect x="71.84" y="84.08" width="11.200000000000001" height="3.36" rx="1.68" fill="#ff6b62"/>
+<rect x="64" y="106.47999999999999" width="56" height="23.52" rx="6.5856" fill="#14261a" stroke="#4cc26a" stroke-width="2.24"/>
+<rect x="71.84" y="116.55999999999999" width="11.200000000000001" height="3.36" rx="1.68" fill="#4cc26a"/>
+<rect x="75.76" y="112.64" width="3.36" height="11.200000000000001" rx="1.68" fill="#4cc26a"/>
+<text x="140" y="122" font-family="'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif" font-size="76" font-weight="400" fill="#e9e6df" text-anchor="start" letter-spacing="-1">precedent</text>
+<text x="66" y="186" font-family="Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="500" fill="#e9e6df" text-anchor="start">Pull requests for AI judgment</text>
+<text x="66" y="232" font-family="Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#a3a7af" text-anchor="start">A human correction to an LLM judge becomes a scoped rule.</text>
+<text x="66" y="262" font-family="Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#a3a7af" text-anchor="start">It is tested on every case, approved by a second person, and reversible.</text>
+<text x="66" y="330" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="15" font-weight="400" fill="#6f747d" text-anchor="start">gate · four-eyes · hash-chained log · offline</text>
+<rect x="760" y="70" width="456" height="260" rx="14" fill="#171a20" stroke="#2a2e36"/>
+<text x="784" y="110" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="14" font-weight="400" fill="#6f747d" text-anchor="start">one correction, two rules</text>
+<text x="784" y="162" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="16" font-weight="700" fill="#8fb0ff" text-anchor="start">v1</text>
+<text x="824" y="162" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="16" font-weight="400" fill="#e9e6df" text-anchor="start">when mentions_repayment</text>
+<text x="824" y="192" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="16" font-weight="400" fill="#a3a7af" text-anchor="start">→ escalation = pass</text>
+<rect x="1088" y="149.05" width="83.2" height="22.099999999999998" rx="11.049999999999999" fill="#2c1513" stroke="#ff6b62" stroke-width="1"/>
+<text x="1129.6" y="164" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#ff6b62" text-anchor="middle">✗ BLOCKED</text>
+<text x="1192" y="192" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" fill="#6f747d" text-anchor="end">fixes 2 · breaks 3</text>
+<text x="784" y="254" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="16" font-weight="700" fill="#8fb0ff" text-anchor="start">v2</text>
+<text x="824" y="254" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="16" font-weight="400" fill="#e9e6df" text-anchor="start">when supervisor_callback</text>
+<text x="824" y="284" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="16" font-weight="400" fill="#a3a7af" text-anchor="start">→ escalation = pass</text>
+<rect x="1088" y="241.05" width="83.2" height="22.099999999999998" rx="11.049999999999999" fill="#14261a" stroke="#4cc26a" stroke-width="1"/>
+<text x="1129.6" y="256" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#4cc26a" text-anchor="middle">✓ PASSED</text>
+<text x="1192" y="284" font-family="'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" fill="#6f747d" text-anchor="end">fixes 3 · breaks 0</text>
 </svg>

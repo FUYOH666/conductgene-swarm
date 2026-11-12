@@ -39,7 +39,7 @@ def _answer(pack: Pack, **overrides: Any) -> dict[str, Any]:
         "recording_disclosure": {"label": "not_applicable", "quote": ""},
     }
     preds = {p.id: {"value": "no", "quote": ""} for p in pack.predicates}
-    preds["supervisor_contact_offered"] = {"value": "yes", "quote": "team lead can call you back"}
+    preds["supervisor_callback_offered"] = {"value": "yes", "quote": "team lead can call you back"}
     preds["threat_of_arrest"] = {"value": "yes", "quote": "we will arrest you"}  # not in the text
     data: dict[str, Any] = {"abstain": False, "items": items, "predicates": preds}
     data.update(overrides)
@@ -48,7 +48,7 @@ def _answer(pack: Pack, **overrides: Any) -> dict[str, Any]:
 
 def test_system_prompt_lists_the_rubric(pack: Pack) -> None:
     prompt = build_system_prompt(pack)
-    assert "escalation_offered" in prompt and "supervisor_contact_offered" in prompt
+    assert "escalation_offered" in prompt and "supervisor_callback_offered" in prompt
     assert pack.clauses[0].id in prompt
 
 
@@ -69,7 +69,7 @@ def test_parse_verifies_every_claim(pack: Pack) -> None:
     assert out.items["escalation_offered"].label == "pass"
     assert out.items["escalation_offered"].quote is not None
     assert out.items["escalation_offered"].clause_ids == [pack.clauses[0].id]
-    assert out.predicates["supervisor_contact_offered"].value == "yes"
+    assert out.predicates["supervisor_callback_offered"].value == "yes"
     # a "yes" whose quote is not in the transcript is downgraded, not trusted
     assert out.predicates["threat_of_arrest"].value == "unknown"
     assert any("threat_of_arrest" in n for n in out.notes)
@@ -154,11 +154,11 @@ def test_factory(pack: Pack, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
 @respx.mock
 def test_agent_predicate_cannot_be_proven_with_customer_words(pack: Pack) -> None:
     data = _answer(pack)
-    data["predicates"]["supervisor_contact_offered"] = {
+    data["predicates"]["supervisor_callback_offered"] = {
         "value": "yes",
         "quote": "I can't pay all of it this month",  # the customer's line
     }
     respx.post(f"{BASE}/chat/completions").mock(return_value=_reply(json.dumps(data)))
     out = LLMJudge(pack, base_url=BASE, model="m").judge(pack.case("CASE-019"))
-    assert out.predicates["supervisor_contact_offered"].value == "unknown"
+    assert out.predicates["supervisor_callback_offered"].value == "unknown"
     assert any("not from Agent" in n for n in out.notes)

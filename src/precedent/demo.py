@@ -8,12 +8,14 @@ correction goes through the gate.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from rich.console import Console
 
 from precedent.engine import decide
 from precedent.events import EventStore
+from precedent.evidence import build_evidence, render_html
 from precedent.gate import run_gate
 from precedent.judge import judge_all
 from precedent.judge.factory import make_judge
@@ -44,7 +46,12 @@ def _fresh_db(path: Path) -> None:
             p.unlink()
 
 
-def run_demo(console: Console, out_dir: Path, judge_spec: str = "heuristic") -> int:
+def run_demo(
+    console: Console,
+    out_dir: Path,
+    judge_spec: str = "heuristic",
+    anchor_receipt: str | None = None,
+) -> int:
     pack = load_pack(PACK)
     judge = make_judge(pack, judge_spec)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -72,7 +79,7 @@ def run_demo(console: Console, out_dir: Path, judge_spec: str = "heuristic") -> 
 
     case = pack.case(CASE)
     ai_label = decide(pack, outputs[CASE], [])[ITEM].label
-    quote = outputs[CASE].predicates["supervisor_contact_offered"].quote
+    quote = outputs[CASE].predicates["supervisor_callback_offered"].quote
     correction = Correction(
         id="C-0001",
         pack=pack.id,
@@ -111,15 +118,36 @@ def run_demo(console: Console, out_dir: Path, judge_spec: str = "heuristic") -> 
     (reports_dir / "escalation-callback@2.md").write_text(gate_markdown(report2, v2))
 
     console.print("\n[bold]5[/]  Approval needs a second person")
+    data_hash, judge_id = pack.dataset_hash(), judge.judge_id
     try:
-        registry.approve("maria", v2.key, dataset_hash=pack.dataset_hash(), judge_id=judge.judge_id)
+        registry.approve("maria", v2.key, dataset_hash=data_hash, judge_id=judge_id)
     except RegistryError as exc:
         console.print(f"   [red]✗[/] maria: {exc}")
-    registry.approve("alex", v2.key, dataset_hash=pack.dataset_hash(), judge_id=judge.judge_id)
+    rerun = run_gate(
+        pack, outputs, registry.active_rules(pack.id), v2, registry.corrections(pack.id)
+    )
+    registry.approve(
+        "alex",
+        v2.key,
+        dataset_hash=data_hash,
+        judge_id=judge_id,
+        rerun=rerun,
+        rationale="Policy (escalation): a scheduled callback from a team lead is an offer.",
+    )
     ok2, _ = _agreement(pack, outputs, registry.active_rules(pack.id))
     console.print(
         f"   [green]✓[/] alex approves {v2.key}: agreement {ok}/{total} → [bold]{ok2}/{total}[/]"
     )
+
+    evidence_dir = out_dir / "evidence"
+    evidence_dir.mkdir(exist_ok=True)
+    for key in (v1.key, v2.key):
+        doc = build_evidence(pack, store, key, outputs, anchor_receipt=anchor_receipt)
+        (evidence_dir / f"{key}.json").write_text(
+            json.dumps(doc, indent=2, ensure_ascii=False) + "\n"
+        )
+        (evidence_dir / f"{key}.html").write_text(render_html(doc, pack))
+    console.print(f"   [dim]evidence packs: {evidence_dir}[/]")
 
     registry.revert("alex", v2.key, "demo: show that one command undoes it")
     ok3, _ = _agreement(pack, outputs, registry.active_rules(pack.id))

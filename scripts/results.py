@@ -133,22 +133,20 @@ def main(pack_name: str) -> int:
         '"Fixes" and "breaks" are relative to that judge alone: a strong judge leaves '
         "less to fix, and a bad rule still breaks what it got right.",
         "",
-        "| judge | rule | decision | fixes | breaks | held-out Δ (95% CI) |",
-        "|---|---|---|---|---|---|",
+        "| judge | rule | decision | fixes | breaks | exact McNemar p | held-out before → after |",
+        "|---|---|---|---|---|---|---|",
     ]
     rules = {r.key: r for r in pack.example_rules()}
     corr = _correction(pack)
     for jid, outputs in all_outputs.items():
         for key, rule in rules.items():
             report = run_gate(pack, outputs, [], rule, [corr])
-            fixes = sum(f.kind == "fixed" for f in report.flips)
-            breaks = sum(f.kind == "broken" for f in report.flips)
-            delta = "—"
-            if report.heldout_delta is not None and report.heldout_ci is not None:
-                lo, hi = report.heldout_ci
-                delta = f"{report.heldout_delta:+.3f} [{lo:+.3f}, {hi:+.3f}]"
+            lab, held = report.labelled, report.heldout
+            assert lab is not None
+            heldout = f"{held.right_before}/{held.n} → {held.right_after}/{held.n}" if held else "—"
             lines.append(
-                f"| `{jid}` | `{key}` | {report.decision} | {fixes} | {breaks} | {delta} |"
+                f"| `{jid}` | `{key}` | {report.decision} | {lab.fixes} | {lab.breaks} "
+                f"| {lab.mcnemar_p:.2f} | {heldout} |"
             )
     lines.append("")
 

@@ -185,10 +185,30 @@ def cmd_gate(args: argparse.Namespace) -> int:
 
 def cmd_approve(args: argparse.Namespace) -> int:
     pack = load_pack(args.pack)
-    judge = _judge(pack, args.judge, None)
-    with EventStore(Path(args.db)) as store:
-        rule = Registry(store).approve(
-            args.actor, args.rule_key, dataset_hash=pack.dataset_hash(), judge_id=judge.judge_id
+    db = Path(args.db)
+    judge = _judge(pack, args.judge, db)
+    with EventStore(db) as store:
+        registry = Registry(store)
+        state = registry.state()
+        record = state.rules.get(args.rule_key)
+        if record is None:
+            console.print(f"[red]unknown rule {args.rule_key}[/]")
+            return 2
+        # The approver re-performs the gate; the recorded report must be reproduced.
+        rerun = run_gate(
+            pack,
+            judge_all(judge, pack.cases),
+            state.active(pack.id),
+            record.rule,
+            [c for c in state.corrections.values() if c.pack == pack.id],
+        )
+        rule = registry.approve(
+            args.actor,
+            args.rule_key,
+            dataset_hash=pack.dataset_hash(),
+            judge_id=judge.judge_id,
+            rationale=args.rationale or "",
+            rerun=rerun,
         )
     console.print(f"[green]✓[/] {rule.key} is active")
     return 0
@@ -220,8 +240,58 @@ def cmd_rules(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_evidence(args: argparse.Namespace) -> int:
+    import json
+
+    from precedent.evidence import build_evidence, render_html
+
+    pack = load_pack(args.pack)
+    db = Path(args.db)
+    outputs = _outputs(pack, args.judge, db)
+    with EventStore(db) as store:
+        doc = build_evidence(
+            pack, store, args.rule_key, outputs, anchor_receipt=args.anchor_receipt
+        )
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f"{args.rule_key}.json").write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+    (out / f"{args.rule_key}.html").write_text(render_html(doc, pack))
+    console.print(
+        f"wrote {out / args.rule_key}.html and .json · sha256 {doc['evidence_hash'][:16]}…"
+    )
+    return 0
+
+
 def cmd_audit(args: argparse.Namespace) -> int:
     with EventStore(Path(args.db)) as store:
+        if args.action == "export":
+            import json
+
+            result = store.verify(anchor=args.anchor)
+            lines = [
+                json.dumps(
+                    {
+                        "seq": e.seq,
+                        "ts": e.ts,
+                        "actor": e.actor,
+                        "type": e.type,
+                        "payload": e.payload,
+                        "prev_hash": e.prev_hash,
+                        "hash": e.hash,
+                    },
+                    ensure_ascii=False,
+                )  # fmt: skip
+                for e in store.events()
+            ]
+            trailer = {"population": result.count, "head": result.head, "chain_ok": result.ok}
+            lines.append(json.dumps({"trailer": trailer}))
+            text = "\n".join(lines) + "\n"
+            if args.out:
+                Path(args.out).write_text(text, encoding="utf-8")
+                console.print(f"exported {result.count} events to {args.out}, head {result.head}")
+            else:
+                sys.stdout.write(text)
+            return 0 if result.ok else 1
         if args.action == "verify":
             result = store.verify(anchor=args.anchor)
             if result.ok:
@@ -311,11 +381,12 @@ def build_parser() -> argparse.ArgumentParser:
     judge_opt(p)
     p.set_defaults(func=cmd_gate)
 
-    p = sub.add_parser("approve", help="approve a rule that passed the gate")
+    p = sub.add_parser("approve", help="re-run the gate and approve a rule that passed it")
     p.add_argument("rule_key")
     p.add_argument("--db", required=True)
     p.add_argument("--pack", required=True)
     p.add_argument("--actor", required=True)
+    p.add_argument("--rationale", help="why the approver accepts this change (kept in the log)")
     judge_opt(p)
     p.set_defaults(func=cmd_approve)
 
@@ -330,8 +401,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--db", required=True)
     p.set_defaults(func=cmd_rules)
 
-    p = sub.add_parser("audit", help="verify or print the event log")
-    p.add_argument("action", choices=["verify", "log"])
+    p = sub.add_parser("evidence", help="write an evidence pack (HTML + JSON) for one rule")
+    p.add_argument("rule_key")
+    p.add_argument("--db", required=True)
+    p.add_argument("--pack", required=True)
+    p.add_argument("--out", default="evidence")
+    p.add_argument("--anchor-receipt", help="where the chain head was recorded outside the log")
+    judge_opt(p)
+    p.set_defaults(func=cmd_evidence)
+
+    p = sub.add_parser("audit", help="verify, print or export the event log")
+    p.add_argument("action", choices=["verify", "log", "export"])
+    p.add_argument("--out", help="export: write the population here instead of stdout")
     p.add_argument("--db", required=True)
     p.add_argument("--anchor", help="a head hash recorded earlier outside the log")
     p.set_defaults(func=cmd_audit)

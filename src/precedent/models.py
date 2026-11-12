@@ -164,6 +164,20 @@ class ItemMetrics(BaseModel):
     kappa_after: float | None
 
 
+class Tally(BaseModel):
+    """Before/after comparison against the labels over a set of verdicts."""
+
+    n: int
+    right_before: int
+    right_after: int
+    fixes: int
+    breaks: int
+    cases_fixed: int
+    cases_broken: int
+    mcnemar_p: float
+    after_ci: tuple[float, float]
+
+
 class GateReport(BaseModel):
     rule_key: str
     rule_hash: str
@@ -176,8 +190,8 @@ class GateReport(BaseModel):
     checks: list[GateCheck]
     flips: list[Flip]
     metrics: list[ItemMetrics]
-    heldout_delta: float | None = None
-    heldout_ci: tuple[float, float] | None = None
+    labelled: Tally | None = None
+    heldout: Tally | None = None
     fires_on: int = 0
 
     @property

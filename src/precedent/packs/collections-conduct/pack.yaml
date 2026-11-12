@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/pack.schema.json
 id: collections-conduct
 version: "2.0"
 title: Call conduct QA for collections and outbound financial calls
@@ -73,16 +74,14 @@ predicates:
       - 'escalation to a supervisor'
       - 'escalation team'
 
-  - id: supervisor_contact_offered
-    question: Does the agent offer any contact with a supervisor, manager or team lead, such as a transfer, a call or a scheduled callback?
+  - id: supervisor_callback_offered
+    question: Does the agent promise that a supervisor, manager or team lead will call or contact the customer later (a callback, not a live transfer)?
+    note: Added after correction C-0001. The rubric item covered transfers well and missed scheduled callbacks.
     speaker: Agent
     patterns:
-      - '(transfer|connect) you (to|with) [\w ]{0,20}\b(supervisor|manager)'
-      - 'speak (with|to) (a|our|my) [\w ]{0,12}\b(supervisor|manager)'
-      - 'escalation to a supervisor'
-      - 'escalation team'
       - '(supervisor|manager|team lead)\b[^.]{0,40}\b(call you back|callback|contact you|reach out)'
       - 'ask (my|our|a) (supervisor|manager|team lead) to (call|contact) you'
+      - 'arrange a callback'
 
   - id: company_identified
     question: Does the agent state the company name and the purpose of the call?

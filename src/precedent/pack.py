@@ -48,6 +48,7 @@ class PredicateDef(BaseModel):
     speaker: str | None = None
     patterns: list[str] = Field(default_factory=list)
     negation: bool = True
+    note: str = ""
 
 
 class HeuristicBranch(BaseModel):
