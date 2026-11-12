@@ -1,169 +1,205 @@
-# ConductGene Swarm
+# Precedent
 
-[![CI](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/ci.yml)
-[![Docker Smoke](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/docker-smoke.yml/badge.svg)](https://github.com/FUYOH666/conductgene-swarm/actions/workflows/docker-smoke.yml)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/FUYOH666/conductgene-swarm)](https://github.com/FUYOH666/conductgene-swarm/releases)
+**Pull requests for AI judgment.** When a person corrects an LLM judge, the
+correction becomes a small rule with a stated scope. The rule is tested against
+every case the system has ever been checked on, approved by someone other than
+its author, and can be reverted with one command. Every step lands in a
+hash-chained log.
 
-**Human-approved AI conduct QA that remembers supervisor corrections safely.**
+```text
+$ precedent demo
+1 Judge agrees with the labels on 107/112 verdicts.
+2 maria corrects CASE-019: escalation_offered needs_review → pass
+  "…team lead can call you back…"
 
-Multi-agent conduct QA for regulated industries (collections, debt servicing, insurance). Prosecutor, Defender, and Arbiter agents review call transcripts with evidence-grounded citations and an explicit abstain path. When a supervisor corrects a verdict, the system stores a **supervisor-approved Policy Gene** — auditable, rollbackable institutional memory that improves future reviews.
+3 She turns it into a rule, the way v1 did
+  escalation-callback@1 when mentions_repayment → escalation_offered = pass
+  gate ✗ BLOCKED   held-out Δ -0.028 [-0.111, +0.056]
+    ✓ source_fixed           1 correction(s) fixed
+    ✗ no_regressions         breaks 3: CASE-005 needs_review→pass, CASE-012 …, CASE-023 …
+    ✗ heldout_not_worse      33/36 → 32/36
 
-Originally built for the UCWS Singapore 2026 hackathon, now maintained as a standalone open-source project.
+4 She states the real reason instead
+  escalation-callback@2 when supervisor_contact_offered → escalation_offered = pass
+  gate ✓ PASSED   held-out Δ +0.056 [+0.000, +0.139]
+    ✓ no_regressions         fixes 3, breaks 0
 
-<p align="center">
-  <a href="docs/assets/architecture.png">
-    <img src="docs/assets/architecture.png" alt="ConductGene Swarm architecture" width="720"/>
-  </a>
-</p>
+5 Approval needs a second person
+  ✗ maria: four-eyes: maria proposed escalation-callback@2 and cannot also approve it
+  ✓ alex approves escalation-callback@2: agreement 107/112 → 110/112
+6 alex reverts it: agreement back to 107/112
+7 Audit log: 7 hash-chained events, ✓ intact
+```
 
-## Why
+[Quickstart](#quickstart) · [How it works](docs/how-it-works.md) ·
+[Results](#results) · [What v1 got wrong](docs/what-v1-got-wrong.md) ·
+[Roadmap](docs/ROADMAP.md)
 
-| Problem | Solution |
-|---------|----------|
-| QA teams repeat the same corrections | Policy Genes preserve approved patterns |
-| LLMs hallucinate policy | Evidence-grounded citations + abstain |
-| Regulators need accountability | Supervisor approval, audit trail, rollback, per-run traces |
+## The problem
 
-Four design ideas carry the system, each transferable to other agent stacks:
+Teams that run an LLM as a judge (call QA, document review, classification)
+have people check a sample of its decisions. Those people disagree with it,
+and the disagreements go one of two ways: lost, or pasted into the prompt.
+A prompt edit is untested. Nobody can say which past decisions it would have
+changed, who approved it, or why the system answered differently on Tuesday
+than on Monday.
 
-1. **Adversarial review instead of a single judge** — disagreement between Prosecutor and Defender surfaces weak evidence before it becomes a wrong verdict.
-2. **No citation, no verdict** — every finding cites a specific policy passage, or the system abstains to a human.
-3. **Institutional memory with human sign-off** — corrections become small, auditable rules that only take effect after supervisor approval and can be rolled back at any time.
-4. **Determinism as the baseline** — the whole pipeline runs offline with rule-based agents in CI; live LLMs are an opt-in layer, so behavior changes are measurable.
+This project's own first version is the example. In June 2026 it "learned"
+from a supervisor correction by storing a keyword rule. The rule fixed the call
+it came from and broke a held-out call: the score went from 1.0 to 0.67, and
+the evaluation reported `improved: True`
+([post-mortem](docs/what-v1-got-wrong.md)). The demo above runs that same
+correction through the v2 gate.
 
-## Quick start
+## Quickstart
+
+Python 3.12+ and [uv](https://docs.astral.sh/uv/). The demo needs no network
+and no model, and runs in under a second once installed:
 
 ```bash
-git clone https://github.com/FUYOH666/conductgene-swarm.git
-cd conductgene-swarm
-cp .env.example .env
-uv sync --extra dev --extra ui
-./scripts/verify_all.sh    # full offline gate: ruff, mypy, pytest+coverage, 16/16 eval, demo
-./scripts/demo.sh          # 90-second demo path (CASE-002 → gene → CASE-005)
-uv run conductgene-ui      # 5-panel Streamlit demo
+uvx --from git+https://github.com/FUYOH666/conductgene-swarm precedent demo
 ```
 
-**Docker:**
+From a clone:
 
 ```bash
-docker compose up --build
+git clone https://github.com/FUYOH666/conductgene-swarm.git && cd conductgene-swarm
+uv sync --extra dev
+uv run precedent demo
+./scripts/verify_all.sh        # lint, mypy --strict, tests, demo; no network
 ```
 
-## Eval metrics (mock mode, synthetic suite)
-
-| Metric | Value |
-|--------|-------|
-| Scenario pass rate | 16/16 (100%) |
-| Citation coverage | 100% |
-| Abstain rate | ~6.3% (CASE-007) |
-| Gene learning (CASE-002 → CASE-005) | `escalation_offered`: needs_review → pass |
-
-Reproduce locally with `./scripts/verify_all.sh` or `./scripts/qa_matrix.sh`.
-
-## Live stack (BGE + Qdrant + LLM providers)
+With a real model on any OpenAI-compatible endpoint (LM Studio by default):
 
 ```bash
-cp .env.example .env   # add CONDUCTGENE_OPENROUTER_API_KEY for cloud LLM
-uv sync --extra dev --extra retrieval --extra live --extra ui
-
-# Start Qdrant + BGE services (embedding :9001, reranker :9002)
-docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
-uv run python scripts/discover_services.py
-uv run python scripts/synth_data.py          # optional: extend KB
-uv run python scripts/ingest_qdrant.py --rebuild
-
-# Live retrieval + mock agents (CI-safe default)
-CONDUCTGENE_RETRIEVAL_MODE=qdrant_rerank CONDUCTGENE_ENABLE_RERANKER=true uv run conductgene-ui
-
-# Full live LLM swarm (OpenRouter / LM Studio / instruct gateway)
-CONDUCTGENE_MODE=live CONDUCTGENE_LLM_PROVIDER=openrouter uv run python scripts/run_live_simulation.py
-uv run python scripts/bench_models.py --provider openrouter --limit 4 --max-cost-usd 1.0
+export PRECEDENT_LLM_BASE_URL=http://127.0.0.1:1234/v1
+uv run precedent judge --pack collections-conduct --judge llm:<model> --db work/p.db --errors
 ```
 
-**Docker live profile** (Qdrant in compose; BGE/LM Studio on host):
+## How it works
 
-```bash
-docker compose -f docker-compose.yml -f docker-compose.live.yml up --build
+```text
+correction ──▶ proposed rule ──▶ gate ──▶ second person approves ──▶ active ──▶ revert
+                    ▲              │
+                    └── BLOCKED ───┘   (new version)
 ```
 
-**Pre-flight scorecard:**
+- **The model perceives, code decides.** One call per case returns a label per
+  rubric item and yes/no answers to a library of narrow predicates ("did the
+  agent offer contact with a supervisor?"). Every positive claim needs a quote
+  that exists verbatim in the case, or it is downgraded.
+- **Rules are written in predicates**, not keywords or prompt text, so their
+  effect is deterministic and cheap to re-check:
 
-```bash
-./scripts/run_simulation_matrix.sh                  # full scorecard → reports/simulation_matrix.md
-SKIP_LIVE=true ./scripts/run_simulation_matrix.sh   # offline only (CI gate)
-```
+  ```yaml
+  id: escalation-callback
+  version: 2
+  item: escalation_offered
+  when:
+    - {predicate: supervisor_contact_offered, equals: "yes"}
+  then: pass
+  source_corrections: [C-0001]
+  examples: [CASE-019]
+  counter_examples: [CASE-005, CASE-023, CASE-025]   # required
+  ```
 
-See [docs/qdrant-retrieval.md](docs/qdrant-retrieval.md) · [docs/live-simulation.md](docs/live-simulation.md)
+- **The gate blocks** if the rule does not fix its own correction, changes a
+  declared counter-example, turns **any** right answer wrong, conflicts with an
+  active rule, or lowers held-out agreement (paired bootstrap CI).
+- **Approval is bound to what the gate saw.** The rule's content hash, the data,
+  the judge and the active rule set. Change any of them and the gate runs again.
+  The author cannot approve their own rule.
+- **The log is append-only SQLite with a hash chain**; `precedent audit verify`
+  detects edits even when the triggers are bypassed. Case text is not logged.
 
-## API
+Details: [docs/how-it-works.md](docs/how-it-works.md) ·
+[writing a pack](docs/writing-a-pack.md).
 
-```bash
-uv run conductgene-serve   # http://127.0.0.1:8090/docs
-```
+## Results
 
-Production hardening (optional, off by default for local demo):
+`collections-conduct` is a small synthetic pack: 28 calls, 9 held out, one
+annotator. These numbers are a smoke test of the machinery, not a benchmark.
+They are regenerated by `scripts/results.py` from the heuristic judge and from
+recorded outputs of a local model.
 
-```bash
-CONDUCTGENE_API_KEY=your-secret        # require X-API-Key header (health/readiness stay open)
-CONDUCTGENE_RATE_LIMIT_RPM=30          # per-client limit on /swarm/analyze and /eval/run
-```
+**Judges, no rules** (112 verdicts: 28 calls × 4 items):
 
-| Endpoint | Description |
-|----------|-------------|
-| `GET /healthz` | Liveness |
-| `GET /healthz/services` | BGE / Qdrant / LLM service probes |
-| `GET /readyz` | Readiness |
-| `POST /swarm/analyze` | Swarm review + audit record (returns `trace_id`) |
-| `POST /genes/learn` | Store supervisor-approved Policy Gene |
-| `GET /genes` | List genes |
-| `POST /genes/{id}/rollback` | Deactivate gene (rollback) |
-| `POST /eval/run` | Run synthetic scenario suite |
-| `GET /audit/{case_id}` | Case provenance |
-| `GET /audit/export` | Export case + gene audit trails |
-| `GET /metrics/evolution` | Learning + quality metrics (cached eval) |
+| judge | agree with labels | held-out | where it is wrong |
+|---|---|---|---|
+| keyword heuristic (the offline baseline) | 107/112 | 33/36 | misses callbacks from a team lead or manager (3), a threat without the usual keywords (1), one disputed label |
+| Gemma 4 26B, local (LM Studio, MLX), recorded | 107/112 | 32/36 | gives a full verdict on an out-of-domain hotel call instead of abstaining (4), the same disputed label |
 
-## CLI
+Quote verification downgraded two Gemma claims that an escalation was offered
+but could not be quoted from the call; one of them was on the hotel call. Median
+18.7 s and about 1.9k tokens per call on an Apple Silicon Mac.
 
-```bash
-uv run conductgene demo
-uv run conductgene eval --suite all
-uv run conductgene analyze --file data/scenarios/collections/case_002_coercive_soft.json
-uv run conductgene audit export --out reports/audit_export.json
-uv run conductgene genes export-skill --out reports/skill   # Policy Genes → portable SKILL.md
-```
+**The demo correction through the gate**, on each judge's outputs:
 
-## MCP
+| judge | rule | gate | fixes | breaks | held-out Δ (95% CI) |
+|---|---|---|---|---|---|
+| keyword heuristic | v1: `mentions_repayment` | BLOCKED | 2 | 3 | −0.028 [−0.111, +0.056] |
+| keyword heuristic | v2: `supervisor_contact_offered` | PASSED | 3 | 0 | +0.056 [+0.000, +0.139] |
+| Gemma 4 26B | v1: `mentions_repayment` | BLOCKED | 0 | 5 | −0.056 [−0.139, +0.000] |
+| Gemma 4 26B | v2: `supervisor_contact_offered` | PASSED | 0 | 0 | +0.000 |
 
-Expose learned Policy Genes to MCP-capable agent runtimes:
+The same keyword rule does more damage on the better judge: Gemma already gets
+the callbacks right, so the rule fixes nothing and breaks five verdicts. A rule
+is only safe relative to a judge, which is why every gate result records the
+judge it ran against.
 
-```bash
-uv sync --extra mcp
-uv run conductgene-mcp     # stdio MCP server: list_genes, export_skill
-```
+Full tables and the list of every disagreement:
+[docs/results/collections-conduct.md](docs/results/collections-conduct.md).
+A benchmark on public customs rulings (U.S. CBP CROSS) with baselines,
+including "corrections as few-shot examples in the prompt", is the next
+milestone ([roadmap](docs/ROADMAP.md)).
 
-## Observability
+## Design principles
 
-Every swarm run emits structured stage traces correlated by `trace_id` (also stored in the audit record):
+1. **No quote, no claim.** A finding the judge cannot quote from the case does
+   not count.
+2. **State the reason, not the trigger.** A rule names the condition that made
+   the human right, and the cases where it must not apply.
+3. **Nothing that was right may become wrong.** The gate counts broken cases
+   individually; an average cannot hide them.
+4. **Two people, one log.** Author and approver differ; every step is an event
+   anyone can verify.
+5. **Offline by default.** Tests, the demo and the gate run without a network or
+   a model; real model runs are recorded and replayed.
 
-```
-swarm_stage trace_id=0d10a721f2664b42 stage=retrieval duration_ms=0.2 case_id=CASE-005 ...
-swarm_stage trace_id=0d10a721f2664b42 stage=verdict duration_ms=0.4 abstained=False ...
-```
+## Limitations
 
-## Docs
+- The packs are small and labelled by one person. There is no human–human
+  agreement figure yet, so there is no ceiling to compare the judge against.
+- Rules can only use predicates the judge was asked; a new predicate means
+  re-running the judge on every case.
+- Actors are names supplied to the CLI. Four-eyes approval stops mistakes, not
+  impersonation; put it behind your own authentication.
+- The log is tamper-evident, not tamper-proof: anchor the head hash elsewhere.
+- Automated monitoring of employees' behaviour (as in call QA) is high-risk
+  under the EU AI Act (Annex III, 4(b)). This tool helps document oversight;
+  it does not make a deployment compliant.
 
-- [Architecture](docs/architecture.md)
-- [Product spec](docs/product-spec.md)
-- [Demo script](docs/demo-script.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Qdrant retrieval setup](docs/qdrant-retrieval.md)
-- [Live simulation guide](docs/live-simulation.md)
-- [Governance (IMDA MGF)](docs/governance.md)
-- [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Releases](https://github.com/FUYOH666/conductgene-swarm/releases)
-- Hackathon-era material: [docs/_archive/hackathon/](docs/_archive/hackathon/)
+## Related work
 
-## License
+LLM-judge calibration from human feedback exists in evaluation platforms
+(LangSmith Align Evals, Galileo's continuous learning with human feedback) and
+in research on criteria drift (Shankar et al., *Who Validates the Validators?*,
+2024). There, corrections become prompt context or few-shot examples. Here a
+correction becomes a reviewed change with a scope, a gate and a revert.
+[evidencegene-court](https://github.com/FUYOH666/evidencegene-court) applies the
+"no evidence, no finding" boundary to forensic investigation.
 
-MIT — see [LICENSE](LICENSE).
+## History
+
+v1 was "ConductGene Swarm", built for the UCWS Singapore 2026 hackathon. It is
+preserved under the tag `v1-ucws-2026`.
+
+## Author
+
+Aleksandr Mordvinov ([scanovich.ai](https://scanovich.ai)), document
+intelligence and AI-operated workflows with human sign-off. If you run an LLM
+judge or classifier in a regulated workflow (customs classification, call QA,
+claims, compliance review) and your reviewers' corrections go nowhere, I would
+like to hear what breaks.
+
+MIT licence.

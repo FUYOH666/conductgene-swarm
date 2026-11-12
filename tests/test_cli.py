@@ -1,95 +1,85 @@
-"""CLI dispatch tests for conductgene.main (in-process, isolated stores)."""
-
 from __future__ import annotations
 
-import argparse
-import json
 from pathlib import Path
 
 import pytest
 
-from conductgene.main import _dispatch
+from precedent.cli import main
+from precedent.pack import builtin_packs_root
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-
-@pytest.fixture
-def cli_env(tmp_path: Path, monkeypatch):
-    """Isolate runtime stores and force offline mock mode."""
-    monkeypatch.chdir(PROJECT_ROOT)
-    monkeypatch.setenv("CONDUCTGENE_MODE", "mock")
-    monkeypatch.setenv("CONDUCTGENE_LLM_PROVIDER", "mock")
-    monkeypatch.setenv("CONDUCTGENE_RETRIEVAL_MODE", "memory")
-    monkeypatch.setenv("CONDUCTGENE_GENE_STORE_PATH", str(tmp_path / "genes.jsonl"))
-    monkeypatch.setenv("CONDUCTGENE_AUDIT_STORE_PATH", str(tmp_path / "audit.jsonl"))
-    monkeypatch.setenv(
-        "CONDUCTGENE_GENE_AUDIT_STORE_PATH", str(tmp_path / "gene_events.jsonl")
-    )
-    return tmp_path
+RULES = builtin_packs_root() / "collections-conduct" / "rules"
 
 
-def _ns(**kwargs) -> argparse.Namespace:
-    return argparse.Namespace(**kwargs)
+def test_demo_tells_the_whole_story(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert main(["demo", "--out", str(tmp_path)]) == 0
+    out = capsys.readouterr().out
+    assert "BLOCKED" in out and "PASSED" in out and "four-eyes" in out
+    assert (tmp_path / "reports" / "escalation-callback@1.md").is_file()
+    assert main(["audit", "verify", "--db", str(tmp_path / "demo.db")]) == 0
 
 
-async def test_cli_analyze_scenario_file(cli_env, capsys):
-    await _dispatch(
-        _ns(
-            command="analyze",
-            transcript=None,
-            file=PROJECT_ROOT / "data/scenarios/collections/case_002_coercive_soft.json",
-            case_id=None,
-            provider=None,
-            model=None,
-            mode=None,
+def test_cli_lifecycle(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    db = str(tmp_path / "p.db")
+    pack = ["--pack", "collections-conduct"]
+    assert main(["packs"]) == 0
+    assert main(["judge", *pack, "--errors"]) == 0
+    assert "CASE-019" in capsys.readouterr().out
+
+    assert (
+        main(
+            [
+                "correct", "--db", db, *pack, "--case", "CASE-019",
+                "--item", "escalation_offered", "--label", "pass",
+                "--reviewer", "maria", "--error-type", "policy_misinterpretation",
+                "--id", "C-0001",
+            ]
         )
-    )
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["case_id"] == "CASE-002"
-    assert payload["trace_id"]
-    assert payload["checklist"]
-
-
-async def test_cli_genes_list_empty(cli_env, capsys):
-    await _dispatch(_ns(command="genes", genes_command=None))
-    assert json.loads(capsys.readouterr().out) == []
-
-
-async def test_cli_demo_then_genes_and_skill_export(cli_env, capsys, tmp_path):
-    await _dispatch(_ns(command="demo"))
-    capsys.readouterr()
-
-    await _dispatch(_ns(command="genes", genes_command=None))
-    genes = json.loads(capsys.readouterr().out)
-    assert len(genes) == 1
-    assert genes[0]["target_checklist_id"] == "escalation_offered"
-
-    out_dir = tmp_path / "skill"
-    await _dispatch(_ns(command="genes", genes_command="export-skill", out=out_dir))
-    assert "SKILL.md" in capsys.readouterr().out
-    assert "escalation_offered" in (out_dir / "SKILL.md").read_text(encoding="utf-8")
-
-
-async def test_cli_eval_writes_report(cli_env, capsys, tmp_path):
-    out = tmp_path / "eval.json"
-    await _dispatch(_ns(command="eval", suite="all", out=out))
-    report = json.loads(out.read_text(encoding="utf-8"))
-    assert report["score"] == 1.0
-    assert report["total"] == 16
-
-
-async def test_cli_learn_stores_gene(cli_env, capsys):
-    await _dispatch(
-        _ns(
-            command="learn",
-            request_id="req-cli-1",
-            checklist_id="escalation_offered",
-            status="pass",
-            rationale="Repayment plan counts as escalation.",
-            trigger="repayment",
-            supervisor_id="cli-supervisor",
+        == 0
+    )  # fmt: skip
+    assert (
+        main(
+            ["propose", str(RULES / "escalation-callback.v1.yaml"), "--db", db, "--actor", "maria"]
         )
+        == 0
     )
-    gene = json.loads(capsys.readouterr().out)
-    assert gene["target_checklist_id"] == "escalation_offered"
-    assert gene["active"] is True
+    report = tmp_path / "gate.md"
+    assert main(["gate", "escalation-callback@1", "--db", db, *pack, "--report", str(report)]) == 1
+    assert "BLOCKED" in report.read_text()
+
+    assert (
+        main(
+            ["propose", str(RULES / "escalation-callback.v2.yaml"), "--db", db, "--actor", "maria"]
+        )
+        == 0
+    )
+    assert main(["gate", "escalation-callback@2", "--db", db, *pack]) == 0
+    assert main(["approve", "escalation-callback@2", "--db", db, "--actor", "maria"]) == 2
+    assert main(["approve", "escalation-callback@2", "--db", db, "--actor", "alex"]) == 0
+    assert main(["rules", "--db", db]) == 0
+    assert main(["eval", *pack, "--db", db]) == 0
+    assert (
+        main(
+            ["revert", "escalation-callback@2", "--db", db, "--actor", "alex", "--reason", "drill"]
+        )
+        == 0
+    )
+    assert main(["audit", "log", "--db", db]) == 0
+    assert main(["audit", "verify", "--db", db]) == 0
+    out = capsys.readouterr().out
+    assert "chain intact" in out
+
+
+def test_cli_errors(tmp_path: Path) -> None:
+    db = str(tmp_path / "p.db")
+    assert main(["gate", "nope@1", "--db", db, "--pack", "collections-conduct"]) == 2
+    assert main(["judge", "--pack", "no-such-pack"]) == 2
+    assert (
+        main(
+            [
+                "correct", "--db", db, "--pack", "collections-conduct", "--case", "CASE-001",
+                "--item", "escalation_offered", "--label", "maybe",
+                "--reviewer", "maria", "--error-type", "misread",
+            ]
+        )
+        == 2
+    )  # fmt: skip

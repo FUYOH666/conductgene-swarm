@@ -1,22 +1,11 @@
-## Summary
+## What and why
 
-<!-- What changed and why (1–3 sentences) -->
-
-## Type of change
-
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation
-- [ ] Test / CI
-- [ ] Refactor
+<!-- 1–3 sentences -->
 
 ## Checklist
 
-- [ ] `./scripts/verify_all.sh` passes locally
-- [ ] CHANGELOG.md updated (if user-facing)
-- [ ] No secrets, `.env`, or internal IPs in the diff
-- [ ] Mock mode remains the default for CI/demo
-
-## Test plan
-
-<!-- Commands run, scenarios tested -->
+- [ ] `./scripts/verify_all.sh` passes
+- [ ] Tests that would fail without this change
+- [ ] Any new number is reproducible from a script in the repo
+- [ ] CHANGELOG updated if user-facing
+- [ ] No secrets, `.env`, addresses or personal data

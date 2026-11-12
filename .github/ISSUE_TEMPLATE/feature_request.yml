@@ -24,12 +24,12 @@ body:
     attributes:
       label: Area
       options:
-        - agents / swarm
-        - policy genes
-        - audit / governance
-        - eval harness
-        - API / CLI
-        - Streamlit UI
+        - judge
+        - rules / gate
+        - event log / audit
+        - packs / data
+        - benchmark
+        - CLI
         - documentation
         - other
     validations:
@@ -40,7 +40,7 @@ body:
     attributes:
       label: Governance alignment
       options:
-        - label: Feature preserves supervisor approval for Policy Genes
+        - label: Keeps four-eyes approval and the gate in front of every rule change
           required: false
         - label: Feature includes audit trail or rollback path
           required: false
