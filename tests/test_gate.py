@@ -21,10 +21,10 @@ def test_v1_keyword_rule_is_blocked(
     checks = _checks(report)
     assert checks["source_fixed"] is True  # it does fix the call it came from...
     assert checks["no_regressions"] is False  # ...and breaks three others
-    assert checks["heldout_not_worse"] is False
     broken = sorted(f.case_id for f in report.flips if f.kind == "broken")
     assert broken == ["CASE-005", "CASE-012", "CASE-023"]
-    assert report.heldout_delta is not None and report.heldout_delta < 0
+    assert report.labelled is not None and (report.labelled.fixes, report.labelled.breaks) == (2, 3)
+    assert report.heldout is not None and (report.heldout.fixes, report.heldout.breaks) == (1, 2)
 
 
 def test_narrow_rule_passes(
@@ -41,7 +41,9 @@ def test_narrow_rule_passes(
         "CASE-028",
     ]
     assert not [f for f in report.flips if f.kind == "broken"]
-    assert report.heldout_delta is not None and report.heldout_delta > 0
+    assert report.heldout is not None and (report.heldout.fixes, report.heldout.breaks) == (2, 0)
+    assert report.labelled is not None and report.labelled.mcnemar_p == 0.25  # 3 fixes, 0 breaks
+    assert next(c for c in report.checks if c.name == "has_effect").passed
     esc = next(m for m in report.metrics if m.item == "escalation_offered")
     assert esc.agreement_after > esc.agreement_before
 
@@ -54,12 +56,12 @@ def test_conflicting_rule_is_blocked(
 ) -> None:
     active = [rules["escalation-callback@2"]]
     conflicting = Rule(
-        id="coercion-needs-review",
+        id="repayment-needs-review",
         pack=pack.id,
         item="escalation_offered",
-        title="Coercive calls always go to review",
+        title="Any repayment talk goes to review",
         rationale="test",
-        when=[Condition(predicate="coercive_consequences")],
+        when=[Condition(predicate="mentions_repayment")],
         then="needs_review",
         examples=["CASE-005"],
         counter_examples=["CASE-001"],
@@ -67,7 +69,7 @@ def test_conflicting_rule_is_blocked(
     report = run_gate(pack, outputs, active, conflicting, [correction])
     assert report.decision == "BLOCKED"
     assert _checks(report)["no_conflicts"] is False
-    after = decide(pack, outputs["CASE-002"], [*active, conflicting])
+    after = decide(pack, outputs["CASE-019"], [*active, conflicting])
     assert after["escalation_offered"].source == "conflict"
     assert after["escalation_offered"].label == "needs_review"
 
@@ -158,8 +160,8 @@ def test_unknown_never_fires_a_rule(
         update={
             "predicates": {
                 **out.predicates,
-                "supervisor_contact_offered": PredicateAnswer(
-                    predicate_id="supervisor_contact_offered", value="unknown"
+                "supervisor_callback_offered": PredicateAnswer(
+                    predicate_id="supervisor_callback_offered", value="unknown"
                 ),
             }
         }
@@ -178,7 +180,7 @@ def test_report_hash_is_stable(
 def test_rules_are_judge_specific(
     pack: Pack, rules: dict[str, Rule], correction: Correction
 ) -> None:
-    """The v1 rule breaks 3 verdicts on the heuristic judge and 5 on Gemma 4."""
+    """The v1 rule breaks 3 verdicts on the heuristic judge and 4 on Gemma 4."""
     from precedent.judge import judge_all
     from precedent.judge.cassette import ReplayJudge
 
@@ -189,6 +191,6 @@ def test_rules_are_judge_specific(
     v1 = run_gate(pack, gemma, [], rules["escalation-callback@1"], [correction])
     v2 = run_gate(pack, gemma, [], rules["escalation-callback@2"], [correction])
     assert v1.decision == "BLOCKED"
-    assert sum(f.kind == "broken" for f in v1.flips) == 5
+    assert sum(f.kind == "broken" for f in v1.flips) == 4
     assert v2.decision == "PASSED"
     assert v1.judge_id.startswith("llm:gemma")  # the model, not the transport

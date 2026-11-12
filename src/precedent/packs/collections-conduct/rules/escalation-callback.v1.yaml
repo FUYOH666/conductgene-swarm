@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/rule.schema.json
 # The v1 "Policy Gene", rewritten as a rule: a repayment plan counts as an
 # escalation offer. It fixes the case it came from and breaks three others.
 id: escalation-callback

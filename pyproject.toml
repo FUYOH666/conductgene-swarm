@@ -1,10 +1,11 @@
 [project]
 name = "precedent-llm"
-version = "2.0.0.dev0"
+version = "2.0.0"
 description = "Pull requests for AI judgment: human corrections to an LLM judge become scoped, versioned, eval-gated, reversible rules with an audit trail."
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Aleksandr Mordvinov" }]
 keywords = [
     "llm-as-a-judge",
@@ -17,8 +18,15 @@ keywords = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
 ]
 dependencies = [
     "pydantic>=2.9.0",
@@ -39,9 +47,14 @@ dev = [
 
 [project.scripts]
 precedent = "precedent.cli:main"
+# so that `uvx precedent-llm demo` works without --from
+precedent-llm = "precedent.cli:main"
 
 [project.urls]
-Repository = "https://github.com/FUYOH666/conductgene-swarm"
+Homepage = "https://github.com/FUYOH666/precedent"
+Repository = "https://github.com/FUYOH666/precedent"
+Changelog = "https://github.com/FUYOH666/precedent/blob/main/CHANGELOG.md"
+Issues = "https://github.com/FUYOH666/precedent/issues"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -58,6 +71,10 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 "src/precedent/judge/llm.py" = ["E501"]
 # SVG markup in f-strings reads better unwrapped.
 "scripts/figures.py" = ["E501"]
+# HTML templating reads better unwrapped.
+"src/precedent/evidence.py" = ["E501"]
+"scripts/site.py" = ["E501"]
+"benchmarks/**" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -75,11 +92,11 @@ show_missing = false
 precision = 1
 
 [build-system]
-requires = ["setuptools>=75", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-precedent = ["packs/**/*"]
+precedent = ["packs/**/*", "py.typed", "schemas/*.json"]

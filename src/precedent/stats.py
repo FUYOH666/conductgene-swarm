@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import random
+import math
 from collections import Counter
 from collections.abc import Sequence
 
@@ -27,24 +27,26 @@ def cohen_kappa(pairs: Sequence[tuple[str, str]]) -> float | None:
     return (observed - expected) / (1.0 - expected)
 
 
-def paired_bootstrap_delta(
-    before: Sequence[bool],
-    after: Sequence[bool],
-    *,
-    resamples: int = 2000,
-    seed: int = 0,
-    level: float = 0.95,
-) -> tuple[float, tuple[float, float]]:
-    """Mean of ``after - before`` correctness with a percentile bootstrap CI."""
-    if len(before) != len(after):
-        raise ValueError("paired samples must have equal length")
-    n = len(before)
+def wilson(k: int, n: int, z: float = 1.959964) -> tuple[float, float]:
+    """Wilson score interval for k successes out of n (95% by default)."""
     if n == 0:
-        return 0.0, (0.0, 0.0)
-    diffs = [int(a) - int(b) for b, a in zip(before, after, strict=True)]
-    delta = sum(diffs) / n
-    rng = random.Random(seed)
-    stats = sorted(sum(diffs[rng.randrange(n)] for _ in range(n)) / n for _ in range(resamples))
-    lo_idx = int((1 - level) / 2 * resamples)
-    hi_idx = min(resamples - 1, int((1 + level) / 2 * resamples))
-    return delta, (stats[lo_idx], stats[hi_idx])
+        return (0.0, 1.0)
+    phat = k / n
+    denom = 1 + z * z / n
+    centre = (phat + z * z / (2 * n)) / denom
+    half = z * math.sqrt(phat * (1 - phat) / n + z * z / (4 * n * n)) / denom
+    return (max(0.0, centre - half), min(1.0, centre + half))
+
+
+def mcnemar_exact(fixes: int, breaks: int) -> float:
+    """Two-sided exact McNemar p-value on the discordant pairs.
+
+    Only verdicts that changed carry information about whether a rule helps:
+    ``fixes`` went wrong → right, ``breaks`` went right → wrong.
+    """
+    n = fixes + breaks
+    if n == 0:
+        return 1.0
+    k = min(fixes, breaks)
+    tail: float = sum(math.comb(n, i) for i in range(k + 1)) / 2**n
+    return min(1.0, 2.0 * tail)

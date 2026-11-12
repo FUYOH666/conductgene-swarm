@@ -98,10 +98,13 @@ def test_recorded_gemma_run_replays_offline(pack: Pack) -> None:
     )
     assert misses == [
         ("CASE-003", "company_disclosure"),
+        ("CASE-013", "company_disclosure"),
         ("CASE-022", "company_disclosure"),
         ("CASE-022", "escalation_offered"),
         ("CASE-022", "recording_disclosure"),
         ("CASE-022", "threat_language"),
     ]
+    # quote verification caught three unquotable "escalation offered" claims, one of
+    # them on CASE-025, where the agent explicitly refused a supervisor callback
     downgraded = sorted(cid for cid, out in outputs.items() if out.notes)
-    assert downgraded == ["CASE-001", "CASE-022"]
+    assert downgraded == ["CASE-001", "CASE-022", "CASE-025"]

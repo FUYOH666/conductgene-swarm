@@ -55,11 +55,9 @@ def print_gate(
 ) -> None:
     line = Text("   gate ")
     line.append_text(decision_text(report))
-    if report.heldout_delta is not None and report.heldout_ci is not None:
-        lo, hi = report.heldout_ci
-        line.append(
-            f"   held-out Δ {report.heldout_delta:+.3f} [{lo:+.3f}, {hi:+.3f}]", style="dim"
-        )
+    if report.heldout is not None:
+        h = report.heldout
+        line.append(f"   held-out {h.right_before}/{h.n} → {h.right_after}/{h.n}", style="dim")
     console.print(line)
     if compact and report.decision == "PASSED":
         n_blocking = sum(c.blocking for c in report.checks)

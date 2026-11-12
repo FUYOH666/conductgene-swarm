@@ -88,7 +88,7 @@ re-checking every rule against every case after any change takes milliseconds.
 
 The predicates are also the vocabulary in which a reviewer states a reason. "This
 should pass because the customer was offered a callback from a team lead" becomes
-`supervisor_contact_offered = yes`. Writing the reason down in that vocabulary is
+`supervisor_callback_offered = yes`. Writing the reason down in that vocabulary is
 most of the value: it separates the cause from the coincidence.
 
 ## What a small experiment already showed
@@ -127,4 +127,4 @@ result than not run the test.
 ---
 
 *Aleksandr Mordvinov, [Scanovich](https://scanovich.ai). Precedent is open source:
-[github.com/FUYOH666/conductgene-swarm](https://github.com/FUYOH666/conductgene-swarm).*
+[github.com/FUYOH666/precedent](https://github.com/FUYOH666/precedent).*

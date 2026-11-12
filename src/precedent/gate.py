@@ -4,8 +4,10 @@ A candidate rule is evaluated together with every rule that is already active,
 against every labelled case the pack has, plus the cases behind accepted
 corrections. It is BLOCKED if it breaks a single case that was right before,
 if it does not fix the correction it came from, if it changes a declared
-counter-example, if it conflicts with another rule, or if held-out agreement
-goes down. Judge outputs are computed once; rules are applied by code, so the
+counter-example, or if it conflicts with another rule. Held-out agreement is
+reported (with an exact McNemar test on the verdicts that changed and a Wilson
+interval), but it never decides on its own: a held-out verdict that breaks is
+already a regression. Judge outputs are computed once; rules are applied by code, so the
 gate is cheap enough to run on every proposal.
 """
 
@@ -13,7 +15,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from precedent.engine import decide, rule_fires
+from precedent.engine import Decision, decide, rule_fires
 from precedent.models import (
     RULE_WORTHY_ERRORS,
     Correction,
@@ -23,10 +25,11 @@ from precedent.models import (
     ItemMetrics,
     JudgeOutput,
     Rule,
+    Tally,
     ruleset_hash,
 )
 from precedent.pack import Pack
-from precedent.stats import agreement, cohen_kappa, paired_bootstrap_delta
+from precedent.stats import agreement, cohen_kappa, mcnemar_exact, wilson
 
 
 def validate_rule(pack: Pack, rule: Rule, corrections: list[Correction]) -> list[str]:
@@ -70,6 +73,39 @@ def validate_rule(pack: Pack, rule: Rule, corrections: list[Correction]) -> list
                 "it does not justify a rule"
             )
     return problems
+
+
+def _tally(
+    keys: list[tuple[str, str]],
+    before: dict[str, dict[str, Decision]],
+    after: dict[str, dict[str, Decision]],
+    golden: dict[tuple[str, str], str],
+) -> Tally:
+    right_before = right_after = fixes = breaks = 0
+    fixed_cases: set[str] = set()
+    broken_cases: set[str] = set()
+    for cid, item in keys:
+        b = before[cid][item].label == golden[(cid, item)]
+        a = after[cid][item].label == golden[(cid, item)]
+        right_before += b
+        right_after += a
+        if a and not b:
+            fixes += 1
+            fixed_cases.add(cid)
+        elif b and not a:
+            breaks += 1
+            broken_cases.add(cid)
+    return Tally(
+        n=len(keys),
+        right_before=right_before,
+        right_after=right_after,
+        fixes=fixes,
+        breaks=breaks,
+        cases_fixed=len(fixed_cases),
+        cases_broken=len(broken_cases),
+        mcnemar_p=mcnemar_exact(fixes, breaks),
+        after_ci=wilson(right_after, len(keys)),
+    )
 
 
 def _golden(pack: Pack, corrections: list[Correction]) -> dict[tuple[str, str], str]:
@@ -246,35 +282,25 @@ def run_gate(
         )
     )
 
-    # 6. held-out agreement does not go down
-    heldout_keys = [
-        (cid, item) for (cid, item) in golden if split.get(cid) == "heldout" and cid in outputs
-    ]
-    delta: float | None = None
-    ci: tuple[float, float] | None = None
-    if heldout_keys:
-        b_ok = [before[cid][item].label == golden[(cid, item)] for cid, item in heldout_keys]
-        a_ok = [after[cid][item].label == golden[(cid, item)] for cid, item in heldout_keys]
-        delta, ci = paired_bootstrap_delta(b_ok, a_ok)
-        checks.append(
-            GateCheck(
-                name="heldout_not_worse",
-                passed=delta >= 0,
-                detail=(
-                    f"{sum(b_ok)}/{len(b_ok)} → {sum(a_ok)}/{len(a_ok)} "
-                    f"(Δ {delta:+.3f}, 95% CI [{ci[0]:+.3f}, {ci[1]:+.3f}])"
-                ),
-            )
+    # Held-out verdicts are reported, not used to decide: any held-out verdict
+    # that breaks is already blocked by no_regressions above.
+    labelled_keys = [(cid, item) for (cid, item) in golden if cid in outputs]
+    heldout_keys = [(cid, item) for (cid, item) in labelled_keys if split.get(cid) == "heldout"]
+    labelled = _tally(labelled_keys, before, after, golden)
+    heldout = _tally(heldout_keys, before, after, golden) if heldout_keys else None
+    checks.append(
+        GateCheck(
+            name="has_effect",
+            passed=labelled.fixes > 0,
+            blocking=False,
+            detail=(
+                f"fixes {labelled.fixes}, breaks {labelled.breaks} of {labelled.n} labelled "
+                f"verdicts (exact McNemar p={labelled.mcnemar_p:.2f})"
+                if labelled.fixes
+                else "fixes nothing on this judge's outputs: the judge already gets these right"
+            ),
         )
-    else:
-        checks.append(
-            GateCheck(
-                name="heldout_not_worse",
-                passed=True,
-                blocking=False,
-                detail="no held-out labels in this pack",
-            )  # fmt: skip
-        )
+    )
 
     # Advisory: does the rule generalise at all, and where could it not decide?
     known = set(candidate.examples) | {by_id[c].case_id for c in candidate.source_corrections}
@@ -335,7 +361,7 @@ def run_gate(
         checks=checks,
         flips=flips,
         metrics=metrics,
-        heldout_delta=delta,
-        heldout_ci=ci,
+        labelled=labelled,
+        heldout=heldout,
         fires_on=len(fires),
     )

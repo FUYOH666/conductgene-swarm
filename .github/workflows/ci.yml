@@ -5,32 +5,67 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
+    name: verify (py${{ matrix.python }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13", "3.14"]
     env:
-      UV_PYTHON: "3.12"
+      UV_PYTHON: ${{ matrix.python }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          enable-cache: true
-      - run: uv python install 3.12
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv python install "$UV_PYTHON"
       - run: ./scripts/verify_all.sh
 
-  figures-in-sync:
+  generated-in-sync:
     runs-on: ubuntu-latest
     env:
       UV_PYTHON: "3.12"
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          enable-cache: true
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       - run: uv sync
-      - name: Regenerate results and figures
+      - name: Regenerate numbers, figures and schemas
         run: |
           uv run python scripts/results.py collections-conduct > /dev/null
           uv run python scripts/figures.py > /dev/null
-      - name: Committed numbers and figures match the code
-        run: git diff --exit-code -- docs/results docs/assets
+          uv run python scripts/schemas.py > /dev/null
+      - name: Committed artifacts match the code
+        run: git diff --exit-code -- docs/results docs/assets src/precedent/schemas
+
+  package:
+    runs-on: ubuntu-latest
+    env:
+      UV_PYTHON: "3.12"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv build
+      - run: uvx twine check --strict dist/*
+      - name: The built wheel runs the demo in a clean environment
+        run: |
+          uv venv "$RUNNER_TEMP/wheel"
+          uv pip install --python "$RUNNER_TEMP/wheel" dist/*.whl
+          "$RUNNER_TEMP/wheel/bin/precedent-llm" demo --out "$RUNNER_TEMP/demo"
+
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uvx zizmor --persona regular .github/workflows

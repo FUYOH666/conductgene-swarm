@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0.dev0] - unreleased
+## [2.0.0] - 2026-11-12
 
 A rebuild. The project is renamed **Precedent** ("pull requests for AI judgment")
 and the hackathon code is removed; v1 stays available under the tag `v1-ucws-2026`.
@@ -17,6 +17,32 @@ Why: [docs/what-v1-got-wrong.md](docs/what-v1-got-wrong.md).
 - `collections-conduct` pack: 28 calls (18 from v1, 10 new), complete labels, 9 held out.
 - `precedent demo`: the v1 keyword rule is blocked with three broken cases; the same correction stated as its real reason passes.
 - A recorded run of Gemma 4 26B (local, LM Studio) on the pack, replayed offline; `scripts/results.py` regenerates `docs/results/collections-conduct.md`. Both judges' disagreements are pinned in tests.
+
+### Evidence and integrity
+
+- `precedent evidence RULE`: a self-contained HTML + JSON evidence pack for one rule change. It covers why, what changes, the full gate report with judge quotes, sign-offs with segregation-of-duties checks, limitations, history and chain integrity, and it carries its own hash. Sample packs: `docs/evidence/`. Their log head is anchored in these release notes.
+- `precedent audit export`: the complete event population with a chain trailer, so an auditor can sample from it.
+- The full gate report is stored in the log. Approval binds the report hash and the gate event, records a rationale, and in the CLI re-performs the gate: if the recorded report is not reproduced exactly, approval is refused. A rule's author cannot record its gate.
+- Held-out agreement is reported, not used to decide (it was redundant with `no_regressions`). Changed verdicts get an exact McNemar test, agreement gets Wilson intervals, and a `has_effect` advisory flags rules that fix nothing on the current judge.
+- The demo's "real reason" is a narrow new predicate, `supervisor_callback_offered`, rather than a restatement of the rubric item. The Gemma 4 run was re-recorded against it.
+
+### Library and release
+
+- Public API in `precedent.__all__`, `py.typed`, version from package metadata, a `precedent-llm` console script (for `uvx precedent-llm`), PEP 639 licence metadata, Python 3.12–3.14.
+- Log format version (`PRAGMA user_version`) and JSON Schemas for rule and pack YAML (`src/precedent/schemas/`).
+- Release workflow:
+  - verification, build, `twine check`, a wheel smoke test;
+  - a CycloneDX SBOM;
+  - build-provenance attestations;
+  - a GitHub Release;
+  - an image at `ghcr.io/fuyoh666/precedent`;
+  - PyPI trusted publishing, prepared and gated on the pending publisher.
+- CI:
+  - a Python 3.12/3.13/3.14 matrix;
+  - a packaging job;
+  - a zizmor audit;
+  - pinned action SHAs;
+  - read-only default permissions.
 
 ### Hardened after an independent review (Codex)
 

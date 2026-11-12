@@ -7,8 +7,8 @@ echo "==> Sync"
 uv sync --extra dev
 
 echo "==> Lint"
-uv run ruff check src tests scripts
-uv run ruff format --check src tests scripts
+uv run ruff check src tests scripts examples
+uv run ruff format --check src tests scripts examples
 
 echo "==> Types (mypy --strict)"
 uv run mypy

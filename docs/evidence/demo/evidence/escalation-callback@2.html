@@ -1,0 +1,191 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Evidence · escalation-callback@2</title><style>
+:root{--bg:#f5f3ee;--panel:#ece9e1;--ink:#16181d;--muted:#585d66;--faint:#8a8f98;--line:#d6d2c7;--accent:#1c3f9e;--green:#1a7f37;--green-bg:#dcefdc;--red:#c4262e;--red-bg:#f6dcd8;}
+@media (prefers-color-scheme: dark){:root{--bg:#0f1115;--panel:#171a20;--ink:#e9e6df;--muted:#a3a7af;--faint:#6f747d;--line:#2a2e36;--accent:#8fb0ff;--green:#4cc26a;--green-bg:#14261a;--red:#ff6b62;--red-bg:#2c1513;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif}
+main{max-width:960px;margin:0 auto;padding:48px 24px 80px}
+h1{font:400 44px/1.1 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;margin:8px 0 4px;letter-spacing:-.5px}
+h2{font:400 28px/1.2 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;margin:44px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+h2 small{font:500 12px 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;color:var(--faint);letter-spacing:.08em;margin-right:10px;text-transform:uppercase}
+.kicker{font:500 12px 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;color:var(--accent);letter-spacing:.12em;text-transform:uppercase}
+.muted{color:var(--muted)}.faint{color:var(--faint)}
+code,pre,.mono{font-family:'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;font-size:13.5px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+.badge{display:inline-block;font:700 13px 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;padding:3px 12px;border-radius:999px;border:1px solid}
+.pass{color:var(--green);background:var(--green-bg)}.block{color:var(--red);background:var(--red-bg)}
+.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card b{display:block;font:400 26px 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif}
+blockquote{margin:8px 0;padding:6px 14px;border-left:3px solid var(--accent);color:var(--muted)}
+.strip{display:flex;flex-wrap:wrap;gap:3px;margin:10px 0}
+.cell{width:16px;height:16px;border-radius:3px;border:1px solid var(--line)}
+.cell.fixed{background:var(--green);border-color:var(--green)}
+.cell.broken{background:var(--red);border-color:var(--red)}
+footer{margin-top:56px;font:12px 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;color:var(--faint)}
+</style></head><body><main><div class='kicker'>Evidence pack · precedent-evidence/1</div>
+<h1>A promised callback from a supervisor, manager or team lead counts as an escalation offer</h1>
+<p class='muted mono'>escalation-callback@2 · when supervisor_callback_offered → escalation_offered = pass</p>
+<p><span class="badge pass">✓ PASSED</span> &nbsp; status <b>active</b> · owner maria · pack <code>collections-conduct</code></p>
+<div class='grid'>
+<div class='card'><span class='faint mono'>fixes</span><b class='ok'>3</b></div>
+<div class='card'><span class='faint mono'>breaks</span><b class='ok'>0</b></div>
+<div class='card'><span class='faint mono'>labelled verdicts</span><b>107 → 110 / 112</b></div>
+<div class='card'><span class='faint mono'>held-out</span><b>33 → 35 / 36</b></div>
+</div>
+<h2><small>1</small>Why this change exists</h2>
+<p><b>C-0001</b> · reviewer <b>maria</b> · 2026-11-12T02:51:55.322904+00:00<br><code>CASE-019</code> <span class='faint mono'>sha256 95b844d725709f6d…</span> · <code>escalation_offered</code>: <span class='bad'>needs_review</span> → <span class='ok'>pass</span> · error type <code>policy_misinterpretation</code></p>
+<blockquote>A team-lead callback is an escalation offer.</blockquote>
+<pre>Agent: This is ABC Collections about your overdue balance.
+Customer: I can&#x27;t pay all of it this month.
+Agent: Understood. We can set up a repayment plan, and my team lead can call you back tomorrow to confirm it.</pre>
+<p class='muted'>Judge, <code>supervisor_callback_offered</code> = yes: “team lead can call you back”</p>
+<p><b>Rationale.</b> Policy (escalation): a live transfer and a scheduled callback from a supervisor, manager or team lead both count; a repayment plan on its own does not.
+</p>
+<p class='muted'><code>supervisor_callback_offered</code>: Does the agent promise that a supervisor, manager or team lead will call or contact the customer later (a callback, not a live transfer)? Added after correction C-0001. The rubric item covered transfers well and missed scheduled callbacks.</p>
+<table><tr><th>clause</th><th>policy text</th></tr>
+<tr><td><code>28316012a13f</code><br><span class='faint'>escalation / Escalation offer</span></td><td>A live transfer and a scheduled callback from a supervisor, manager or team lead both count as an escalation offer.</td></tr>
+<tr><td><code>171ccb81ca81</code><br><span class='faint'>escalation / Escalation offer</span></td><td>A repayment plan on its own is not an escalation offer.</td></tr>
+</table>
+<h2><small>2</small>What changes</h2>
+<pre>id: escalation-callback
+version: 2
+pack: collections-conduct
+item: escalation_offered
+title: A promised callback from a supervisor, manager or team lead counts as an escalation
+  offer
+rationale: &#x27;Policy (escalation): a live transfer and a scheduled callback from a supervisor,
+  manager or team lead both count; a repayment plan on its own does not.
+
+  &#x27;
+when:
+- predicate: supervisor_callback_offered
+  equals: &#x27;yes&#x27;
+then: pass
+clause_refs:
+- 28316012a13f
+- 171ccb81ca81
+source_corrections:
+- C-0001
+examples:
+- CASE-019
+counter_examples:
+- CASE-005
+- CASE-023
+- CASE-025
+author: maria
+</pre>
+<p class='muted'>Against the previous version escalation-callback@1:</p><pre>--- escalation-callback@1
++++ escalation-callback@2
+@@ -1,19 +1,26 @@
+ id: escalation-callback
+-version: 1
++version: 2
+ pack: collections-conduct
+ item: escalation_offered
+-title: A repayment plan counts as an escalation offer
+-rationale: The reviewer saw a repayment plan in the corrected call and generalised
+-  from it.
++title: A promised callback from a supervisor, manager or team lead counts as an escalation
++  offer
++rationale: &#x27;Policy (escalation): a live transfer and a scheduled callback from a supervisor,
++  manager or team lead both count; a repayment plan on its own does not.
++
++  &#x27;
+ when:
+-- predicate: mentions_repayment
++- predicate: supervisor_callback_offered
+   equals: &#x27;yes&#x27;
+ then: pass
+-clause_refs: []
++clause_refs:
++- 28316012a13f
++- 171ccb81ca81
+ source_corrections:
+ - C-0001
+ examples:
+ - CASE-019
+ counter_examples:
+-- CASE-001
++- CASE-005
++- CASE-023
++- CASE-025
+ author: maria
+</pre>
+<p class='faint mono'>rule content sha256 234ae3109ab51633c06d07fe0dd5a102fec08bffb6acab785e49f991465402f6<br>active rules before 4f53cda18c2baa0c… → after 3ea521f99e0d9fa0…</p>
+<h2><small>3</small>Testing: the gate</h2>
+<table><tr><th>check</th><th>result</th><th>detail</th></tr>
+<tr><td><code>well_formed</code></td><td><b class='ok'>pass</b></td><td></td></tr>
+<tr><td><code>source_fixed</code></td><td><b class='ok'>pass</b></td><td>1 correction(s) fixed</td></tr>
+<tr><td><code>examples_fire</code></td><td><b class='ok'>pass</b></td><td>fires on all examples</td></tr>
+<tr><td><code>counter_examples_hold</code></td><td><b class='ok'>pass</b></td><td>3 unchanged</td></tr>
+<tr><td><code>no_regressions</code></td><td><b class='ok'>pass</b></td><td>fixes 3, breaks 0</td></tr>
+<tr><td><code>no_conflicts</code></td><td><b class='ok'>pass</b></td><td>none</td></tr>
+<tr><td><code>has_effect</code></td><td><b class='ok'>pass</b></td><td>fixes 3, breaks 0 of 112 labelled verdicts (exact McNemar p=0.25)</td></tr>
+<tr><td><code>generalises</code></td><td><b class='ok'>pass</b></td><td>fires on 4 case(s), 3 beyond its sources</td></tr>
+</table>
+<p class='muted'>Every labelled case, in order; filled cells changed.</p><div class='strip'>
+<span class='cell ' title='CASE-001 unchanged'></span>
+<span class='cell ' title='CASE-002 unchanged'></span>
+<span class='cell ' title='CASE-003 unchanged'></span>
+<span class='cell ' title='CASE-004 unchanged'></span>
+<span class='cell ' title='CASE-005 unchanged'></span>
+<span class='cell ' title='CASE-006 unchanged'></span>
+<span class='cell ' title='CASE-007 unchanged'></span>
+<span class='cell ' title='CASE-008 unchanged'></span>
+<span class='cell ' title='CASE-009 unchanged'></span>
+<span class='cell ' title='CASE-010 unchanged'></span>
+<span class='cell ' title='CASE-011 unchanged'></span>
+<span class='cell ' title='CASE-012 unchanged'></span>
+<span class='cell ' title='CASE-013 unchanged'></span>
+<span class='cell ' title='CASE-014 unchanged'></span>
+<span class='cell ' title='CASE-015 unchanged'></span>
+<span class='cell ' title='CASE-016 unchanged'></span>
+<span class='cell ' title='CASE-017 unchanged'></span>
+<span class='cell ' title='CASE-018 unchanged'></span>
+<span class='cell fixed' title='CASE-019 fixed'></span>
+<span class='cell ' title='CASE-020 unchanged'></span>
+<span class='cell ' title='CASE-021 unchanged'></span>
+<span class='cell ' title='CASE-022 unchanged'></span>
+<span class='cell ' title='CASE-023 unchanged'></span>
+<span class='cell fixed' title='CASE-024 fixed'></span>
+<span class='cell ' title='CASE-025 unchanged'></span>
+<span class='cell ' title='CASE-026 unchanged'></span>
+<span class='cell ' title='CASE-027 unchanged'></span>
+<span class='cell fixed' title='CASE-028 fixed'></span>
+</div>
+<table><tr><th>case</th><th>split</th><th>before → after</th><th>label</th><th>effect</th><th>judge quote</th></tr>
+<tr><td><code>CASE-019</code></td><td>dev</td><td>needs_review → pass</td><td>pass</td><td><b class='ok'>fixed</b></td><td>“team lead can call you back”</td></tr>
+<tr><td><code>CASE-024</code></td><td>heldout</td><td>needs_review → pass</td><td>pass</td><td><b class='ok'>fixed</b></td><td>“manager to call you back”</td></tr>
+<tr><td><code>CASE-028</code></td><td>heldout</td><td>needs_review → pass</td><td>pass</td><td><b class='ok'>fixed</b></td><td>“team lead will call you back”</td></tr>
+</table>
+<p class='muted'>All labelled verdicts: 107 → 110 of 112 correct (95% Wilson CI after: 0.94–1.00); fixes 3, breaks 0, exact McNemar p = 0.25. Held-out: 33 → 35 of 36. Threshold: zero verdicts may go from right to wrong.</p>
+<p class='faint mono'>judge heuristic:collections-conduct@2.0<br>dataset sha256 29a683998b04fe05ded243ca2f8a41ad4d0143e4ba0eb4589d48a3b023144f26<br>report sha256 7986031cde67b0792afa2a1c93848d749ef2e51951afbf9aafebcd7f3e2dee46<br>re-perform: precedent gate escalation-callback@2 --db &lt;log&gt; --pack collections-conduct --judge &lt;same judge&gt;  # must reproduce report_hash</p>
+<h2><small>4</small>Sign-offs</h2><table>
+<tr><td>author</td><td>maria</td></tr>
+<tr><td>gate run by</td><td>ci</td></tr>
+<tr><td>approved by</td><td>alex</td></tr>
+<tr><td>approver's rationale</td><td>Policy (escalation): a scheduled callback from a team lead is an offer.</td></tr>
+<tr><td>author ≠ gate runner</td><td><b class='ok'>yes</b></td></tr>
+<tr><td>author ≠ approver</td><td><b class='ok'>yes</b></td></tr>
+<tr><td>identity</td><td>unauthenticated CLI name (no identity provider is attached in this deployment)</td></tr>
+</table>
+<h2><small>5</small>Limitations</h2><ul>
+<li>Tested on 28 labelled cases in pack collections-conduct; see the pack&#x27;s LABELING.md.</li>
+<li>The result holds for judge heuristic:collections-conduct@2.0 only; a new judge needs a new gate run.</li>
+<li>A verified quote proves the words are in the case, not that they support the claim.</li>
+<li>Actor names are not authenticated; see &#x27;identity&#x27;.</li>
+</ul><h2><small>6</small>History</h2><table><tr><th>seq</th><th>time (UTC)</th><th>actor</th><th>event</th><th>hash</th></tr>
+<tr><td>1</td><td>2026-11-12T02:51:55.322904+00:00</td><td>maria</td><td><code>correction.recorded</code></td><td><span class='mono faint'>c3c90039b54ec50b…</span></td></tr>
+<tr><td>2</td><td>2026-11-12T02:51:55.326872+00:00</td><td>maria</td><td><code>rule.proposed</code></td><td><span class='mono faint'>7aec0f290329be97…</span></td></tr>
+<tr><td>4</td><td>2026-11-12T02:51:55.331541+00:00</td><td>maria</td><td><code>rule.proposed</code></td><td><span class='mono faint'>0af4cdaea2aa1520…</span></td></tr>
+<tr><td>5</td><td>2026-11-12T02:51:55.334001+00:00</td><td>ci</td><td><code>rule.gated</code></td><td><span class='mono faint'>98445a7aaf3c5613…</span></td></tr>
+<tr><td>6</td><td>2026-11-12T02:51:55.339745+00:00</td><td>alex</td><td><code>rule.approved</code></td><td><span class='mono faint'>557037925951dffb…</span></td></tr>
+</table><h2><small>7</small>Integrity</h2>
+<p>Hash chain <b class=ok>verifies</b> over 6 events. Head:</p><pre>557037925951dffb59e4daf5de596b929bf59d1967798f4ec9bae1dd0218553b</pre>
+<p>Head anchored outside the log: GitHub Release v2.0.0 notes: https://github.com/FUYOH666/precedent/releases/tag/v2.0.0</p>
+<p class='faint mono'>precedent audit verify --db &lt;log&gt; --anchor &lt;head&gt;<br>evidence sha256 0af99e6fb0c862b19481b20e6e8ab4b255b6d76852c93327383981820f8e5365 (over the JSON without this field)</p>
+<footer>Generated 2026-11-12T02:51:55+00:00 by precedent 2.0.0 · github.com/FUYOH666/precedent</footer></main></body></html>

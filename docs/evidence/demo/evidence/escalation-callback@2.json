@@ -1,0 +1,333 @@
+{
+  "format": "precedent-evidence/1",
+  "generated_at": "2026-11-12T02:51:55+00:00",
+  "precedent_version": "2.0.0",
+  "summary": {
+    "rule": "escalation-callback@2",
+    "title": "A promised callback from a supervisor, manager or team lead counts as an escalation offer",
+    "plain": "when supervisor_callback_offered → escalation_offered = pass",
+    "item": "escalation_offered",
+    "status": "active",
+    "gate_decision": "PASSED",
+    "owner": "maria",
+    "proposed_at": "2026-11-12T02:51:55.331541+00:00",
+    "gated_at": "2026-11-12T02:51:55.334001+00:00",
+    "approved_at": "2026-11-12T02:51:55.339745+00:00"
+  },
+  "why": {
+    "corrections": [
+      {
+        "id": "C-0001",
+        "pack": "collections-conduct",
+        "case_id": "CASE-019",
+        "case_hash": "95b844d725709f6d22e55ef48fb7bf96d3eeff2dcf1fcfe98ce590e269b67dc5",
+        "item": "escalation_offered",
+        "ai_label": "needs_review",
+        "human_label": "pass",
+        "reviewer": "maria",
+        "error_type": "policy_misinterpretation",
+        "note": "A team-lead callback is an escalation offer.",
+        "recorded_at": "2026-11-12T02:51:55.322904+00:00",
+        "case_excerpt": "Agent: This is ABC Collections about your overdue balance.\nCustomer: I can't pay all of it this month.\nAgent: Understood. We can set up a repayment plan, and my team lead can call you back tomorrow to confirm it.",
+        "evidence_quotes": [
+          {
+            "predicate": "supervisor_callback_offered",
+            "value": "yes",
+            "quote": "team lead can call you back"
+          }
+        ]
+      }
+    ],
+    "rationale": "Policy (escalation): a live transfer and a scheduled callback from a supervisor, manager or team lead both count; a repayment plan on its own does not.\n",
+    "policy_clauses": [
+      {
+        "id": "28316012a13f",
+        "doc": "escalation",
+        "section": "Escalation offer",
+        "text": "A live transfer and a scheduled callback from a supervisor, manager or team lead both count as an escalation offer."
+      },
+      {
+        "id": "171ccb81ca81",
+        "doc": "escalation",
+        "section": "Escalation offer",
+        "text": "A repayment plan on its own is not an escalation offer."
+      }
+    ],
+    "predicates": [
+      {
+        "id": "supervisor_callback_offered",
+        "question": "Does the agent promise that a supervisor, manager or team lead will call or contact the customer later (a callback, not a live transfer)?",
+        "note": "Added after correction C-0001. The rubric item covered transfers well and missed scheduled callbacks."
+      }
+    ]
+  },
+  "change": {
+    "rule_yaml": "id: escalation-callback\nversion: 2\npack: collections-conduct\nitem: escalation_offered\ntitle: A promised callback from a supervisor, manager or team lead counts as an escalation\n  offer\nrationale: 'Policy (escalation): a live transfer and a scheduled callback from a supervisor,\n  manager or team lead both count; a repayment plan on its own does not.\n\n  '\nwhen:\n- predicate: supervisor_callback_offered\n  equals: 'yes'\nthen: pass\nclause_refs:\n- 28316012a13f\n- 171ccb81ca81\nsource_corrections:\n- C-0001\nexamples:\n- CASE-019\ncounter_examples:\n- CASE-005\n- CASE-023\n- CASE-025\nauthor: maria\n",
+    "rule_hash": "234ae3109ab51633c06d07fe0dd5a102fec08bffb6acab785e49f991465402f6",
+    "previous_version": "escalation-callback@1",
+    "diff": "--- escalation-callback@1\n+++ escalation-callback@2\n@@ -1,19 +1,26 @@\n id: escalation-callback\n-version: 1\n+version: 2\n pack: collections-conduct\n item: escalation_offered\n-title: A repayment plan counts as an escalation offer\n-rationale: The reviewer saw a repayment plan in the corrected call and generalised\n-  from it.\n+title: A promised callback from a supervisor, manager or team lead counts as an escalation\n+  offer\n+rationale: 'Policy (escalation): a live transfer and a scheduled callback from a supervisor,\n+  manager or team lead both count; a repayment plan on its own does not.\n+\n+  '\n when:\n-- predicate: mentions_repayment\n+- predicate: supervisor_callback_offered\n   equals: 'yes'\n then: pass\n-clause_refs: []\n+clause_refs:\n+- 28316012a13f\n+- 171ccb81ca81\n source_corrections:\n - C-0001\n examples:\n - CASE-019\n counter_examples:\n-- CASE-001\n+- CASE-005\n+- CASE-023\n+- CASE-025\n author: maria\n",
+    "active_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "active_after": "3ea521f99e0d9fa0b4f4ee0db6cc7c4f0f97224ff951db7c9cd40c2c973f50ba"
+  },
+  "testing": {
+    "report": {
+      "rule_key": "escalation-callback@2",
+      "rule_hash": "234ae3109ab51633c06d07fe0dd5a102fec08bffb6acab785e49f991465402f6",
+      "pack": "collections-conduct",
+      "judge_id": "heuristic:collections-conduct@2.0",
+      "dataset_hash": "29a683998b04fe05ded243ca2f8a41ad4d0143e4ba0eb4589d48a3b023144f26",
+      "ruleset_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ruleset_after": "3ea521f99e0d9fa0b4f4ee0db6cc7c4f0f97224ff951db7c9cd40c2c973f50ba",
+      "decision": "PASSED",
+      "checks": [
+        {
+          "name": "well_formed",
+          "passed": true,
+          "blocking": true,
+          "detail": ""
+        },
+        {
+          "name": "source_fixed",
+          "passed": true,
+          "blocking": true,
+          "detail": "1 correction(s) fixed"
+        },
+        {
+          "name": "examples_fire",
+          "passed": true,
+          "blocking": true,
+          "detail": "fires on all examples"
+        },
+        {
+          "name": "counter_examples_hold",
+          "passed": true,
+          "blocking": true,
+          "detail": "3 unchanged"
+        },
+        {
+          "name": "no_regressions",
+          "passed": true,
+          "blocking": true,
+          "detail": "fixes 3, breaks 0"
+        },
+        {
+          "name": "no_conflicts",
+          "passed": true,
+          "blocking": true,
+          "detail": "none"
+        },
+        {
+          "name": "has_effect",
+          "passed": true,
+          "blocking": false,
+          "detail": "fixes 3, breaks 0 of 112 labelled verdicts (exact McNemar p=0.25)"
+        },
+        {
+          "name": "generalises",
+          "passed": true,
+          "blocking": false,
+          "detail": "fires on 4 case(s), 3 beyond its sources"
+        }
+      ],
+      "flips": [
+        {
+          "case_id": "CASE-019",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "pass",
+          "kind": "fixed",
+          "split": "dev"
+        },
+        {
+          "case_id": "CASE-024",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "pass",
+          "kind": "fixed",
+          "split": "heldout"
+        },
+        {
+          "case_id": "CASE-028",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "pass",
+          "kind": "fixed",
+          "split": "heldout"
+        }
+      ],
+      "metrics": [
+        {
+          "item": "threat_language",
+          "n": 28,
+          "agreement_before": 0.9642857142857143,
+          "agreement_after": 0.9642857142857143,
+          "kappa_before": 0.918840579710145,
+          "kappa_after": 0.918840579710145
+        },
+        {
+          "item": "escalation_offered",
+          "n": 28,
+          "agreement_before": 0.8928571428571429,
+          "agreement_after": 1.0,
+          "kappa_before": 0.8064516129032258,
+          "kappa_after": 1.0
+        },
+        {
+          "item": "company_disclosure",
+          "n": 28,
+          "agreement_before": 0.9642857142857143,
+          "agreement_after": 0.9642857142857143,
+          "kappa_before": 0.7846153846153847,
+          "kappa_after": 0.7846153846153847
+        },
+        {
+          "item": "recording_disclosure",
+          "n": 28,
+          "agreement_before": 1.0,
+          "agreement_after": 1.0,
+          "kappa_before": 1.0,
+          "kappa_after": 1.0
+        }
+      ],
+      "labelled": {
+        "n": 112,
+        "right_before": 107,
+        "right_after": 110,
+        "fixes": 3,
+        "breaks": 0,
+        "cases_fixed": 3,
+        "cases_broken": 0,
+        "mcnemar_p": 0.25,
+        "after_ci": [
+          0.93721951204693,
+          0.9950891885079272
+        ]
+      },
+      "heldout": {
+        "n": 36,
+        "right_before": 33,
+        "right_after": 35,
+        "fixes": 2,
+        "breaks": 0,
+        "cases_fixed": 2,
+        "cases_broken": 0,
+        "mcnemar_p": 0.5,
+        "after_ci": [
+          0.8583028121147521,
+          0.9950795929146393
+        ]
+      },
+      "fires_on": 4
+    },
+    "report_hash": "7986031cde67b0792afa2a1c93848d749ef2e51951afbf9aafebcd7f3e2dee46",
+    "flips": [
+      {
+        "case_id": "CASE-019",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "pass",
+        "kind": "fixed",
+        "split": "dev",
+        "quotes": [
+          "team lead can call you back"
+        ]
+      },
+      {
+        "case_id": "CASE-024",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "pass",
+        "kind": "fixed",
+        "split": "heldout",
+        "quotes": [
+          "manager to call you back"
+        ]
+      },
+      {
+        "case_id": "CASE-028",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "pass",
+        "kind": "fixed",
+        "split": "heldout",
+        "quotes": [
+          "team lead will call you back"
+        ]
+      }
+    ],
+    "pack": "collections-conduct",
+    "dataset_hash": "29a683998b04fe05ded243ca2f8a41ad4d0143e4ba0eb4589d48a3b023144f26",
+    "judge_id": "heuristic:collections-conduct@2.0",
+    "cases": 28,
+    "heldout_cases": 9,
+    "reproduce": "precedent gate escalation-callback@2 --db <log> --pack collections-conduct --judge <same judge>  # must reproduce report_hash"
+  },
+  "signoffs": {
+    "author": "maria",
+    "gate_runner": "ci",
+    "approver": "alex",
+    "approval_rationale": "Policy (escalation): a scheduled callback from a team lead is an offer.",
+    "identity": "unauthenticated CLI name (no identity provider is attached in this deployment)",
+    "segregation": {
+      "author_is_not_gate_runner": true,
+      "author_is_not_approver": true
+    }
+  },
+  "limitations": [
+    "Tested on 28 labelled cases in pack collections-conduct; see the pack's LABELING.md.",
+    "The result holds for judge heuristic:collections-conduct@2.0 only; a new judge needs a new gate run.",
+    "A verified quote proves the words are in the case, not that they support the claim.",
+    "Actor names are not authenticated; see 'identity'."
+  ],
+  "history": [
+    {
+      "seq": 1,
+      "ts": "2026-11-12T02:51:55.322904+00:00",
+      "actor": "maria",
+      "type": "correction.recorded",
+      "hash": "c3c90039b54ec50bd62d70bca742cd30780074dba05020d7f925d3d69d283813"
+    },
+    {
+      "seq": 2,
+      "ts": "2026-11-12T02:51:55.326872+00:00",
+      "actor": "maria",
+      "type": "rule.proposed",
+      "hash": "7aec0f290329be979d3b3252f25cc3e4ac2b100318f98bb77ea0a8381965d0ca"
+    },
+    {
+      "seq": 4,
+      "ts": "2026-11-12T02:51:55.331541+00:00",
+      "actor": "maria",
+      "type": "rule.proposed",
+      "hash": "0af4cdaea2aa15203c7665d490dfc5c9675d7566f8f765f0c196972ba3ce1922"
+    },
+    {
+      "seq": 5,
+      "ts": "2026-11-12T02:51:55.334001+00:00",
+      "actor": "ci",
+      "type": "rule.gated",
+      "hash": "98445a7aaf3c561360059c0a3218c43d9f4e611b75eda328451583ac64078e4b"
+    },
+    {
+      "seq": 6,
+      "ts": "2026-11-12T02:51:55.339745+00:00",
+      "actor": "alex",
+      "type": "rule.approved",
+      "hash": "557037925951dffb59e4daf5de596b929bf59d1967798f4ec9bae1dd0218553b"
+    }
+  ],
+  "integrity": {
+    "chain_ok": true,
+    "events": 6,
+    "head": "557037925951dffb59e4daf5de596b929bf59d1967798f4ec9bae1dd0218553b",
+    "anchor_receipt": "GitHub Release v2.0.0 notes: https://github.com/FUYOH666/precedent/releases/tag/v2.0.0",
+    "verify": "precedent audit verify --db <log> --anchor <head>"
+  },
+  "evidence_hash": "0af99e6fb0c862b19481b20e6e8ab4b255b6d76852c93327383981820f8e5365"
+}

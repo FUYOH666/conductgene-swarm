@@ -19,6 +19,8 @@ from typing import Any
 from precedent.hashing import canonical_json, sha256_hex
 
 GENESIS = "0" * 64
+#: Bumped when the on-disk format changes; stored as SQLite PRAGMA user_version.
+LOG_FORMAT = 1
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS events (
@@ -68,7 +70,14 @@ class EventStore:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._conn = sqlite3.connect(self.path, isolation_level=None, timeout=timeout)
         self._conn.execute("PRAGMA journal_mode=WAL")
+        found = int(self._conn.execute("PRAGMA user_version").fetchone()[0])
+        if found > LOG_FORMAT:
+            raise RuntimeError(
+                f"{self.path} uses log format {found}; this version of precedent reads {LOG_FORMAT}"
+            )
         self._conn.executescript(_SCHEMA)
+        if found == 0:
+            self._conn.execute(f"PRAGMA user_version = {LOG_FORMAT}")
         self._depth = 0
 
     @contextmanager

@@ -31,8 +31,8 @@ items:
     evidence_required: [pass]   # the judge must quote the case to use these
 
 predicates:
-  - id: supervisor_contact_offered
-    question: Does the agent offer any contact with a supervisor, manager or team lead?
+  - id: supervisor_callback_offered
+    question: Does the agent promise a callback from a supervisor, manager or team lead?
     # optional, heuristic judge only:
     speaker: Agent
     patterns: ['(supervisor|manager)\b[^.]{0,40}\bcall you back']

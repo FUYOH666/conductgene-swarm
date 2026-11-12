@@ -1,0 +1,355 @@
+{
+  "format": "precedent-evidence/1",
+  "generated_at": "2026-11-12T02:51:55+00:00",
+  "precedent_version": "2.0.0",
+  "summary": {
+    "rule": "escalation-callback@1",
+    "title": "A repayment plan counts as an escalation offer",
+    "plain": "when mentions_repayment → escalation_offered = pass",
+    "item": "escalation_offered",
+    "status": "blocked",
+    "gate_decision": "BLOCKED",
+    "owner": "maria",
+    "proposed_at": "2026-11-12T02:51:55.331541+00:00",
+    "gated_at": "2026-11-12T02:51:55.328225+00:00",
+    "approved_at": null
+  },
+  "why": {
+    "corrections": [
+      {
+        "id": "C-0001",
+        "pack": "collections-conduct",
+        "case_id": "CASE-019",
+        "case_hash": "95b844d725709f6d22e55ef48fb7bf96d3eeff2dcf1fcfe98ce590e269b67dc5",
+        "item": "escalation_offered",
+        "ai_label": "needs_review",
+        "human_label": "pass",
+        "reviewer": "maria",
+        "error_type": "policy_misinterpretation",
+        "note": "A team-lead callback is an escalation offer.",
+        "recorded_at": "2026-11-12T02:51:55.322904+00:00",
+        "case_excerpt": "Agent: This is ABC Collections about your overdue balance.\nCustomer: I can't pay all of it this month.\nAgent: Understood. We can set up a repayment plan, and my team lead can call you back tomorrow to confirm it.",
+        "evidence_quotes": [
+          {
+            "predicate": "mentions_repayment",
+            "value": "yes",
+            "quote": "repayment"
+          }
+        ]
+      }
+    ],
+    "rationale": "The reviewer saw a repayment plan in the corrected call and generalised from it.",
+    "policy_clauses": [],
+    "predicates": [
+      {
+        "id": "mentions_repayment",
+        "question": "Does the agent offer a repayment plan, a payment plan or paying over time?",
+        "note": ""
+      }
+    ]
+  },
+  "change": {
+    "rule_yaml": "id: escalation-callback\nversion: 1\npack: collections-conduct\nitem: escalation_offered\ntitle: A repayment plan counts as an escalation offer\nrationale: The reviewer saw a repayment plan in the corrected call and generalised\n  from it.\nwhen:\n- predicate: mentions_repayment\n  equals: 'yes'\nthen: pass\nclause_refs: []\nsource_corrections:\n- C-0001\nexamples:\n- CASE-019\ncounter_examples:\n- CASE-001\nauthor: maria\n",
+    "rule_hash": "192f18becf21c8a1b75738b3dc6aede7fb5678bf42220d0185146cd419a7521e",
+    "previous_version": null,
+    "diff": "",
+    "active_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "active_after": "98bb82774ec358c1b4cea499792f09cf3572b7ca04458ab4d4da3ec520cce482"
+  },
+  "testing": {
+    "report": {
+      "rule_key": "escalation-callback@1",
+      "rule_hash": "192f18becf21c8a1b75738b3dc6aede7fb5678bf42220d0185146cd419a7521e",
+      "pack": "collections-conduct",
+      "judge_id": "heuristic:collections-conduct@2.0",
+      "dataset_hash": "29a683998b04fe05ded243ca2f8a41ad4d0143e4ba0eb4589d48a3b023144f26",
+      "ruleset_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ruleset_after": "98bb82774ec358c1b4cea499792f09cf3572b7ca04458ab4d4da3ec520cce482",
+      "decision": "BLOCKED",
+      "checks": [
+        {
+          "name": "well_formed",
+          "passed": true,
+          "blocking": true,
+          "detail": ""
+        },
+        {
+          "name": "source_fixed",
+          "passed": true,
+          "blocking": true,
+          "detail": "1 correction(s) fixed"
+        },
+        {
+          "name": "examples_fire",
+          "passed": true,
+          "blocking": true,
+          "detail": "fires on all examples"
+        },
+        {
+          "name": "counter_examples_hold",
+          "passed": true,
+          "blocking": true,
+          "detail": "1 unchanged"
+        },
+        {
+          "name": "no_regressions",
+          "passed": false,
+          "blocking": true,
+          "detail": "breaks 3: CASE-005, CASE-012, CASE-023"
+        },
+        {
+          "name": "no_conflicts",
+          "passed": true,
+          "blocking": true,
+          "detail": "none"
+        },
+        {
+          "name": "has_effect",
+          "passed": true,
+          "blocking": false,
+          "detail": "fixes 2, breaks 3 of 112 labelled verdicts (exact McNemar p=1.00)"
+        },
+        {
+          "name": "generalises",
+          "passed": true,
+          "blocking": false,
+          "detail": "fires on 10 case(s), 9 beyond its sources"
+        }
+      ],
+      "flips": [
+        {
+          "case_id": "CASE-005",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "needs_review",
+          "kind": "broken",
+          "split": "heldout"
+        },
+        {
+          "case_id": "CASE-012",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "needs_review",
+          "kind": "broken",
+          "split": "heldout"
+        },
+        {
+          "case_id": "CASE-019",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "pass",
+          "kind": "fixed",
+          "split": "dev"
+        },
+        {
+          "case_id": "CASE-023",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "needs_review",
+          "kind": "broken",
+          "split": "dev"
+        },
+        {
+          "case_id": "CASE-028",
+          "item": "escalation_offered",
+          "before": "needs_review",
+          "after": "pass",
+          "golden": "pass",
+          "kind": "fixed",
+          "split": "heldout"
+        }
+      ],
+      "metrics": [
+        {
+          "item": "threat_language",
+          "n": 28,
+          "agreement_before": 0.9642857142857143,
+          "agreement_after": 0.9642857142857143,
+          "kappa_before": 0.918840579710145,
+          "kappa_after": 0.918840579710145
+        },
+        {
+          "item": "escalation_offered",
+          "n": 28,
+          "agreement_before": 0.8928571428571429,
+          "agreement_after": 0.8571428571428571,
+          "kappa_before": 0.8064516129032258,
+          "kappa_after": 0.7477477477477477
+        },
+        {
+          "item": "company_disclosure",
+          "n": 28,
+          "agreement_before": 0.9642857142857143,
+          "agreement_after": 0.9642857142857143,
+          "kappa_before": 0.7846153846153847,
+          "kappa_after": 0.7846153846153847
+        },
+        {
+          "item": "recording_disclosure",
+          "n": 28,
+          "agreement_before": 1.0,
+          "agreement_after": 1.0,
+          "kappa_before": 1.0,
+          "kappa_after": 1.0
+        }
+      ],
+      "labelled": {
+        "n": 112,
+        "right_before": 107,
+        "right_after": 106,
+        "fixes": 2,
+        "breaks": 3,
+        "cases_fixed": 2,
+        "cases_broken": 3,
+        "mcnemar_p": 1.0,
+        "after_ci": [
+          0.8880297356810913,
+          0.9752190611289615
+        ]
+      },
+      "heldout": {
+        "n": 36,
+        "right_before": 33,
+        "right_after": 32,
+        "fixes": 1,
+        "breaks": 2,
+        "cases_fixed": 1,
+        "cases_broken": 2,
+        "mcnemar_p": 1.0,
+        "after_ci": [
+          0.7468519127209039,
+          0.955933597303301
+        ]
+      },
+      "fires_on": 10
+    },
+    "report_hash": "d0194f05e660f1fa00c78944cf6be92a16fbc75fc59b1faa245bc230b8ac5d55",
+    "flips": [
+      {
+        "case_id": "CASE-005",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "needs_review",
+        "kind": "broken",
+        "split": "heldout",
+        "quotes": [
+          "repayment"
+        ]
+      },
+      {
+        "case_id": "CASE-012",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "needs_review",
+        "kind": "broken",
+        "split": "heldout",
+        "quotes": [
+          "payment plan"
+        ]
+      },
+      {
+        "case_id": "CASE-019",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "pass",
+        "kind": "fixed",
+        "split": "dev",
+        "quotes": [
+          "repayment"
+        ]
+      },
+      {
+        "case_id": "CASE-023",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "needs_review",
+        "kind": "broken",
+        "split": "dev",
+        "quotes": [
+          "repayment"
+        ]
+      },
+      {
+        "case_id": "CASE-028",
+        "item": "escalation_offered",
+        "before": "needs_review",
+        "after": "pass",
+        "golden": "pass",
+        "kind": "fixed",
+        "split": "heldout",
+        "quotes": [
+          "payment plan"
+        ]
+      }
+    ],
+    "pack": "collections-conduct",
+    "dataset_hash": "29a683998b04fe05ded243ca2f8a41ad4d0143e4ba0eb4589d48a3b023144f26",
+    "judge_id": "heuristic:collections-conduct@2.0",
+    "cases": 28,
+    "heldout_cases": 9,
+    "reproduce": "precedent gate escalation-callback@1 --db <log> --pack collections-conduct --judge <same judge>  # must reproduce report_hash"
+  },
+  "signoffs": {
+    "author": "maria",
+    "gate_runner": "ci",
+    "approver": null,
+    "approval_rationale": "",
+    "identity": "unauthenticated CLI name (no identity provider is attached in this deployment)",
+    "segregation": {
+      "author_is_not_gate_runner": true,
+      "author_is_not_approver": false
+    }
+  },
+  "limitations": [
+    "Tested on 28 labelled cases in pack collections-conduct; see the pack's LABELING.md.",
+    "The result holds for judge heuristic:collections-conduct@2.0 only; a new judge needs a new gate run.",
+    "A verified quote proves the words are in the case, not that they support the claim.",
+    "Actor names are not authenticated; see 'identity'."
+  ],
+  "history": [
+    {
+      "seq": 1,
+      "ts": "2026-11-12T02:51:55.322904+00:00",
+      "actor": "maria",
+      "type": "correction.recorded",
+      "hash": "c3c90039b54ec50bd62d70bca742cd30780074dba05020d7f925d3d69d283813"
+    },
+    {
+      "seq": 2,
+      "ts": "2026-11-12T02:51:55.326872+00:00",
+      "actor": "maria",
+      "type": "rule.proposed",
+      "hash": "7aec0f290329be979d3b3252f25cc3e4ac2b100318f98bb77ea0a8381965d0ca"
+    },
+    {
+      "seq": 3,
+      "ts": "2026-11-12T02:51:55.328225+00:00",
+      "actor": "ci",
+      "type": "rule.gated",
+      "hash": "0b4f26e1b3334c2d112039f20b83aa69e8e2f964c5f8dbc831b4dc62b030e356"
+    },
+    {
+      "seq": 4,
+      "ts": "2026-11-12T02:51:55.331541+00:00",
+      "actor": "maria",
+      "type": "rule.proposed",
+      "hash": "0af4cdaea2aa15203c7665d490dfc5c9675d7566f8f765f0c196972ba3ce1922"
+    }
+  ],
+  "integrity": {
+    "chain_ok": true,
+    "events": 6,
+    "head": "557037925951dffb59e4daf5de596b929bf59d1967798f4ec9bae1dd0218553b",
+    "anchor_receipt": "GitHub Release v2.0.0 notes: https://github.com/FUYOH666/precedent/releases/tag/v2.0.0",
+    "verify": "precedent audit verify --db <log> --anchor <head>"
+  },
+  "evidence_hash": "4bdba6708782e4a1c0668df2f6ee28e314a623322a28264f457e91d55cd7b35f"
+}
