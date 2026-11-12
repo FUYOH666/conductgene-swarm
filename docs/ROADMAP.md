@@ -1,36 +1,47 @@
 # Roadmap
 
-## Done in v2.0.0.dev0
+## Done
 
-- Core: packs, structured LLM judge with quote verification, heuristic baseline, record/replay.
-- Rules as predicate conditions; deterministic application; conflicts go to review.
-- Blocking gate: source fixed, examples, counter-examples, zero regressions, conflicts, held-out with bootstrap CI.
-- Lifecycle with four-eyes approval, stale-gate detection, versions, revert.
-- Append-only SQLite event log with hash chain and `audit verify`.
-- `collections-conduct` pack (28 calls, 9 held out) and the v1 regression as the demo.
+- **v2.0.0.** The core:
+  - packs; a structured LLM judge with quote verification; a heuristic baseline; record and replay;
+  - rules as predicate conditions, applied by code;
+  - the blocking gate, four-eyes approval, revert;
+  - the hash-chained event log, evidence packs and audit export;
+  - the `collections-conduct` pack with the v1 regression as the demo.
+- **v2.1.0.** A GitHub Action and `precedent check`: rule changes are gated in pull requests.
+- **v2.2.0.** A pre-registered correction-stream benchmark (240 calls, seven ways to use 20 corrections).
+  Rules broke no right verdict, but retrieved examples were 3.4 points more accurate, largely because 7 of the 20
+  corrections were perception errors that a rule cannot express. [Results](../README.md#benchmark-20-corrections-seven-ways-to-use-them).
 
 ## Next
 
-1. **`customs-hs` pack on public data.** Product descriptions and classifications
-   from U.S. CBP rulings (CROSS) and the USITC HTS, both public domain. Items such
-   as "the code exists and is current", "GRI 1 and the section and chapter notes
-   were applied", "the reasoning cites a source". An EAEU / TN VED adapter for
-   pilots on a broker's own declarations.
-2. **Benchmark.** Arms: heuristic rules; one judge; one judge with corrections as
-   few-shot examples (the cheap baseline to beat); self-consistency; judge plus
-   gated rules; judge plus ungated rules (how many regressions the gate prevents).
-   A local model and a frontier model; cost and latency per case; numbers only
-   from scripts in the repository.
-3. **Model upgrades re-run the gate.** When the judge changes (new model, new
-   prompt), every active rule is re-gated against the new judge's outputs before
-   the switch. On the demo pack the v1 keyword rule breaks 3 verdicts on the
-   heuristic judge and 5 on Gemma 4: rules are judge-specific.
-4. **Second annotator** for both packs and a published human–human agreement.
-5. **Rule drafting:** an LLM proposes a rule and a counter-example from a
-   correction; a person edits it.
-6. **Shadow mode:** a passed rule runs on new traffic without changing verdicts;
-   would-flip cases go to a reviewer before approval.
-7. **Evidence pack:** an HTML dossier per decision and per rule for auditors.
+1. **Route each correction to the remedy that fits it.** The benchmark shows two kinds of correction.
+   - A misapplied policy (the judge saw the facts and drew the wrong conclusion) becomes a rule.
+   - A misread fact (the judge says the agent stated the call's purpose, quoting the customer's guess)
+     becomes a gated example.
+     It is retrieved for similar cases, and it is accepted only if re-judging the regression set
+     breaks nothing.
+
+   The router reads the judge's own predicate answers. If they contradict the reviewer's reason, the
+   error is perception. A pre-registered follow-up compares routed corrections with retrieved examples.
+2. **Speaker-bound predicates by default.** A predicate about what the agent said accepts only a quote
+   from an agent line. The library supports this today (`speaker: Agent`); packs should not be able to
+   forget it.
+3. **`customs-hs` pack on public data.**
+   - Product descriptions and classifications from U.S. CBP rulings (CROSS) and the USITC HTS, both
+     public domain.
+   - Items such as "the code exists and is current", "GRI 1 and the section and chapter notes were
+     applied", "the reasoning cites a source".
+   - An EAEU / TN VED adapter for pilots on a broker's own declarations.
+4. **Model upgrades re-run the gate.** When the judge changes (new model, new prompt), every active rule
+   is re-gated against the new judge's outputs before the switch. Rules are judge-specific. On the demo
+   pack the v1 keyword rule breaks 3 verdicts on the heuristic judge and 4 on Gemma 4.
+5. **Second annotator** for both packs and a published human–human agreement.
+6. **Rule drafting in the CLI.** An LLM proposes a rule and a counter-example from a correction, and a
+   person edits it. The benchmark harness already does this with a Qwen-family drafter. In 13 of 13
+   expressible cases the draft passed the gate on the first attempt.
+7. **Shadow mode.** A passed rule runs on new traffic without changing verdicts, and would-flip cases go
+   to a reviewer before approval.
 
 ## Later
 

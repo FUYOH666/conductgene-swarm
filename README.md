@@ -42,8 +42,9 @@ uvx --from git+https://github.com/FUYOH666/precedent precedent demo      # offli
 <sub>On the keyword judge, 28 synthetic calls with 9 held out and one annotator: a test of the
 machinery, not a benchmark. The same two rules as real pull requests on this repository:
 <a href="https://github.com/FUYOH666/precedent/pull/14">#14 blocked</a> ·
-<a href="https://github.com/FUYOH666/precedent/pull/15">#15 passed</a>. A pre-registered 240-call benchmark is under way
-(<a href="benchmarks/correction_stream/PREREGISTRATION.md">design</a>).</sub>
+<a href="https://github.com/FUYOH666/precedent/pull/15">#15 passed</a>. For a real comparison with prompt-based ways
+of using corrections, see the <a href="#benchmark-20-corrections-seven-ways-to-use-them">pre-registered benchmark</a>:
+rules broke nothing, and retrieved examples were more accurate.</sub>
 
 > **Running an LLM judge with human reviewers?** Send us a sample of the decisions they overrode.
 > We run them through the gate on your hardware and show which corrections are safe rules and which
@@ -204,6 +205,64 @@ Locally, the same check without an event log is `precedent check RULE.yaml --pac
 
 ## Results
 
+### Benchmark: 20 corrections, seven ways to use them
+
+The hypotheses were [pre-registered](benchmarks/correction_stream/PREREGISTRATION.md) before any judge output
+existed; departures from the plan are [logged](benchmarks/correction_stream/DEVIATIONS.md).
+
+- **Data.** 240 synthetic collection calls, written by a GPT-family model from fact vectors. Gold labels come
+  from a policy function, never from a model. A Qwen-family model checked every call against its facts.
+- **Corrections.** The judge, Gemma 4 26B, made 20 errors on the pool split, and each became a correction
+  carrying the reviewer's reason.
+- **Test.** A sealed set of 80 calls (320 verdicts), read only at the checkpoints.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/benchmark-dark.svg">
+    <img alt="For each way of using 20 corrections: verdicts turned from right to wrong (red) and from wrong to right (green). Rules through the gate: 0 broken, 10 fixed, 91.6%. Retrieved examples: 10 broken, 31 fixed, 95.0%. Few-shot: 19 broken, 28 fixed. Guidelines: 5 broken, 13 fixed. Gated guidelines: every batch rejected. Placebo: 9 broken, 5 fixed. Re-running the judge unchanged: 16 broken, 8 fixed." src="docs/assets/benchmark-light.svg" width="100%">
+  </picture>
+</p>
+
+- **Rules broke nothing; every prompt method broke something.** Rules through the gate turned 0 right verdicts
+  wrong in all three correction orders. Compared with the rules (exact McNemar, Holm-corrected):
+
+  | prompt method | right verdicts broken | p |
+  |---|---|---|
+  | few-shot examples | 19 | < 0.001 |
+  | retrieved examples | 10 | 0.004 |
+  | guidelines | 5 | 0.062, not significant |
+
+  15 of the 19 few-shot breaks fell on one kind of call: a customer who asked for a supervisor and was refused.
+- **Retrieved examples were more accurate: 95.0% against 91.6%.** We pre-registered that rules would stay within
+  2 points of the best prompt method. They did not, so that hypothesis failed.
+- **Most of that gap is misreading, not misapplied policy.** 7 of the 20 corrections could not become a rule. In
+  all 7, the judge said the agent had stated why they were calling, and the agent had not. In 5 of them its
+  evidence was the customer's guess ("I assume this is about the overdue debt"). A rule built on the judge's own
+  answers cannot repair what the judge misread; retrieved examples can. Precedent can reject a quote from the
+  wrong speaker (`speaker: Agent`, as the demo pack does), which would have flagged those 5. The benchmark's
+  frozen predicate library did not use it.
+- **The judge is noisy on its own.** Re-running it unchanged at temperature 0 turned 16 right verdicts wrong.
+  A correction delivered through the prompt arrives mixed with that noise. A rule changes only the verdicts
+  where it fires.
+- **Gating prompt edits kept nothing.** We also tried accepting a batch of guidelines only if re-judging a dev
+  set broke nothing. Both batches broke dev verdicts (6 and 10), so this method ended where it started.
+- **A stronger judge left nothing to correct.** DeepSeek V4.1 Flash got 960/960 verdicts right on the same calls,
+  so its correction stream was empty. A clear policy on synthetic calls is easy for a large model. Managed
+  corrections earn their keep with a small or local judge, or on harder data.
+
+**What we take from it:** corrections come in two kinds.
+- **A misapplied policy** becomes a rule, which is local and auditable.
+- **A misread fact** needs better perception: a predicate bound to a speaker, or retrieved examples behind the
+  same regression gate.
+
+The next release routes each correction to the remedy that fits it ([roadmap](docs/ROADMAP.md)).
+
+Full tables, secondary endpoints and exploratory analyses are in
+[RESULTS.md](benchmarks/correction_stream/results/gemma-4-26b-a4b-it/RESULTS.md). Every judge call is
+recorded, and CI rebuilds the tables from those recordings and fails on drift.
+
+### The demo pack
+
 `collections-conduct` is a deliberately small pack: 28 synthetic calls, 9 held out, one annotator.
 Every number and figure here is regenerated by `scripts/results.py` and `scripts/figures.py`, and CI
 fails if they drift.
@@ -223,15 +282,6 @@ fails if they drift.
   no data leaving the machine.
 
 All tables and every single disagreement: [docs/results/collections-conduct.md](docs/results/collections-conduct.md).
-
-**Next: does the gate beat the alternatives?** A pre-registered benchmark is running:
-- 240 calls written from fact vectors, with gold labels from a policy function;
-- three model families (one writes, one checks, one judges);
-- eight arms, among them "corrections as few-shot examples", retrieved examples, guidelines in the
-  prompt, a placebo, and gated vs ungated rules.
-
-Hypotheses and endpoints were hashed into an event log before the first judge call:
-[PREREGISTRATION.md](benchmarks/correction_stream/PREREGISTRATION.md).
 
 ## Design principles
 
@@ -267,6 +317,10 @@ Only the pack changes: rubric, predicates, policy, labelled cases.
 - A verified quote proves the words are in the case, not that they support the claim. A prompt
   injection inside a case is itself quotable; see [SECURITY.md](SECURITY.md).
 - Rules can only use predicates the judge was asked; adding a predicate means re-running the judge.
+  Rules fix how a policy is applied, not what the judge misread: in the benchmark, 7 of 20 corrections
+  could not become a rule for that reason.
+- The benchmark is one synthetic domain and one judge for the comparison (a second judge made no
+  errors to correct). Its gold labels come from a written policy, not from people disagreeing.
 - Actors are names given to the CLI. Segregation of duties stops mistakes, not impersonation; put
   it behind your own authentication.
 - The log is tamper-evident, not tamper-proof: anchor the head elsewhere (`audit verify --anchor`).

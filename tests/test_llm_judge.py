@@ -90,6 +90,32 @@ def test_unquoted_or_invalid_labels_become_review(pack: Pack) -> None:
 
 
 @respx.mock
+def test_answers_in_the_wrong_shape_are_read_not_trusted(pack: Pack) -> None:
+    """A bare string where an object was asked for: no crash, no unquoted 'yes'."""
+    data = _answer(pack)
+    data["predicates"]["supervisor_callback_offered"] = "yes"  # no quote possible
+    data["predicates"]["threat_of_arrest"] = ["no"]
+    data["items"]["escalation_offered"] = "pass"
+    data["items"]["company_disclosure"]["quote"] = {"text": "This is ABC Collections"}
+    data["items"]["recording_disclosure"]["clause_ids"] = pack.clauses[0].id
+    respx.post(f"{BASE}/chat/completions").mock(return_value=_reply(json.dumps(data)))
+    out = LLMJudge(pack, base_url=BASE, model="m").judge(pack.case("CASE-019"))
+    assert out.predicates["supervisor_callback_offered"].value == "unknown"
+    assert out.predicates["threat_of_arrest"].value == "unknown"
+    assert out.items["escalation_offered"].label == "needs_review"
+    assert out.items["company_disclosure"].label == "needs_review"
+    assert out.items["recording_disclosure"].clause_ids == [pack.clauses[0].id]
+    assert sum("expected an object" in n for n in out.notes) == 3
+
+    respx.post(f"{BASE}/chat/completions").mock(
+        return_value=_reply(json.dumps({"abstain": False, "items": [], "predicates": "none"}))
+    )
+    out = LLMJudge(pack, base_url=BASE, model="m").judge(pack.case("CASE-019"))
+    assert {v.label for v in out.items.values()} == {"needs_review"}
+    assert any(n.startswith("predicates: expected an object") for n in out.notes)
+
+
+@respx.mock
 def test_abstain_and_retry_on_bad_json(pack: Pack) -> None:
     route = respx.post(f"{BASE}/chat/completions")
     route.side_effect = [

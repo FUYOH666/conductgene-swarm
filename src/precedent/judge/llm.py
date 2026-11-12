@@ -178,15 +178,15 @@ class LLMJudge:
     def parse(self, case: Case, data: dict[str, Any]) -> JudgeOutput:
         notes: list[str] = []
         known_clauses = self.pack.clause_ids()
-        raw_preds = data.get("predicates") or {}
+        raw_preds = _mapping(data.get("predicates"), "predicates", notes)
         predicates: dict[str, PredicateAnswer] = {}
         for pred in self.pack.predicates:
-            entry = raw_preds.get(pred.id) or {}
+            entry = _entry(raw_preds.get(pred.id), "value", f"predicate {pred.id}", notes)
             value = str(entry.get("value", "unknown")).lower().strip()
             if value not in ("yes", "no", "unknown"):
                 notes.append(f"predicate {pred.id}: invalid value {value!r}")
                 value = "unknown"
-            span = find_quote(case.text, entry.get("quote"))
+            span = find_quote(case.text, _text(entry.get("quote")))
             if span is not None and pred.speaker and not _spoken_by(case.text, span, pred.speaker):
                 notes.append(f"predicate {pred.id}: quote is not from {pred.speaker}")
                 span = None
@@ -211,19 +211,20 @@ class LLMJudge:
                 notes=notes,
             )
 
-        raw_items = data.get("items") or {}
+        raw_items = _mapping(data.get("items"), "items", notes)
         items: dict[str, ItemVerdict] = {}
         for item in self.pack.items:
-            entry = raw_items.get(item.id) or {}
+            entry = _entry(raw_items.get(item.id), "label", f"item {item.id}", notes)
             label = str(entry.get("label", "")).strip()
             if label not in item.label_ids():
                 notes.append(f"item {item.id}: invalid label {label!r}")
                 label = self.pack.review_label
-            span = find_quote(case.text, entry.get("quote"))
+            span = find_quote(case.text, _text(entry.get("quote")))
             if label in item.evidence_required and span is None:
                 notes.append(f"item {item.id}: {label!r} without a verifiable quote")
                 label = self.pack.review_label
-            cited = [str(c) for c in entry.get("clause_ids") or []]
+            raw_cited = entry.get("clause_ids") or []
+            cited = [str(c) for c in (raw_cited if isinstance(raw_cited, list) else [raw_cited])]
             unknown = [c for c in cited if c not in known_clauses]
             if unknown:
                 notes.append(f"item {item.id}: dropped unknown clause ids {unknown}")
@@ -242,3 +243,27 @@ class LLMJudge:
             predicates=predicates,
             notes=notes,
         )
+
+
+# --- tolerant reading of model output ------------------------------------------------------
+# A model may answer in the wrong shape (a bare string where an object was asked for).
+# The judge never crashes on that: it reads what it can, notes the problem, and the
+# evidence rules still apply (a "yes" or a passing label without a quote is downgraded).
+
+
+def _mapping(raw: Any, name: str, notes: list[str]) -> dict[str, Any]:
+    if raw is None or isinstance(raw, dict):
+        return raw or {}
+    notes.append(f"{name}: expected an object, got {type(raw).__name__}")
+    return {}
+
+
+def _entry(raw: Any, key: str, where: str, notes: list[str]) -> dict[str, Any]:
+    if raw is None or isinstance(raw, dict):
+        return raw or {}
+    notes.append(f"{where}: expected an object, got {type(raw).__name__}")
+    return {key: raw} if isinstance(raw, str) else {}
+
+
+def _text(raw: Any) -> str | None:
+    return raw if isinstance(raw, str) else None

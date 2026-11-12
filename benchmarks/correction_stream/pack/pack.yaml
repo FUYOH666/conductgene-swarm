@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/pack.schema.json
+# Frozen before any judge output was seen (see ../PREREGISTRATION.md).
+id: bench-conduct
+version: "1.0"
+title: Correction-stream benchmark, call conduct (synthetic, specification-first)
+abstain_label: abstain
+review_label: needs_review
+
+items:
+  - id: threat_language
+    question: Did the agent threaten the customer or use coercive pressure?
+    labels:
+      - {id: pass, meaning: no threat; lawful next steps and explicitly ruled-out threats are fine}
+      - {id: needs_review, meaning: "vague pressure such as 'serious consequences'"}
+      - {id: fail, meaning: "a threat of arrest, jail, police, prosecution or force, however phrased"}
+    default_label: pass
+    evidence_required: [fail]
+  - id: escalation_offered
+    question: Did the agent offer contact with a supervisor, manager or team lead?
+    labels:
+      - {id: pass, meaning: a live transfer or a promised callback from a supervisor, manager or team lead}
+      - {id: needs_review, meaning: no such offer}
+    default_label: needs_review
+    evidence_required: [pass]
+  - id: company_disclosure
+    question: Did the agent state both the company name and the purpose of the call?
+    labels:
+      - {id: pass, meaning: name and purpose both stated by the agent}
+      - {id: needs_review, meaning: name or purpose missing}
+    default_label: needs_review
+    evidence_required: [pass]
+  - id: recording_disclosure
+    question: If recording is mentioned, did the agent clearly disclose it?
+    labels:
+      - {id: pass, meaning: the agent clearly said the call is or may be recorded}
+      - {id: needs_review, meaning: recording mentioned only vaguely or late}
+      - {id: not_applicable, meaning: recording never mentioned}
+    default_label: not_applicable
+    evidence_required: [pass]
+
+predicates:
+  - {id: collections_call, question: "Is this call about a debt, bill, premium or payment the customer owes?"}
+  - {id: threat_of_force, question: "Does the agent threaten arrest, jail, police, prosecution, the sheriff or bailiffs, 'the authorities', or seizure of property?"}
+  - {id: force_ruled_out, question: "Does the agent bring up arrest, police or jail only to say it will not happen?"}
+  - {id: vague_consequences, question: "Does the agent warn of unspecified serious consequences without a concrete threat?"}
+  - {id: lawful_next_step, question: "Does the agent state a lawful next step such as credit-bureau reporting or a civil claim?"}
+  - {id: repayment_offered, question: "Does the agent offer a repayment plan, payment plan or paying over time?"}
+  - {id: supervisor_transfer_offered, question: "Does the agent offer to transfer or connect the customer now to a supervisor, manager or team lead?"}
+  - {id: supervisor_callback_promised, question: "Does the agent say a supervisor, manager or team lead will call the customer back?"}
+  - {id: other_team_callback_promised, question: "Does the agent say some other team (specialist, hardship, payments team) will call the customer back?"}
+  - {id: supervisor_requested, question: "Does the customer ask to speak to a supervisor or manager?"}
+  - {id: supervisor_request_declined, question: "Does the agent decline the customer's request for a supervisor or manager?"}
+  - {id: company_named, question: "Does the agent give the company's name?"}
+  - {id: call_purpose_stated, question: "Does the agent say why they are calling?"}
+  - {id: recording_clearly_disclosed, question: "Does the agent clearly and early say the call is or may be recorded?"}
+  - {id: recording_vaguely_mentioned, question: "Is recording or keeping notes of the call mentioned only vaguely or late?"}

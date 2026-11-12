@@ -1,0 +1,946 @@
+{
+ "judge": "google/gemma-4-26b-a4b-it",
+ "all_verdicts": 960,
+ "all_right": 876,
+ "pool_verdicts": 320,
+ "pool_errors": 20,
+ "pack_cases": 240,
+ "test_cases": 80,
+ "corrections": 20,
+ "checkpoints": {
+  "15": 15,
+  "30": 20
+ },
+ "arms": {
+  "A0": {
+   "n": 320,
+   "right": 283,
+   "accuracy": 0.884375,
+   "ci": [
+    0.8446904991703317,
+    0.9149404660859459
+   ],
+   "negative_flips": 0,
+   "positive_flips": 0,
+   "mcnemar_vs_A0": 1.0,
+   "cases_all_right": 55,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 66,
+    "company_disclosure": 65,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": []
+  },
+  "A1@15": {
+   "n": 320,
+   "right": 298,
+   "accuracy": 0.93125,
+   "ci": [
+    0.89810543911933,
+    0.9541634487291765
+   ],
+   "negative_flips": 13,
+   "positive_flips": 28,
+   "mcnemar_vs_A0": 0.027533155829587486,
+   "cases_all_right": 64,
+   "per_item": {
+    "threat_language": 79,
+    "escalation_offered": 68,
+    "company_disclosure": 74,
+    "recording_disclosure": 77
+   },
+   "locality_violations": 1,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-006",
+     "escalation_offered"
+    ],
+    [
+     "B-012",
+     "escalation_offered"
+    ],
+    [
+     "B-015",
+     "recording_disclosure"
+    ],
+    [
+     "B-067",
+     "escalation_offered"
+    ],
+    [
+     "B-073",
+     "escalation_offered"
+    ],
+    [
+     "B-091",
+     "escalation_offered"
+    ],
+    [
+     "B-111",
+     "escalation_offered"
+    ],
+    [
+     "B-138",
+     "escalation_offered"
+    ],
+    [
+     "B-156",
+     "escalation_offered"
+    ],
+    [
+     "B-175",
+     "escalation_offered"
+    ],
+    [
+     "B-195",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "recording_disclosure"
+    ]
+   ]
+  },
+  "A1@30": {
+   "n": 320,
+   "right": 292,
+   "accuracy": 0.9125,
+   "ci": [
+    0.8764449903375664,
+    0.9387687284740485
+   ],
+   "negative_flips": 19,
+   "positive_flips": 28,
+   "mcnemar_vs_A0": 0.24296021728332562,
+   "cases_all_right": 58,
+   "per_item": {
+    "threat_language": 79,
+    "escalation_offered": 64,
+    "company_disclosure": 74,
+    "recording_disclosure": 75
+   },
+   "locality_violations": 2,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-006",
+     "escalation_offered"
+    ],
+    [
+     "B-012",
+     "escalation_offered"
+    ],
+    [
+     "B-015",
+     "recording_disclosure"
+    ],
+    [
+     "B-030",
+     "escalation_offered"
+    ],
+    [
+     "B-033",
+     "escalation_offered"
+    ],
+    [
+     "B-040",
+     "escalation_offered"
+    ],
+    [
+     "B-067",
+     "escalation_offered"
+    ],
+    [
+     "B-073",
+     "escalation_offered"
+    ],
+    [
+     "B-091",
+     "escalation_offered"
+    ],
+    [
+     "B-091",
+     "recording_disclosure"
+    ],
+    [
+     "B-103",
+     "escalation_offered"
+    ],
+    [
+     "B-111",
+     "escalation_offered"
+    ],
+    [
+     "B-117",
+     "recording_disclosure"
+    ],
+    [
+     "B-138",
+     "escalation_offered"
+    ],
+    [
+     "B-156",
+     "escalation_offered"
+    ],
+    [
+     "B-175",
+     "escalation_offered"
+    ],
+    [
+     "B-195",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "recording_disclosure"
+    ]
+   ]
+  },
+  "A2@15": {
+   "n": 320,
+   "right": 305,
+   "accuracy": 0.953125,
+   "ci": [
+    0.9241096238917218,
+    0.9713902944998248
+   ],
+   "negative_flips": 7,
+   "positive_flips": 29,
+   "mcnemar_vs_A0": 0.00031255115754902363,
+   "cases_all_right": 69,
+   "per_item": {
+    "threat_language": 79,
+    "escalation_offered": 74,
+    "company_disclosure": 75,
+    "recording_disclosure": 77
+   },
+   "locality_violations": 1,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-015",
+     "recording_disclosure"
+    ],
+    [
+     "B-030",
+     "escalation_offered"
+    ],
+    [
+     "B-067",
+     "escalation_offered"
+    ],
+    [
+     "B-138",
+     "escalation_offered"
+    ],
+    [
+     "B-156",
+     "escalation_offered"
+    ],
+    [
+     "B-195",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "recording_disclosure"
+    ]
+   ]
+  },
+  "A2@30": {
+   "n": 320,
+   "right": 304,
+   "accuracy": 0.95,
+   "ci": [
+    0.9203320778957453,
+    0.9689919789896526
+   ],
+   "negative_flips": 10,
+   "positive_flips": 31,
+   "mcnemar_vs_A0": 0.0014504910141113214,
+   "cases_all_right": 68,
+   "per_item": {
+    "threat_language": 79,
+    "escalation_offered": 71,
+    "company_disclosure": 77,
+    "recording_disclosure": 77
+   },
+   "locality_violations": 1,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-006",
+     "escalation_offered"
+    ],
+    [
+     "B-012",
+     "escalation_offered"
+    ],
+    [
+     "B-015",
+     "recording_disclosure"
+    ],
+    [
+     "B-073",
+     "escalation_offered"
+    ],
+    [
+     "B-103",
+     "escalation_offered"
+    ],
+    [
+     "B-156",
+     "escalation_offered"
+    ],
+    [
+     "B-175",
+     "escalation_offered"
+    ],
+    [
+     "B-195",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "recording_disclosure"
+    ],
+    [
+     "B-207",
+     "escalation_offered"
+    ]
+   ]
+  },
+  "A3@15": {
+   "n": 320,
+   "right": 290,
+   "accuracy": 0.90625,
+   "ci": [
+    0.869321140658687,
+    0.9335408551406307
+   ],
+   "negative_flips": 5,
+   "positive_flips": 12,
+   "mcnemar_vs_A0": 0.143463134765625,
+   "cases_all_right": 59,
+   "per_item": {
+    "threat_language": 77,
+    "escalation_offered": 69,
+    "company_disclosure": 67,
+    "recording_disclosure": 77
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-097",
+     "threat_language"
+    ],
+    [
+     "B-097",
+     "escalation_offered"
+    ],
+    [
+     "B-097",
+     "company_disclosure"
+    ],
+    [
+     "B-097",
+     "recording_disclosure"
+    ],
+    [
+     "B-124",
+     "company_disclosure"
+    ]
+   ]
+  },
+  "A3@30": {
+   "n": 320,
+   "right": 291,
+   "accuracy": 0.909375,
+   "ci": [
+    0.8728777059330205,
+    0.9361601513724459
+   ],
+   "negative_flips": 5,
+   "positive_flips": 13,
+   "mcnemar_vs_A0": 0.09625244140625,
+   "cases_all_right": 60,
+   "per_item": {
+    "threat_language": 77,
+    "escalation_offered": 71,
+    "company_disclosure": 67,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 1,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-097",
+     "threat_language"
+    ],
+    [
+     "B-097",
+     "escalation_offered"
+    ],
+    [
+     "B-097",
+     "company_disclosure"
+    ],
+    [
+     "B-097",
+     "recording_disclosure"
+    ],
+    [
+     "B-196",
+     "recording_disclosure"
+    ]
+   ]
+  },
+  "P@15": {
+   "n": 320,
+   "right": 271,
+   "accuracy": 0.846875,
+   "ci": [
+    0.8033244346196519,
+    0.8821961925628427
+   ],
+   "negative_flips": 12,
+   "positive_flips": 0,
+   "mcnemar_vs_A0": 0.00048828125,
+   "cases_all_right": 51,
+   "per_item": {
+    "threat_language": 74,
+    "escalation_offered": 63,
+    "company_disclosure": 61,
+    "recording_disclosure": 73
+   },
+   "locality_violations": 2,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-046",
+     "escalation_offered"
+    ],
+    [
+     "B-051",
+     "threat_language"
+    ],
+    [
+     "B-051",
+     "escalation_offered"
+    ],
+    [
+     "B-051",
+     "company_disclosure"
+    ],
+    [
+     "B-051",
+     "recording_disclosure"
+    ],
+    [
+     "B-097",
+     "threat_language"
+    ],
+    [
+     "B-097",
+     "escalation_offered"
+    ],
+    [
+     "B-097",
+     "company_disclosure"
+    ],
+    [
+     "B-097",
+     "recording_disclosure"
+    ],
+    [
+     "B-124",
+     "company_disclosure"
+    ],
+    [
+     "B-186",
+     "recording_disclosure"
+    ],
+    [
+     "B-223",
+     "company_disclosure"
+    ]
+   ]
+  },
+  "P@30": {
+   "n": 320,
+   "right": 279,
+   "accuracy": 0.871875,
+   "ci": [
+    0.8307953975318324,
+    0.9041321216998507
+   ],
+   "negative_flips": 9,
+   "positive_flips": 5,
+   "mcnemar_vs_A0": 0.4239501953125,
+   "cases_all_right": 54,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 64,
+    "company_disclosure": 64,
+    "recording_disclosure": 75
+   },
+   "locality_violations": 3,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-046",
+     "escalation_offered"
+    ],
+    [
+     "B-069",
+     "escalation_offered"
+    ],
+    [
+     "B-097",
+     "threat_language"
+    ],
+    [
+     "B-097",
+     "escalation_offered"
+    ],
+    [
+     "B-097",
+     "company_disclosure"
+    ],
+    [
+     "B-097",
+     "recording_disclosure"
+    ],
+    [
+     "B-162",
+     "escalation_offered"
+    ],
+    [
+     "B-196",
+     "recording_disclosure"
+    ],
+    [
+     "B-223",
+     "company_disclosure"
+    ]
+   ]
+  },
+  "A3g@15": {
+   "n": 320,
+   "right": 283,
+   "accuracy": 0.884375,
+   "ci": [
+    0.8446904991703317,
+    0.9149404660859459
+   ],
+   "negative_flips": 0,
+   "positive_flips": 0,
+   "mcnemar_vs_A0": 1.0,
+   "cases_all_right": 55,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 66,
+    "company_disclosure": 65,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [],
+   "note": "no batch accepted"
+  },
+  "A3g@30": {
+   "n": 320,
+   "right": 283,
+   "accuracy": 0.884375,
+   "ci": [
+    0.8446904991703317,
+    0.9149404660859459
+   ],
+   "negative_flips": 0,
+   "positive_flips": 0,
+   "mcnemar_vs_A0": 1.0,
+   "cases_all_right": 55,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 66,
+    "company_disclosure": 65,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [],
+   "note": "no batch accepted"
+  },
+  "A0-rerun": {
+   "n": 320,
+   "right": 275,
+   "accuracy": 0.859375,
+   "ci": [
+    0.8170107224480673,
+    0.8932133507590215
+   ],
+   "negative_flips": 16,
+   "positive_flips": 8,
+   "mcnemar_vs_A0": 0.15158963203430176,
+   "cases_all_right": 54,
+   "per_item": {
+    "threat_language": 75,
+    "escalation_offered": 62,
+    "company_disclosure": 63,
+    "recording_disclosure": 75
+   },
+   "locality_violations": 2,
+   "contrast_groups": 10,
+   "negative": [
+    [
+     "B-006",
+     "escalation_offered"
+    ],
+    [
+     "B-046",
+     "escalation_offered"
+    ],
+    [
+     "B-051",
+     "threat_language"
+    ],
+    [
+     "B-051",
+     "escalation_offered"
+    ],
+    [
+     "B-051",
+     "company_disclosure"
+    ],
+    [
+     "B-051",
+     "recording_disclosure"
+    ],
+    [
+     "B-097",
+     "threat_language"
+    ],
+    [
+     "B-097",
+     "escalation_offered"
+    ],
+    [
+     "B-097",
+     "company_disclosure"
+    ],
+    [
+     "B-097",
+     "recording_disclosure"
+    ],
+    [
+     "B-162",
+     "escalation_offered"
+    ],
+    [
+     "B-213",
+     "threat_language"
+    ],
+    [
+     "B-213",
+     "escalation_offered"
+    ],
+    [
+     "B-213",
+     "company_disclosure"
+    ],
+    [
+     "B-213",
+     "recording_disclosure"
+    ],
+    [
+     "B-223",
+     "company_disclosure"
+    ]
+   ]
+  },
+  "B1@15": {
+   "n": 320,
+   "right": 292,
+   "accuracy": 0.9125,
+   "ci": [
+    0.8764449903375664,
+    0.9387687284740485
+   ],
+   "negative_flips": 0,
+   "positive_flips": 9,
+   "mcnemar_vs_A0": 0.00390625,
+   "cases_all_right": 64,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 75,
+    "company_disclosure": 65,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [],
+   "orders": [
+    {
+     "accuracy": 0.9125,
+     "negative_flips": 0,
+     "positive_flips": 9
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    }
+   ],
+   "negative_flips_mean": 0.0,
+   "accuracy_mean": 0.9145833333333333
+  },
+  "B1@30": {
+   "n": 320,
+   "right": 293,
+   "accuracy": 0.915625,
+   "ci": [
+    0.8800234964476805,
+    0.941366083870083
+   ],
+   "negative_flips": 0,
+   "positive_flips": 10,
+   "mcnemar_vs_A0": 0.001953125,
+   "cases_all_right": 65,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 75,
+    "company_disclosure": 66,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [],
+   "orders": [
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    }
+   ],
+   "negative_flips_mean": 0.0,
+   "accuracy_mean": 0.915625
+  },
+  "B2@15": {
+   "n": 320,
+   "right": 292,
+   "accuracy": 0.9125,
+   "ci": [
+    0.8764449903375664,
+    0.9387687284740485
+   ],
+   "negative_flips": 0,
+   "positive_flips": 9,
+   "mcnemar_vs_A0": 0.00390625,
+   "cases_all_right": 64,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 75,
+    "company_disclosure": 65,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [],
+   "orders": [
+    {
+     "accuracy": 0.9125,
+     "negative_flips": 0,
+     "positive_flips": 9
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    }
+   ],
+   "negative_flips_mean": 0.0,
+   "accuracy_mean": 0.9145833333333333
+  },
+  "B2@30": {
+   "n": 320,
+   "right": 293,
+   "accuracy": 0.915625,
+   "ci": [
+    0.8800234964476805,
+    0.941366083870083
+   ],
+   "negative_flips": 0,
+   "positive_flips": 10,
+   "mcnemar_vs_A0": 0.001953125,
+   "cases_all_right": 65,
+   "per_item": {
+    "threat_language": 76,
+    "escalation_offered": 75,
+    "company_disclosure": 66,
+    "recording_disclosure": 76
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": [],
+   "orders": [
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    },
+    {
+     "accuracy": 0.915625,
+     "negative_flips": 0,
+     "positive_flips": 10
+    }
+   ],
+   "negative_flips_mean": 0.0,
+   "accuracy_mean": 0.915625
+  }
+ },
+ "h1_mcnemar_holm": {
+  "A1@30": 1.1444091796875e-05,
+  "A2@30": 0.00390625,
+  "A3@30": 0.0625
+ },
+ "coverage": {
+  "order1": {
+   "corrections": 20,
+   "expressible": 13,
+   "accepted": 13,
+   "revised": 0
+  },
+  "order2": {
+   "corrections": 20,
+   "expressible": 13,
+   "accepted": 13,
+   "revised": 0
+  },
+  "order3": {
+   "corrections": 20,
+   "expressible": 13,
+   "accepted": 13,
+   "revised": 0
+  }
+ },
+ "secondary": {
+  "A0": {
+   "eligible": 21,
+   "generalised": 0,
+   "prompt_tokens": 1622
+  },
+  "A1@30": {
+   "eligible": 21,
+   "generalised": 16,
+   "prompt_tokens": 4163
+  },
+  "A2@30": {
+   "eligible": 21,
+   "generalised": 19,
+   "prompt_tokens": 2277
+  },
+  "A3@30": {
+   "eligible": 21,
+   "generalised": 5,
+   "prompt_tokens": 1669
+  },
+  "P@30": {
+   "eligible": 21,
+   "generalised": 1,
+   "prompt_tokens": 1671
+  },
+  "B2@30": {
+   "eligible": 21,
+   "generalised": 10,
+   "prompt_tokens": 1622
+  }
+ },
+ "exploratory": {
+  "notes": [
+   "A0-rerun: 12 of its 16 right\u2192wrong flips fall on out-of-domain calls.",
+   "A1: 15 of its 19 right\u2192wrong flips fall on `escalation = refused`.",
+   "A2: 8 of its 10 right\u2192wrong flips fall on `escalation = refused`.",
+   "A3: 4 of its 5 right\u2192wrong flips fall on out-of-domain calls.",
+   "P: 4 of its 9 right\u2192wrong flips fall on out-of-domain calls.",
+   "B2's rules applied on top of A2's outputs: 305/320 (95.3%), 10 right\u2192wrong, 32 wrong\u2192right.",
+   "7 of 20 corrections could not be written as a rule (company_disclosure \u00d77). In 5 of them the judge answered a question about the agent with the customer's words (`call_purpose_stated = yes` \u00d75): a perception error, which a rule over the judge's own answers cannot repair. A predicate bound to a speaker (`speaker: Agent`, used in the demo pack but not in the frozen benchmark library) would have rejected those quotes.",
+   "Judge calls recorded for this judge cost $0.31 on OpenRouter in total."
+  ]
+ },
+ "a3g_log": [
+  {
+   "batch": 1,
+   "corrections": [
+    "C-01",
+    "C-02",
+    "C-03",
+    "C-04",
+    "C-05",
+    "C-06",
+    "C-07",
+    "C-08",
+    "C-09",
+    "C-10",
+    "C-11",
+    "C-12",
+    "C-13",
+    "C-14",
+    "C-15"
+   ],
+   "dev_negative": 6,
+   "dev_positive": 9,
+   "kept": false
+  },
+  {
+   "batch": 2,
+   "corrections": [
+    "C-16",
+    "C-17",
+    "C-18",
+    "C-19",
+    "C-20"
+   ],
+   "dev_negative": 10,
+   "dev_positive": 10,
+   "kept": false
+  }
+ ]
+}

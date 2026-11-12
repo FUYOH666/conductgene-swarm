@@ -1,0 +1,43 @@
+{
+ "judge": "deepseek/deepseek-v4.1-flash-1017",
+ "all_verdicts": 960,
+ "all_right": 960,
+ "pool_verdicts": 320,
+ "pool_errors": 0,
+ "pack_cases": 240,
+ "test_cases": 80,
+ "corrections": 0,
+ "checkpoints": {
+  "15": 0,
+  "30": 0
+ },
+ "arms": {
+  "A0": {
+   "n": 320,
+   "right": 320,
+   "accuracy": 1.0,
+   "ci": [
+    0.9881378409837756,
+    0.9999999999999998
+   ],
+   "negative_flips": 0,
+   "positive_flips": 0,
+   "mcnemar_vs_A0": 1.0,
+   "cases_all_right": 80,
+   "per_item": {
+    "threat_language": 80,
+    "escalation_offered": 80,
+    "company_disclosure": 80,
+    "recording_disclosure": 80
+   },
+   "locality_violations": 0,
+   "contrast_groups": 10,
+   "negative": []
+  }
+ },
+ "h1_mcnemar_holm": {},
+ "coverage": {},
+ "secondary": {},
+ "exploratory": {},
+ "a3g_log": []
+}
