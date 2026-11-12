@@ -6,3 +6,8 @@
   and drafts, DeepSeek judges. All 240 transcripts are re-verified with the hosted verifier; the partial
   local verification (150 cases) and the 5 local Gemma judgements are kept in `archive/` and not used.
   The data is synthetic, so no confidential text leaves the machine.
+- 2026-11-12: `spec.py` was reformatted by `ruff format` after its hash was recorded in `prereg.db`, so its
+  bytes no longer match `spec_sha256`. The change is whitespace and line wrapping only. `spec.build()`
+  regenerates `specs.jsonl` byte for byte. `PREREGISTRATION.md` and the frozen pack (policy +
+  `pack.yaml`) still match their recorded hashes. Check:
+  `uv run python benchmarks/correction_stream/check_prereg.py`.
