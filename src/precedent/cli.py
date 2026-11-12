@@ -51,11 +51,11 @@ def cmd_demo(args: argparse.Namespace) -> int:
     from precedent.demo import run_demo
 
     if not args.svg:
-        return run_demo(console, Path(args.out), args.judge)
+        return run_demo(console, Path(args.out), args.judge, args.anchor_receipt)
     recorder = Console(
         record=True, width=100, force_terminal=True, color_system="truecolor", highlight=False
     )
-    code = run_demo(recorder, Path(args.out), args.judge)
+    code = run_demo(recorder, Path(args.out), args.judge, args.anchor_receipt)
     recorder.save_svg(args.svg, title="precedent demo", theme=TERMINAL_THEME)
     console.print(f"[dim]wrote {args.svg}[/]")
     return code
@@ -324,6 +324,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("demo", help="the v1 bug, caught by the gate")
     p.add_argument("--out", default="precedent-demo")
     p.add_argument("--svg", help="also export the run as a terminal SVG")
+    p.add_argument("--anchor-receipt", help="where the log head will be recorded (evidence packs)")
     judge_opt(p)
     p.set_defaults(func=cmd_demo)
 

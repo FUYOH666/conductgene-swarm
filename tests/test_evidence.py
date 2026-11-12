@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 
 from precedent.cli import main
-from precedent.evidence import FORMAT, build_evidence, render_html
 from precedent.events import EventStore
+from precedent.evidence import FORMAT, build_evidence, render_html
 from precedent.hashing import canonical_json, sha256_hex
 from precedent.judge import judge_all
 from precedent.judge.heuristic import HeuristicJudge

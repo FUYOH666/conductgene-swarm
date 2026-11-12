@@ -73,6 +73,8 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 "scripts/figures.py" = ["E501"]
 # HTML templating reads better unwrapped.
 "src/precedent/evidence.py" = ["E501"]
+"scripts/site.py" = ["E501"]
+"benchmarks/**" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"

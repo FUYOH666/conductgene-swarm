@@ -23,3 +23,6 @@ notes/
 
 # Local demo output
 precedent-demo/
+
+# Pages build output
+_site/

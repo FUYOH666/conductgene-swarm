@@ -65,10 +65,16 @@ the cases behind accepted corrections.
 | `counter_examples_hold` | a declared counter-example changes at all, even towards its label |
 | `no_regressions` | **any** labelled case goes from right to wrong |
 | `no_conflicts` | the rule disagrees with an active rule on some case |
-| `heldout_not_worse` | held-out agreement goes down (reported with a paired bootstrap 95% CI) |
 
-Advisory checks report whether the rule fires beyond its own sources and on
-how many cases the judge answered `unknown`.
+Advisory checks report whether the rule changes anything at all on this judge
+(`has_effect`, with an exact McNemar test on the verdicts that changed), whether
+it fires beyond its own sources, and on how many cases the judge answered
+`unknown`. Held-out agreement is reported with a Wilson interval but never
+decides on its own: a held-out verdict that breaks is already a regression.
+
+The gate is run by someone other than the rule's author; the approver's CLI
+re-performs it and refuses to approve unless the recorded report is
+reproduced exactly.
 
 A gate result is bound to the rule's content hash, the dataset hash, the
 judge id, the set of recorded corrections and the hash of the active rule set.
