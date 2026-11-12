@@ -170,8 +170,9 @@ export` hands over the complete event population for sampling.
 ## Run the gate on pull requests
 
 Rules are files, so a change to how your judge decides can be reviewed like any other change. The
-repository's own [`rules/`](rules/) directory is gated this way: a pull request that adds a rule gets
-the gate report as a comment and fails if the rule is blocked.
+repository's own [`rules/active/`](rules/) directory is gated this way: a pull request that adds or
+edits a rule gets the gate report as a comment, fails if the rule is blocked, and the merge makes the
+rule active.
 
 ```yaml
 # .github/workflows/rules.yml
@@ -187,7 +188,7 @@ jobs:
       - uses: FUYOH666/precedent@v2
         with:
           pack: path/to/your-pack          # or a built-in pack name
-          rules: rules/proposed/*.yaml
+          rules: rules/active/*.yaml         # or only the files the PR changed
           corrections: rules/corrections.yaml
           active: rules/active
           judge: replay:path/to/recorded-judge.jsonl   # recorded outputs; CI needs no model
