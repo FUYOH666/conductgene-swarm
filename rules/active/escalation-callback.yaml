@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/rule.schema.json
+# The same correction, stated as the reason it actually was: the customer was
+# promised a callback from a team lead. The reviewer adds a narrow predicate for
+# that distinction (callbacks, not transfers) instead of reusing a keyword.
+id: escalation-callback
+version: 2
+pack: collections-conduct
+item: escalation_offered
+title: A promised callback from a supervisor, manager or team lead counts as an escalation offer
+rationale: >
+  Policy (escalation): a live transfer and a scheduled callback from a
+  supervisor, manager or team lead both count; a repayment plan on its own
+  does not.
+when:
+  - {predicate: supervisor_callback_offered, equals: "yes"}
+then: pass
+clause_refs: [28316012a13f, 171ccb81ca81]
+source_corrections: [C-0001]
+examples: [CASE-019]
+counter_examples: [CASE-005, CASE-023, CASE-025]
