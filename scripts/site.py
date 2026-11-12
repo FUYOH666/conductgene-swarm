@@ -74,6 +74,11 @@ second person to approve it, and reverts in one command. Every step lands in a h
   <b>The same correction, stated as its reason</b><span class="muted">Fixes 3, breaks 0, approved by a second person.</span></a>
 </div>
 
+<div class="kicker">In a real pull request</div>
+<p>The rules gate runs on this repository as a GitHub Action:
+<a href="{REPO}/pull/14">#14, the v1 rule, blocked</a> ·
+<a href="{REPO}/pull/15">#15, the reason-based rule, passed and merged</a>.</p>
+
 <div class="kicker">Read</div>
 <p><a href="{REPO}">The repository</a> · <a href="{REPO}/blob/main/docs/essay.md">Your reviewers are already
 writing policy (essay)</a> · <a href="{REPO}/blob/main/docs/what-v1-got-wrong.md">What v1 got wrong</a> ·
