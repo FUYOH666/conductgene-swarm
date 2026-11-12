@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0] - 2026-11-12
+
+### Added
+
+- **GitHub Action** (`uses: FUYOH666/precedent@v2`): gates rule files in a pull request, posts the gate report as a comment and in the job summary, and fails if any rule is BLOCKED.
+- `precedent check`: the same gate without an event log, for CI and pre-commit. Corrections come from a YAML file and active rules from a directory.
+- The repository gates its own `rules/` directory with the action.
+
+### Changed
+
+- **Visual identity.**
+  - Figures embed Instrument Serif, Geist and Geist Mono (SIL OFL), subset per figure.
+  - The terminal capture, the social card and the Pages landing share the same tokens and type.
+
 ## [2.0.0] - 2026-11-12
 
 A rebuild. The project is renamed **Precedent** ("pull requests for AI judgment")

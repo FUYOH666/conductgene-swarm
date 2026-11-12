@@ -1,0 +1,63 @@
+name: Precedent gate
+description: Gate proposed rules for an LLM judge in a pull request. Fails if any rule is BLOCKED.
+author: Scanovich
+branding:
+  icon: check-square
+  color: blue
+
+inputs:
+  pack:
+    description: Built-in pack name or path to a pack directory
+    required: true
+  rules:
+    description: Rule YAML files to gate (space-separated paths or a shell glob)
+    required: true
+  corrections:
+    description: YAML list of reviewer corrections the rules may cite
+    required: false
+    default: ""
+  active:
+    description: Directory of rules already in force
+    required: false
+    default: ""
+  judge:
+    description: heuristic, replay:PATH, or llm:MODEL (with PRECEDENT_LLM_* in the environment)
+    required: false
+    default: heuristic
+
+outputs:
+  report:
+    description: Path to the Markdown gate report
+    value: ${{ steps.gate.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      with:
+        enable-cache: false
+    - id: gate
+      shell: bash
+      env:
+        PACK: ${{ inputs.pack }}
+        RULES: ${{ inputs.rules }}
+        CORRECTIONS: ${{ inputs.corrections }}
+        ACTIVE: ${{ inputs.active }}
+        JUDGE: ${{ inputs.judge }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        report="$RUNNER_TEMP/precedent-gate.md"
+        printf '## Precedent gate\n\n' > "$report"
+        args=(--pack "$PACK" --judge "$JUDGE" --summary "$report")
+        if [ -n "$CORRECTIONS" ]; then args+=(--corrections "$CORRECTIONS"); fi
+        if [ -n "$ACTIVE" ]; then args+=(--active "$ACTIVE"); fi
+        shopt -s nullglob
+        # shellcheck disable=SC2206  # RULES is a list of paths or a glob, split on purpose
+        files=($RULES)
+        if [ ${#files[@]} -eq 0 ]; then echo "no rule files matched: $RULES"; echo "report=" >> "$GITHUB_OUTPUT"; exit 0; fi
+        set +e
+        uvx --from "$ACTION_PATH" precedent check "${files[@]}" "${args[@]}"
+        code=$?
+        cat "$report" >> "$GITHUB_STEP_SUMMARY"
+        echo "report=$report" >> "$GITHUB_OUTPUT"
+        exit $code

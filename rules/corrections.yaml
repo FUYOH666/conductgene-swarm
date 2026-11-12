@@ -1,0 +1,9 @@
+# Reviewer corrections that rules in proposed/ may cite. case_hash is filled in from the pack.
+- id: C-0001
+  case_id: CASE-019
+  item: escalation_offered
+  ai_label: needs_review
+  human_label: pass
+  reviewer: maria
+  error_type: policy_misinterpretation
+  note: A promised callback from a team lead is an escalation offer.

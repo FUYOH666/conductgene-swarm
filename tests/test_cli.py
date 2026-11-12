@@ -90,3 +90,18 @@ def test_demo_exports_a_terminal_svg(tmp_path: Path) -> None:
     assert main(["demo", "--out", str(tmp_path / "d"), "--svg", str(svg)]) == 0
     body = svg.read_text()
     assert body.startswith("<svg") and "BLOCKED" in body and "PASSED" in body
+
+
+def test_check_is_a_stateless_gate_for_ci(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[1]
+    summary = tmp_path / "summary.md"
+    common = [
+        "--pack", "collections-conduct",
+        "--corrections", str(root / "rules" / "corrections.yaml"),
+        "--active", str(root / "rules" / "active"),
+        "--summary", str(summary),
+    ]  # fmt: skip
+    assert main(["check", str(RULES / "escalation-callback.v2.yaml"), *common]) == 0
+    assert main(["check", str(RULES / "escalation-callback.v1.yaml"), *common]) == 1
+    text = summary.read_text()
+    assert "PASSED" in text and "BLOCKED" in text
