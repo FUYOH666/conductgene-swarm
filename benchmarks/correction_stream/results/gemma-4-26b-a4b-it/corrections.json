@@ -1,0 +1,162 @@
+[
+ {
+  "case_id": "B-122",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-01"
+ },
+ {
+  "case_id": "B-148",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-02"
+ },
+ {
+  "case_id": "B-047",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-03"
+ },
+ {
+  "case_id": "B-041",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-04"
+ },
+ {
+  "case_id": "B-139",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-05"
+ },
+ {
+  "case_id": "B-209",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-06"
+ },
+ {
+  "case_id": "B-031",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-07"
+ },
+ {
+  "case_id": "B-238",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-08"
+ },
+ {
+  "case_id": "B-041",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-09"
+ },
+ {
+  "case_id": "B-167",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-10"
+ },
+ {
+  "case_id": "B-200",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-11"
+ },
+ {
+  "case_id": "B-192",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-12"
+ },
+ {
+  "case_id": "B-099",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-13"
+ },
+ {
+  "case_id": "B-079",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-14"
+ },
+ {
+  "case_id": "B-181",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-15"
+ },
+ {
+  "case_id": "B-047",
+  "item": "company_disclosure",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "The agent named the company but never said why they were calling (needs_review).",
+  "id": "C-16"
+ },
+ {
+  "case_id": "B-206",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-17"
+ },
+ {
+  "case_id": "B-050",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-18"
+ },
+ {
+  "case_id": "B-233",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-19"
+ },
+ {
+  "case_id": "B-163",
+  "item": "escalation_offered",
+  "ai_label": "pass",
+  "human_label": "needs_review",
+  "reason": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+  "id": "C-20"
+ }
+]

@@ -79,6 +79,13 @@ second person to approve it, and reverts in one command. Every step lands in a h
 <a href="{REPO}/pull/14">#14, the v1 rule, blocked</a> ·
 <a href="{REPO}/pull/15">#15, the reason-based rule, passed and merged</a>.</p>
 
+<div class="kicker">Measured, with a pre-registration</div>
+<p>Twenty corrections to a Gemma 4 judge, used seven ways. Rules through the gate turned no right verdict
+wrong; few-shot examples broke 19, retrieved examples 10. Retrieved examples were still more accurate,
+95.0% against 91.6%, largely because some corrections were misreadings that a rule cannot express.
+<a href="{REPO}#benchmark-20-corrections-seven-ways-to-use-them">The benchmark</a> ·
+<a href="{REPO}/blob/main/benchmarks/correction_stream/PREREGISTRATION.md">pre-registration</a></p>
+
 <div class="kicker">Read</div>
 <p><a href="{REPO}">The repository</a> · <a href="{REPO}/blob/main/docs/essay.md">Your reviewers are already
 writing policy (essay)</a> · <a href="{REPO}/blob/main/docs/what-v1-got-wrong.md">What v1 got wrong</a> ·
@@ -112,6 +119,7 @@ LLMS = f"""# Precedent
 - [Writing a pack]({REPO}/blob/main/docs/writing-a-pack.md): define a new domain
 - [Essay]({REPO}/blob/main/docs/essay.md): why corrections should be treated as code changes
 - [What v1 got wrong]({REPO}/blob/main/docs/what-v1-got-wrong.md): the failure that motivated v2
+- [Benchmark]({REPO}/blob/main/benchmarks/correction_stream/README.md): pre-registered comparison of rules with few-shot, retrieved and guideline corrections
 - [Evidence pack, blocked rule]({SITE}/evidence/escalation-callback@1.html)
 - [Evidence pack, approved rule]({SITE}/evidence/escalation-callback@2.html)
 - [Python API]({REPO}/blob/main/src/precedent/__init__.py): public names are in `__all__`

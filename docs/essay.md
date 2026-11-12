@@ -117,12 +117,21 @@ review, content moderation, the house rules a coding agent should follow. Only t
 pack changes: the rubric, the predicates, the policy, the labelled cases.
 
 What is not known yet matters as much. The packs are small and labelled by one
-person, so there is no ceiling to measure against. The cheapest serious
-competitor, "put the corrections into the prompt as examples", has not been
-beaten on a public benchmark yet; that comparison, on public customs rulings, is
-next. If it loses, the gate and the log still stand, but the predicate rules
-would need to justify themselves differently. We would rather publish that
-result than not run the test.
+person, so there is no ceiling to measure against.
+
+We did run the cheapest serious competitor, "put the corrections into the prompt
+as examples", in a [pre-registered benchmark](../README.md#benchmark-20-corrections-seven-ways-to-use-them).
+Retrieved examples won on accuracy: 95.0% against 91.6% for the rules. The rules
+won on what they promise: they turned no right verdict wrong, while every prompt
+method did. Most of the accuracy gap came from a different kind of correction.
+There, the judge had misread the call rather than misapplied the policy, and a
+rule cannot fix a misreading.
+
+So the predicate rules now justify themselves differently. They are not the most
+accurate way to use a correction. They are the way whose effect is local,
+attributable and reversible. Next, each correction goes to the remedy that fits
+it, and the comparison is repeated on public customs rulings. We said we would
+rather publish that result than not run the test. Here it is.
 
 ---
 

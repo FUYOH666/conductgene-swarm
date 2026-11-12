@@ -1,6 +1,8 @@
 """Correction-stream benchmark: how should reviewer corrections reach an LLM judge?
 
-Phases are cached on disk (judge cassettes under runs/), so each can be re-run:
+Each judge (``JUDGE_MODEL``) writes to its own ``results/<model>/``. Phases are cached
+on disk (judge cassettes under ``results/<model>/runs/``), so each can be re-run, and
+``analyze`` alone rebuilds the tables from the recorded cassettes without any model call:
 
     uv run python benchmarks/correction_stream/run.py build      # pack/cases.jsonl
     uv run python benchmarks/correction_stream/run.py base       # A0 on all cases
@@ -31,7 +33,7 @@ from precedent.engine import decide, rule_fires
 from precedent.gate import run_gate
 from precedent.hashing import sha256_hex
 from precedent.judge.cassette import RecordingJudge
-from precedent.judge.llm import LLMJudge, extract_json
+from precedent.judge.llm import LLMJudge, _spoken_by, extract_json
 from precedent.models import Case, Condition, Correction, JudgeOutput, Rule
 from precedent.pack import Pack, load_pack
 from precedent.similarity import SimilarityClient
@@ -39,12 +41,14 @@ from precedent.stats import mcnemar_exact, wilson
 
 HERE = Path(__file__).resolve().parent
 PACK_DIR = HERE / "pack"
-RUNS = HERE / "runs"
 BASE_URL = os.environ.get("PRECEDENT_LLM_BASE_URL", "https://openrouter.ai/api/v1")
 API_KEY = os.environ.get("PRECEDENT_LLM_API_KEY", "")
 JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "deepseek/deepseek-v4.1-flash-1017")
 DRAFT_MODEL = os.environ.get("DRAFT_MODEL", "qwen/qwen3.8-27b")
 WORKERS = int(os.environ.get("BENCH_WORKERS", "8"))
+# every judge gets its own results directory, so cassettes never mix across judges
+OUT = HERE / "results" / JUDGE_MODEL.split("/")[-1].replace(":", "-")
+RUNS = OUT / "runs"
 ITEMS = ["threat_language", "escalation_offered", "company_disclosure", "recording_disclosure"]
 FACT_FOR_ITEM = {
     "threat_language": "threat",
@@ -284,12 +288,12 @@ def stream(p: Pack, base: dict[str, JudgeOutput]) -> list[dict[str, Any]]:
                 out.append(by_item[item].pop())
     for n, corr in enumerate(out, 1):
         corr["id"] = f"C-{n:02d}"
-    (HERE / "corrections.json").write_text(json.dumps(out, indent=1))
+    (OUT / "corrections.json").write_text(json.dumps(out, indent=1))
     return out
 
 
 def corrections() -> list[dict[str, Any]]:
-    return json.loads((HERE / "corrections.json").read_text())
+    return json.loads((OUT / "corrections.json").read_text())
 
 
 def as_correction(p: Pack, c: dict[str, Any]) -> Correction:
@@ -413,7 +417,7 @@ def phase_gated() -> None:
             accepted = candidate
         if accepted:
             run_judge(GuidedJudge(p, f"A3g-{hi}", guideline_block(accepted)), tests, f"A3g-{hi}")
-    (HERE / "a3g_log.json").write_text(json.dumps(log, indent=1))
+    (OUT / "a3g_log.json").write_text(json.dumps(log, indent=1))
     print(log)
 
 
@@ -488,7 +492,7 @@ def phase_draft() -> None:
             d = _ask(client, DRAFT_PROMPT, _draft_user(p, corr, base[corr["case_id"]]))
             drafts[corr["id"]] = d
             print(corr["id"], json.dumps(d)[:160], flush=True)
-    (HERE / "drafts.json").write_text(json.dumps(drafts, indent=1))
+    (OUT / "drafts.json").write_text(json.dumps(drafts, indent=1))
 
 
 def _gate_pack(p: Pack, corrs_so_far: list[dict[str, Any]]) -> Pack:
@@ -511,13 +515,13 @@ def _mine_counter_examples(
 def phase_rules() -> None:
     p = pack()
     base = load_run("A0", p)
-    drafts = json.loads((HERE / "drafts.json").read_text())
+    drafts = json.loads((OUT / "drafts.json").read_text())
     corrs = corrections()
     sim = SimilarityClient()
     results: dict[str, Any] = {}
     revisions_cache: dict[str, Any] = (
-        json.loads((HERE / "revisions.json").read_text())
-        if (HERE / "revisions.json").exists()
+        json.loads((OUT / "revisions.json").read_text())
+        if (OUT / "revisions.json").exists()
         else {}
     )
     headers = {"Authorization": f"Bearer {API_KEY}"} if API_KEY else {}
@@ -564,16 +568,18 @@ def phase_rules() -> None:
                     if rep.decision == "PASSED":
                         b2 = [r for r in b2 if r.id != rule.id] + [rule]
                     entry["accepted"] = rep.decision == "PASSED"
-                if n in CHECKPOINTS:
-                    entry["checkpoint"] = n
-                    results.setdefault(f"order{seed}", {})[str(n)] = {
-                        "B1": [r.model_dump(mode="json") for r in b1],
-                        "B2": [r.model_dump(mode="json") for r in b2],
-                    }
+                # a stream shorter than a checkpoint is read at its end, as the A arms are
+                for cp in CHECKPOINTS:
+                    if n == min(cp, len(order)):
+                        entry.setdefault("checkpoints", []).append(cp)
+                        results.setdefault(f"order{seed}", {})[str(cp)] = {
+                            "B1": [r.model_dump(mode="json") for r in b1],
+                            "B2": [r.model_dump(mode="json") for r in b2],
+                        }
                 log.append(entry)
             results.setdefault(f"order{seed}", {})["log"] = log
-    (HERE / "revisions.json").write_text(json.dumps(revisions_cache, indent=1))
-    (HERE / "rules_runs.json").write_text(json.dumps(results, indent=1))
+    (OUT / "revisions.json").write_text(json.dumps(revisions_cache, indent=1))
+    (OUT / "rules_runs.json").write_text(json.dumps(results, indent=1))
     print("rules done")
 
 
@@ -620,6 +626,119 @@ def _score(
     }  # fmt: skip
 
 
+def _fact_value(case: Case, item: str) -> str:
+    facts = case.metadata["facts"]
+    return "out_of_domain" if facts.get("out_of_domain") else str(facts[FACT_FOR_ITEM[item]])
+
+
+def _prompt_tokens(outs: dict[str, JudgeOutput], cases: list[Case]) -> int:
+    toks = [int(outs[c.id].meta.get("usage", {}).get("prompt_tokens", 0)) for c in cases]
+    return round(sum(toks) / len(toks)) if toks else 0
+
+
+def _secondary_and_exploratory(
+    p: Pack,
+    tests: list[Case],
+    base_out: dict[str, JudgeOutput],
+    base: dict[tuple[str, str], str],
+    arms: dict[str, dict[str, Any]],
+    rr: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    corrs = corrections()
+    if not corrs:
+        return {}, {}
+    corrected = {(c["item"], _fact_value(p.case(c["case_id"]), c["item"])) for c in corrs}
+    gold = {(c.id, i): c.golden[i] for c in tests for i in ITEMS}
+    eligible = [
+        (c.id, i)
+        for c in tests
+        for i in ITEMS
+        if base[(c.id, i)] != gold[(c.id, i)] and (i, _fact_value(c, i)) in corrected
+    ]
+    final_rules = [Rule.model_validate(x) for x in rr.get("order1", {}).get("30", {}).get("B2", [])]
+    runs = {
+        "A0": (base_out, []),
+        "A1@30": (load_run("A1-30", p), []),
+        "A2@30": (load_run("A2-30", p), []),
+        "A3@30": (load_run("A3-30", p), []),
+        "P@30": (load_run("P-30", p), []),
+        "B2@30": (base_out, final_rules),
+    }
+    secondary: dict[str, Any] = {}
+    for key, (outs, rules) in runs.items():
+        if key not in arms or any(c.id not in outs for c in tests):
+            continue
+        dec = _decisions(p, outs, tests, rules)
+        secondary[key] = {
+            "eligible": len(eligible),
+            "generalised": sum(dec[k] == gold[k] for k in eligible),
+            "prompt_tokens": _prompt_tokens(outs, tests),
+        }
+
+    notes: list[str] = []
+    # where the negative flips of each arm concentrate
+    for key in ("A0-rerun", "A1@30", "A2@30", "A3@30", "P@30"):
+        if key not in arms or not arms[key]["negative"]:
+            continue
+        kinds: dict[str, int] = {}
+        for cid, item in arms[key]["negative"]:
+            v = _fact_value(p.case(cid), item)
+            k = "out-of-domain calls" if v == "out_of_domain" else f"`{FACT_FOR_ITEM[item]} = {v}`"
+            kinds[k] = kinds.get(k, 0) + 1
+        top, n = max(kinds.items(), key=lambda kv: kv[1])
+        notes.append(
+            f"{key.replace('@30', '')}: {n} of its {arms[key]['negative_flips']} right→wrong flips fall on {top}."
+        )
+    # rules on top of retrieved examples: the rules read A2's own predicate answers (no new call)
+    a2 = runs["A2@30"][0]
+    if "A2@30" in arms and len(a2) == len(tests) and final_rules:
+        s = _score(p, tests, base, _decisions(p, a2, tests, final_rules))
+        notes.append(
+            f"B2's rules applied on top of A2's outputs: {s['right']}/{s['n']} ({s['accuracy']:.1%}), "
+            f"{s['negative_flips']} right→wrong, {s['positive_flips']} wrong→right."
+        )
+    # corrections no rule could express: did the judge support a "yes" with the customer's words?
+    drafts = json.loads((OUT / "drafts.json").read_text()) if (OUT / "drafts.json").exists() else {}
+    inexpressible = [c for c in corrs if drafts and not drafts.get(c["id"], {}).get("expressible")]
+    if inexpressible:
+        # predicates that ask what the agent did; a customer's line is no evidence for them
+        agent_preds = {pr.id for pr in p.predicates if "the agent" in pr.question.lower()}
+        items: dict[str, int] = {}
+        misread: dict[str, int] = {}
+        customer = 0
+        for c in inexpressible:
+            items[c["item"]] = items.get(c["item"], 0) + 1
+            case, out = p.case(c["case_id"]), base_out[c["case_id"]]
+            hits = [
+                k
+                for k, a in out.predicates.items()
+                if k in agent_preds
+                and a.value == "yes"
+                and a.quote is not None
+                and _spoken_by(case.text, a.quote, "Customer")
+            ]
+            customer += bool(hits)
+            for k in hits:
+                misread[k] = misread.get(k, 0) + 1
+        notes.append(
+            f"{len(inexpressible)} of {len(corrs)} corrections could not be written as a rule "
+            f"({', '.join(f'{k} ×{v}' for k, v in items.items())}). In {customer} of them the judge answered "
+            f"a question about the agent with the customer's words ("
+            + ", ".join(f"`{k} = yes` ×{v}" for k, v in misread.items())
+            + "): a perception error, which a rule over the judge's own answers cannot repair. "
+            "A predicate bound to a speaker (`speaker: Agent`, used in the demo pack but not in the frozen "
+            "benchmark library) would have rejected those quotes."
+        )
+    cost = sum(
+        float(o.meta.get("usage", {}).get("cost", 0) or 0)
+        for f in sorted(RUNS.glob("*.jsonl"))
+        for o in (JudgeOutput.model_validate(x) for x in _jsonl(f))
+    )
+    if cost:
+        notes.append(f"Judge calls recorded for this judge cost ${cost:.2f} on OpenRouter in total.")
+    return secondary, {"notes": notes}
+
+
 def holm(pvals: dict[str, float]) -> dict[str, float]:
     ordered = sorted(pvals.items(), key=lambda kv: kv[1])
     m, out, running = len(ordered), {}, 0.0
@@ -635,7 +754,10 @@ def phase_analyze() -> None:
     base_out = load_run("A0", p)
     base = _decisions(p, base_out, tests)
     arms: dict[str, dict[str, Any]] = {"A0": _score(p, tests, base, base)}
-    for name in ("A1", "A2", "A3", "P", "A3g"):
+    n_corr = len(corrections())
+    # with an empty stream there is nothing to feed back: only the baseline exists
+    arm_names = ("A1", "A2", "A3", "P", "A3g") if n_corr else ()
+    for name in arm_names:
         for cp in CHECKPOINTS:
             run = load_run(f"{name}-{cp}", p)
             if len(run) == len(tests):
@@ -646,11 +768,11 @@ def phase_analyze() -> None:
     if len(rerun) == len(tests):
         arms["A0-rerun"] = _score(p, tests, base, _decisions(p, rerun, tests))
     rr = (
-        json.loads((HERE / "rules_runs.json").read_text())
-        if (HERE / "rules_runs.json").exists()
+        json.loads((OUT / "rules_runs.json").read_text())
+        if (OUT / "rules_runs.json").exists()
         else {}
     )
-    for arm in ("B1", "B2"):
+    for arm in ("B1", "B2") if n_corr else ():
         for cp in CHECKPOINTS:
             scores = []
             for seed in ORDERS:
@@ -687,19 +809,31 @@ def phase_analyze() -> None:
                 "accepted": sum(bool(e.get("accepted")) for e in log),
                 "revised": sum("second_gate" in e for e in log),
             }
+    secondary, exploratory = _secondary_and_exploratory(p, tests, base_out, base, arms, rr)
+    pool = [c for c in p.cases if split_of(c) == "pool"]
+    pool_dec = _decisions(p, base_out, pool)
+    all_dec = _decisions(p, base_out, p.cases)
     result = {
+        "judge": JUDGE_MODEL,
+        "all_verdicts": len(all_dec),
+        "all_right": sum(all_dec[(c.id, i)] == c.golden[i] for c in p.cases for i in ITEMS),
+        "pool_verdicts": len(pool_dec),
+        "pool_errors": sum(pool_dec[(c.id, i)] != c.golden[i] for c in pool for i in ITEMS),
         "pack_cases": len(p.cases),
         "test_cases": len(tests),
-        "corrections": len(corrections()),
+        "corrections": n_corr,
+        "checkpoints": {str(cp): min(cp, n_corr) for cp in CHECKPOINTS},
         "arms": arms,
         "h1_mcnemar_holm": holm(comps) if comps else {},
         "coverage": coverage,
-        "a3g_log": json.loads((HERE / "a3g_log.json").read_text())
-        if (HERE / "a3g_log.json").exists()
+        "secondary": secondary,
+        "exploratory": exploratory,
+        "a3g_log": json.loads((OUT / "a3g_log.json").read_text())
+        if (OUT / "a3g_log.json").exists()
         else [],
     }
-    (HERE / "results.json").write_text(json.dumps(result, indent=1))
-    (HERE / "RESULTS.md").write_text(render_results(result), encoding="utf-8")
+    (OUT / "results.json").write_text(json.dumps(result, indent=1))
+    (OUT / "RESULTS.md").write_text(render_results(result), encoding="utf-8")
     print(
         json.dumps(
             {
@@ -735,8 +869,11 @@ def render_results(r: dict[str, Any]) -> str:
         if "orders" in a:
             negs = [o["negative_flips"] for o in a["orders"]]
             neg = f"{a['negative_flips_mean']:.1f} ({min(negs)}–{max(negs)})"
+        shown = r.get("checkpoints", {}).get(cp, cp)
+        if cp and str(shown) != cp:
+            shown = f"{shown} (whole stream)"
         return (
-            f"| {name} | {cp or '—'} | {ARM_LABELS.get(name, '')} | {a['right']}/{a['n']} "
+            f"| {name} | {shown or '—'} | {ARM_LABELS.get(name, '')} | {a['right']}/{a['n']} "
             f"({a['accuracy']:.1%}, {lo:.1%}–{hi:.1%}) | {neg} | {a['positive_flips']} | "
             f"{a['mcnemar_vs_A0']:.3f} | {a['cases_all_right']}/{r['test_cases']} |"
         )
@@ -754,63 +891,128 @@ def render_results(r: dict[str, Any]) -> str:
         "A **negative flip** is a verdict the baseline judge got right that the arm gets wrong. "
         "B arms run in three correction orders; their negative flips are shown as mean (range).",
         "",
+        f"Judge: `{r.get('judge', '')}`. Baseline verdicts right on all {r.get('pack_cases')} "
+        f"cases: {r.get('all_right', '?')}/{r.get('all_verdicts', '?')}. Wrong verdicts on the pool split, the source of corrections: "
+        f"{r.get('pool_errors', '?')} of {r.get('pool_verdicts', '?')}."
+        + (
+            " The stream is empty, so no arm differs from A0 and the hypotheses cannot be tested with this judge."
+            if r["corrections"] == 0
+            else ""
+        ),
+        "",
         "| arm | after N corrections | what happens to corrections | verdicts right (95% Wilson CI) | negative flips | positive flips | exact McNemar vs A0 | cases all four right |",
         "|---|---|---|---|---|---|---|---|",
     ]
     lines += [row(k) for k in order if k in arms]
 
-    # hypotheses, as pre-registered
-    lines += ["", "## Hypotheses", ""]
-    if "B2@30" in arms:
-        b2 = arms["B2@30"]
-        prompt = {k: arms[k] for k in ("A1@30", "A2@30", "A3@30") if k in arms}
+    # hypotheses, as pre-registered; a verdict needs the pre-registered test, not just the direction
+    lines += ["", "## Hypotheses (pre-registered)", ""] if r["corrections"] else []
+    final = r.get("checkpoints", {}).get("30", 30)
+
+    def neg(key: str) -> float:
+        a = arms[key]
+        return float(a.get("negative_flips_mean", a["negative_flips"]))
+
+    def short(key: str) -> str:
+        return key.split("@")[0]
+
+    prompt = [k for k in ("A1@30", "A2@30", "A3@30") if k in arms]
+    if "B2@30" in arms and prompt:
         holm_p = r.get("h1_mcnemar_holm", {})
-        h1 = all(
-            b2.get("negative_flips_mean", b2["negative_flips"]) < v["negative_flips"]
-            for v in prompt.values()
+        fewer = {k: neg("B2@30") < neg(k) for k in prompt}
+        sig = {k: fewer[k] and holm_p.get(k, 1.0) < 0.05 for k in prompt}
+        h1 = (
+            "supported"
+            if all(sig.values())
+            else "partly supported"
+            if any(sig.values())
+            else "direction only, not significant"
+            if all(fewer.values())
+            else "not supported"
         )
+        parts = [
+            f"{short(k)} {neg(k):.0f} (Holm p={holm_p.get(k, float('nan')):.3f}"
+            + ("" if sig[k] else ", not significant")
+            + ")"
+            for k in prompt
+        ]
         lines.append(
-            f"- **H1** (B2 has fewer negative flips than each prompt arm after 30): "
-            f"{'supported' if h1 else 'not supported'}. B2 {b2.get('negative_flips_mean', b2['negative_flips']):.1f}; "
-            + ", ".join(
-                f"{k.split('@')[0]} {v['negative_flips']} (Holm p={holm_p.get(k, float('nan')):.3f})"
-                for k, v in prompt.items()
-            )
-            + "."
+            f"- **H1** (B2 has fewer negative flips than each prompt arm, final checkpoint = {final} corrections): "
+            f"**{h1}**. B2 {neg('B2@30'):.1f}; " + ", ".join(parts) + "."
         )
-        if prompt:
-            best_key = max(prompt, key=lambda k: prompt[k]["accuracy"])
-            margin = b2.get("accuracy_mean", b2["accuracy"]) - prompt[best_key]["accuracy"]
-            lines.append(
-                f"- **H2** (B2 non-inferior to the best prompt arm, margin 2 points): "
-                f"{'supported' if margin >= -0.02 else 'not supported'}. B2 {b2.get('accuracy_mean', b2['accuracy']):.1%} "
-                f"vs {best_key.split('@')[0]} {prompt[best_key]['accuracy']:.1%} (difference {margin * 100:+.1f} points)."
-            )
+        best = max(prompt, key=lambda k: arms[k]["accuracy"])
+        b2acc = arms["B2@30"].get("accuracy_mean", arms["B2@30"]["accuracy"])
+        margin = b2acc - arms[best]["accuracy"]
+        lines.append(
+            f"- **H2** (B2 non-inferior to the best prompt arm on accuracy, margin 2 points): "
+            f"**{'supported' if margin >= -0.02 else 'not supported'}**. B2 {b2acc:.1%} vs {short(best)} "
+            f"{arms[best]['accuracy']:.1%} ({margin * 100:+.1f} points)."
+        )
     if "B1@30" in arms and "B2@30" in arms:
-        b1n, b2n = arms["B1@30"]["negative_flips_mean"], arms["B2@30"]["negative_flips_mean"]
-        a3n = arms.get("A3@30", {}).get("negative_flips")
-        a3gn = arms.get("A3g@30", {}).get("negative_flips")
-        lines.append(
-            f"- **H3** (gating reduces negative flips): rules B1 {b1n:.1f} → B2 {b2n:.1f}"
-            + (f"; prompt A3 {a3n} → A3g {a3gn}" if a3n is not None and a3gn is not None else "")
-            + "."
+        b1n, b2n = neg("B1@30"), neg("B2@30")
+        cov = list(r.get("coverage", {}).values())
+        blocked_none = bool(cov) and all(c["accepted"] == c["expressible"] for c in cov)
+        rules_txt = f"Rules B1 {b1n:.1f} → B2 {b2n:.1f}" + (
+            " (no difference: the gate blocked none of the drafted rules)" if blocked_none else ""
         )
-    if "P@30" in arms:
-        pn = arms["P@30"]["negative_flips"]
+        a3g_log = r.get("a3g_log", [])
+        prompt_txt = ""
+        if "A3@30" in arms and "A3g@30" in arms:
+            prompt_txt = f"; guidelines A3 {neg('A3@30'):.0f} → A3g {neg('A3g@30'):.0f}"
+            if a3g_log and not any(b["kept"] for b in a3g_log):
+                regress = ", ".join(str(b["dev_negative"]) for b in a3g_log)
+                prompt_txt += (
+                    f" (the dev check rejected every batch, with {regress} right→wrong flips on dev, "
+                    "so A3g is the unchanged baseline: no flips and no gains)"
+                )
+        reduced = [b2n < b1n, "A3g@30" in arms and neg("A3g@30") < neg("A3@30")]
+        h3 = "supported" if all(reduced) else "partly supported" if any(reduced) else "not supported"
+        lines.append(f"- **H3** (gating reduces negative flips in each family): **{h3}**. {rules_txt}{prompt_txt}.")
+    if "P@30" in arms and prompt:
+        pn = neg("P@30")
+        above = [short(k) for k in prompt if neg(k) > pn]
+        h4 = (
+            "supported"
+            if len(above) == len(prompt)
+            else "partly supported"
+            if above
+            else "not supported"
+        )
         lines.append(
-            f"- **H4** (prompt edits flip more than a placebo): placebo P flips {pn} right verdicts; "
-            + ", ".join(
-                f"{k.split('@')[0]} {arms[k]['negative_flips']}"
-                for k in ("A1@30", "A2@30", "A3@30")
-                if k in arms
-            )
+            f"- **H4** (prompt edits flip more right verdicts than a placebo): **{h4}**. Placebo {pn:.0f}; "
+            + ", ".join(f"{short(k)} {neg(k):.0f}" for k in prompt)
             + "."
         )
     if "A0-rerun" in arms:
         lines.append(
-            f"- **Noise floor**: re-running the same judge flips {arms['A0-rerun']['negative_flips']} right verdicts "
-            f"and {arms['A0-rerun']['positive_flips']} wrong ones."
+            f"- **Noise floor**: re-running the baseline judge unchanged flips {arms['A0-rerun']['negative_flips']} "
+            f"right verdicts and {arms['A0-rerun']['positive_flips']} wrong ones. Prompt arms re-judge every case and "
+            "inherit this noise; rule arms read the baseline's recorded answers and do not."
         )
+    sec = r.get("secondary", {})
+    if sec:
+        lines += [
+            "",
+            f"## Secondary endpoints (final checkpoint, {final} corrections)",
+            "",
+            "Generalisation: test verdicts wrong under A0 whose item and deciding fact match a corrected one, "
+            "and that the arm gets right. Locality: contrast pairs with a right→wrong flip on either side. "
+            "Prompt tokens: mean per judge call.",
+            "",
+            "| arm | per item (threat / escalation / company / recording, of 80) | generalisation | locality violations | prompt tokens |",
+            "|---|---|---|---|---|",
+        ]
+        for key, v in sec.items():
+            a = arms[key]
+            pi = " / ".join(str(a["per_item"][i]) for i in ITEMS)
+            lines.append(
+                f"| {key.replace('@30', '')} | {pi} | {v['generalised']}/{v['eligible']} | "
+                f"{a['locality_violations']}/{a['contrast_groups']} | {v['prompt_tokens']} |"
+            )
+    ex = r.get("exploratory", {})
+    if ex:
+        lines += ["", "## Exploratory (not pre-registered)", ""]
+        lines += [f"- {line}" for line in ex.get("notes", [])]
     if r.get("coverage"):
         lines += [
             "",
@@ -845,7 +1047,7 @@ PHASES = {
 }  # fmt: skip
 
 if __name__ == "__main__":
-    RUNS.mkdir(exist_ok=True)
+    RUNS.mkdir(parents=True, exist_ok=True)
     for phase in sys.argv[1:] or ["analyze"]:
         print(f"== {phase}", flush=True)
         PHASES[phase]()

@@ -1,0 +1,4646 @@
+{
+ "order1": {
+  "15": {
+   "B1": [
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    }
+   ],
+   "B2": [
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [
+      "B-110",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [
+      "B-201",
+      "B-048"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [
+      "B-056",
+      "B-113"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-170"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [
+      "B-227",
+      "B-038"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [
+      "B-119",
+      "B-072"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-042"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [
+      "B-170",
+      "B-077"
+     ],
+     "author": "drafter"
+    }
+   ]
+  },
+  "30": {
+   "B1": [
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-19",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-19"
+     ],
+     "examples": [
+      "B-233"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    }
+   ],
+   "B2": [
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [
+      "B-110",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [
+      "B-201",
+      "B-048"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [
+      "B-056",
+      "B-113"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-170"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [
+      "B-227",
+      "B-038"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [
+      "B-119",
+      "B-072"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-042"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [
+      "B-170",
+      "B-077"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [
+      "B-102",
+      "B-215"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-19",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-19"
+     ],
+     "examples": [
+      "B-233"
+     ],
+     "counter_examples": [
+      "B-072",
+      "B-215"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [
+      "B-173",
+      "B-089"
+     ],
+     "author": "drafter"
+    }
+   ]
+  },
+  "log": [
+   {
+    "correction": "C-12",
+    "expressible": false
+   },
+   {
+    "correction": "C-06",
+    "expressible": false
+   },
+   {
+    "correction": "C-18",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-20",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-10",
+    "expressible": false
+   },
+   {
+    "correction": "C-01",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-17",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-02",
+    "expressible": false
+   },
+   {
+    "correction": "C-16",
+    "expressible": false
+   },
+   {
+    "correction": "C-07",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-11",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-14",
+    "expressible": false
+   },
+   {
+    "correction": "C-15",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-13",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-08",
+    "expressible": false,
+    "checkpoints": [
+     15
+    ]
+   },
+   {
+    "correction": "C-04",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-09",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-03",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-19",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-05",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true,
+    "checkpoints": [
+     30
+    ]
+   }
+  ]
+ },
+ "order2": {
+  "15": {
+   "B1": [
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    }
+   ],
+   "B2": [
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [
+      "B-227",
+      "B-038"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [
+      "B-110",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [
+      "B-201",
+      "B-048"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [
+      "B-056",
+      "B-113"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-042"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [
+      "B-173",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [
+      "B-119",
+      "B-072"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [
+      "B-170",
+      "B-077"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-170"
+     ],
+     "author": "drafter"
+    }
+   ]
+  },
+  "30": {
+   "B1": [
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-19",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-19"
+     ],
+     "examples": [
+      "B-233"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    }
+   ],
+   "B2": [
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [
+      "B-227",
+      "B-038"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [
+      "B-110",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [
+      "B-201",
+      "B-048"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [
+      "B-056",
+      "B-113"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-042"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [
+      "B-173",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [
+      "B-119",
+      "B-072"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [
+      "B-170",
+      "B-077"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-170"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-19",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-19"
+     ],
+     "examples": [
+      "B-233"
+     ],
+     "counter_examples": [
+      "B-072",
+      "B-215"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [
+      "B-102",
+      "B-215"
+     ],
+     "author": "drafter"
+    }
+   ]
+  },
+  "log": [
+   {
+    "correction": "C-08",
+    "expressible": false
+   },
+   {
+    "correction": "C-07",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-18",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-09",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-20",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-16",
+    "expressible": false
+   },
+   {
+    "correction": "C-14",
+    "expressible": false
+   },
+   {
+    "correction": "C-01",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-04",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-10",
+    "expressible": false
+   },
+   {
+    "correction": "C-15",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-05",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-11",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-13",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-17",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true,
+    "checkpoints": [
+     15
+    ]
+   },
+   {
+    "correction": "C-06",
+    "expressible": false
+   },
+   {
+    "correction": "C-12",
+    "expressible": false
+   },
+   {
+    "correction": "C-19",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-03",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-02",
+    "expressible": false,
+    "checkpoints": [
+     30
+    ]
+   }
+  ]
+ },
+ "order3": {
+  "15": {
+   "B1": [
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    }
+   ],
+   "B2": [
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [
+      "B-227",
+      "B-038"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-170"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [
+      "B-102",
+      "B-215"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [
+      "B-170",
+      "B-077"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [
+      "B-056",
+      "B-113"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [
+      "B-119",
+      "B-072"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [
+      "B-201",
+      "B-048"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-042"
+     ],
+     "author": "drafter"
+    }
+   ]
+  },
+  "30": {
+   "B1": [
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-19",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-19"
+     ],
+     "examples": [
+      "B-233"
+     ],
+     "counter_examples": [],
+     "author": "drafter"
+    }
+   ],
+   "B2": [
+    {
+     "id": "R-C-09",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-09"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-04",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "company_disclosure",
+     "title": "Company named without stated call purpose",
+     "rationale": "The agent named the company but never said why they were calling (needs_review).",
+     "when": [
+      {
+       "predicate": "company_named",
+       "equals": "yes"
+      },
+      {
+       "predicate": "call_purpose_stated",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-04"
+     ],
+     "examples": [
+      "B-041"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-110"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-07",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-07"
+     ],
+     "examples": [
+      "B-031"
+     ],
+     "counter_examples": [
+      "B-227",
+      "B-038"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-17",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Specialist callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-17"
+     ],
+     "examples": [
+      "B-206"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-170"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-03",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-03"
+     ],
+     "examples": [
+      "B-047"
+     ],
+     "counter_examples": [
+      "B-102",
+      "B-215"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-13",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-13"
+     ],
+     "examples": [
+      "B-099"
+     ],
+     "counter_examples": [
+      "B-170",
+      "B-077"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-01",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-01"
+     ],
+     "examples": [
+      "B-122"
+     ],
+     "counter_examples": [
+      "B-056",
+      "B-113"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-11",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-11"
+     ],
+     "examples": [
+      "B-200"
+     ],
+     "counter_examples": [
+      "B-119",
+      "B-072"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-20",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-20"
+     ],
+     "examples": [
+      "B-163"
+     ],
+     "counter_examples": [
+      "B-201",
+      "B-048"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-15",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-15"
+     ],
+     "examples": [
+      "B-181"
+     ],
+     "counter_examples": [
+      "B-048",
+      "B-042"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-05",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback alone is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-05"
+     ],
+     "examples": [
+      "B-139"
+     ],
+     "counter_examples": [
+      "B-173",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-18",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Other-team callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-18"
+     ],
+     "examples": [
+      "B-050"
+     ],
+     "counter_examples": [
+      "B-110",
+      "B-089"
+     ],
+     "author": "drafter"
+    },
+    {
+     "id": "R-C-19",
+     "version": 1,
+     "pack": "bench-conduct",
+     "item": "escalation_offered",
+     "title": "Non-supervisor callback is not an escalation offer",
+     "rationale": "A callback from a specialist, hardship or payments team is not an escalation offer (needs_review).",
+     "when": [
+      {
+       "predicate": "other_team_callback_promised",
+       "equals": "yes"
+      },
+      {
+       "predicate": "supervisor_transfer_offered",
+       "equals": "no"
+      },
+      {
+       "predicate": "supervisor_callback_promised",
+       "equals": "no"
+      }
+     ],
+     "then": "needs_review",
+     "clause_refs": [],
+     "source_corrections": [
+      "C-19"
+     ],
+     "examples": [
+      "B-233"
+     ],
+     "counter_examples": [
+      "B-072",
+      "B-215"
+     ],
+     "author": "drafter"
+    }
+   ]
+  },
+  "log": [
+   {
+    "correction": "C-09",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-04",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-07",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-06",
+    "expressible": false
+   },
+   {
+    "correction": "C-16",
+    "expressible": false
+   },
+   {
+    "correction": "C-17",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-03",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-13",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-01",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-02",
+    "expressible": false
+   },
+   {
+    "correction": "C-14",
+    "expressible": false
+   },
+   {
+    "correction": "C-11",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-20",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-10",
+    "expressible": false
+   },
+   {
+    "correction": "C-15",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true,
+    "checkpoints": [
+     15
+    ]
+   },
+   {
+    "correction": "C-12",
+    "expressible": false
+   },
+   {
+    "correction": "C-05",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-18",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-19",
+    "expressible": true,
+    "first_gate": "PASSED",
+    "accepted": true
+   },
+   {
+    "correction": "C-08",
+    "expressible": false,
+    "checkpoints": [
+     30
+    ]
+   }
+  ]
+ }
+}

@@ -11,3 +11,13 @@
   regenerates `specs.jsonl` byte for byte. `PREREGISTRATION.md` and the frozen pack (policy +
   `pack.yaml`) still match their recorded hashes. Check:
   `uv run python benchmarks/correction_stream/check_prereg.py`.
+- 2026-11-12T03:32Z: the hosted DeepSeek judge made no wrong verdict on the first 144 cases (576 verdicts), so
+  the correction stream, which is built from the baseline's errors on the pool split, would have been empty
+  and no hypothesis could be tested. The run went back to the pre-registered judge, Gemma 4 26B, which
+  OpenRouter serves as `google/gemma-4-26b-a4b-it` (same weights; the provider's quantisation and runtime differ
+  from local MLX). No arm had been run with DeepSeek; only its baseline exists. That baseline is completed
+  on all 240 cases and published in `results/deepseek-v4.1-flash-1017/` as a ceiling observation. Each judge
+  now writes to its own `results/<model>/` directory, so cassettes cannot mix.
+- 2026-11-12: `run.py` reads a stream shorter than a checkpoint at its end for the B arms, as it already did for
+  the A arms (the pre-registration caps the stream at 30, "fewer if fewer exist"). Before this fix a short stream
+  would have left B without a 30-correction checkpoint.

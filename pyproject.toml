@@ -1,6 +1,6 @@
 [project]
 name = "precedent-llm"
-version = "2.1.0"
+version = "2.2.0"
 description = "Pull requests for AI judgment: human corrections to an LLM judge become scoped, versioned, eval-gated, reversible rules with an audit trail."
 readme = "README.md"
 requires-python = ">=3.12"

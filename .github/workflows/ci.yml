@@ -41,8 +41,12 @@ jobs:
           uv run python scripts/results.py collections-conduct > /dev/null
           uv run --with "fonttools[woff]==4.68.0" python scripts/figures.py > /dev/null
           uv run python scripts/schemas.py > /dev/null
+          # benchmark tables, rebuilt from the recorded judge cassettes (no model call)
+          for judge in google/gemma-4-26b-a4b-it deepseek/deepseek-v4.1-flash-1017; do
+            JUDGE_MODEL="$judge" uv run python benchmarks/correction_stream/run.py analyze > /dev/null
+          done
       - name: Committed artifacts match the code
-        run: git diff --exit-code -- docs/results docs/assets src/precedent/schemas
+        run: git diff --exit-code -- docs/results docs/assets src/precedent/schemas benchmarks/correction_stream/results
 
   package:
     runs-on: ubuntu-latest

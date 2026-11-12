@@ -1,0 +1,242 @@
+{
+ "C-01": {
+  "expressible": true,
+  "title": "Non-supervisor team callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-02": {
+  "expressible": false
+ },
+ "C-03": {
+  "expressible": true,
+  "title": "Other-team callback alone is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-04": {
+  "expressible": true,
+  "title": "Company named without stated call purpose",
+  "when": [
+   {
+    "predicate": "company_named",
+    "equals": "yes"
+   },
+   {
+    "predicate": "call_purpose_stated",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-05": {
+  "expressible": true,
+  "title": "Other-team callback alone is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-06": {
+  "expressible": false
+ },
+ "C-07": {
+  "expressible": true,
+  "title": "Non-supervisor callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-08": {
+  "expressible": false
+ },
+ "C-09": {
+  "expressible": true,
+  "title": "Other-team callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-10": {
+  "expressible": false
+ },
+ "C-11": {
+  "expressible": true,
+  "title": "Non-supervisor team callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-12": {
+  "expressible": false
+ },
+ "C-13": {
+  "expressible": true,
+  "title": "Other-team callback alone is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-14": {
+  "expressible": false
+ },
+ "C-15": {
+  "expressible": true,
+  "title": "Non-supervisor team callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-16": {
+  "expressible": false
+ },
+ "C-17": {
+  "expressible": true,
+  "title": "Specialist callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-18": {
+  "expressible": true,
+  "title": "Other-team callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-19": {
+  "expressible": true,
+  "title": "Non-supervisor callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   },
+   {
+    "predicate": "supervisor_transfer_offered",
+    "equals": "no"
+   },
+   {
+    "predicate": "supervisor_callback_promised",
+    "equals": "no"
+   }
+  ],
+  "then": "needs_review"
+ },
+ "C-20": {
+  "expressible": true,
+  "title": "Non-supervisor callback is not an escalation offer",
+  "when": [
+   {
+    "predicate": "other_team_callback_promised",
+    "equals": "yes"
+   }
+  ],
+  "then": "needs_review"
+ }
+}
