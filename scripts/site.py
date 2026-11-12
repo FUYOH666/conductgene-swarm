@@ -18,6 +18,9 @@ REPO = "https://github.com/FUYOH666/precedent"
 SITE = "https://fuyoh666.github.io/precedent"
 
 CSS = f"""
+@font-face{{font-family:'Instrument Serif';src:url(fonts/InstrumentSerif-Regular.ttf);font-display:swap}}
+@font-face{{font-family:Geist;src:url(fonts/Geist.ttf);font-weight:100 900;font-display:swap}}
+@font-face{{font-family:'Geist Mono';src:url(fonts/GeistMono.ttf);font-weight:100 900;font-display:swap}}
 :root{{{css_variables(LIGHT)}}}
 @media (prefers-color-scheme: dark){{:root{{{css_variables(DARK)}}}}}
 *{{box-sizing:border-box}}
@@ -66,7 +69,7 @@ second person to approve it, and reverts in one command. Every step lands in a h
 <div class="kicker">What an auditor receives</div>
 <div class="cards">
   <a class="card" href="evidence/escalation-callback@1.html"><span class="badge block">✗ BLOCKED</span>
-  <b>The keyword rule from v1</b><span class="muted">Fixes 2 calls, breaks 3. The evidence pack shows which ones and why.</span></a>
+  <b>The keyword rule from version 1</b><span class="muted">Fixes 2 calls, breaks 3. The evidence pack shows which ones and why.</span></a>
   <a class="card" href="evidence/escalation-callback@2.html"><span class="badge pass">✓ PASSED</span>
   <b>The same correction, stated as its reason</b><span class="muted">Fixes 3, breaks 0, approved by a second person.</span></a>
 </div>
@@ -118,6 +121,7 @@ def main() -> int:
     (OUT / "favicon.svg").write_text(FAVICON, encoding="utf-8")
     (OUT / "llms.txt").write_text(LLMS, encoding="utf-8")
     shutil.copy(ROOT / "docs" / "assets" / "social-preview.png", OUT / "social-preview.png")
+    shutil.copytree(ROOT / "docs" / "assets" / "fonts", OUT / "fonts")
     for f in (ROOT / "docs" / "evidence" / "demo" / "evidence").glob("*"):
         shutil.copy(f, OUT / "evidence" / f.name)
     print(f"site: {sorted(p.relative_to(OUT).as_posix() for p in OUT.rglob('*') if p.is_file())}")

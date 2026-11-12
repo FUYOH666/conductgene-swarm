@@ -39,7 +39,7 @@ jobs:
       - name: Regenerate numbers, figures and schemas
         run: |
           uv run python scripts/results.py collections-conduct > /dev/null
-          uv run python scripts/figures.py > /dev/null
+          uv run --with "fonttools[woff]==4.68.0" python scripts/figures.py > /dev/null
           uv run python scripts/schemas.py > /dev/null
       - name: Committed artifacts match the code
         run: git diff --exit-code -- docs/results docs/assets src/precedent/schemas

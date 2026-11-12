@@ -1,6 +1,10 @@
 """Draw the README figures as SVG, in a light and a dark variant.
 
-    uv run python scripts/figures.py
+    uv run --with "fonttools[woff]==4.68.0" python scripts/figures.py
+
+Fonts (Instrument Serif, Geist, Geist Mono; SIL OFL, docs/assets/fonts) are
+subset to the glyphs each figure uses and embedded as WOFF2, because SVGs shown
+through <img> on GitHub cannot load web fonts.
 
 Writes docs/assets/{banner,lifecycle,flips}-{light,dark}.svg. The flip map is
 computed from the pack and the recorded judge runs, so it cannot drift from
@@ -9,7 +13,11 @@ the numbers in docs/results.
 
 from __future__ import annotations
 
-from html import escape
+import base64
+import io
+import logging
+import re
+from html import escape, unescape
 from pathlib import Path
 
 from precedent.gate import run_gate
@@ -22,13 +30,53 @@ from precedent.theme import DARK, LIGHT, MONO, SANS, SERIF, Palette
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "docs" / "assets"
+FONTS = {
+    "Instrument Serif": ("InstrumentSerif-Regular.ttf", "400"),
+    "Geist": ("Geist.ttf", "100 900"),
+    "Geist Mono": ("GeistMono.ttf", "100 900"),
+}
+_USED: dict[str, set[str]] = {}
+
+
+def _family(stack: str) -> str:
+    return stack.split(",")[0].strip().strip("'\"")
+
+
+def font_faces(used: dict[str, set[str]]) -> str:
+    """@font-face rules with each font subset to the characters it renders."""
+    from fontTools import subset
+
+    logging.getLogger("fontTools").setLevel(logging.ERROR)
+    rules = []
+    for family, chars in sorted(used.items()):
+        if family not in FONTS or not chars:
+            continue
+        file, weight = FONTS[family]
+        options = subset.Options()
+        options.flavor = "woff2"
+        options.layout_features = ["kern", "liga", "calt"]
+        options.name_IDs = [0, 1, 2]
+        font = subset.load_font(str(ASSETS / "fonts" / file), options)
+        subsetter = subset.Subsetter(options)
+        subsetter.populate(text="".join(sorted(chars | {" "})))
+        subsetter.subset(font)
+        buf = io.BytesIO()
+        subset.save_font(font, buf, options)
+        data = base64.b64encode(buf.getvalue()).decode()
+        rules.append(
+            f"@font-face{{font-family:'{family}';font-weight:{weight};"
+            f"src:url(data:font/woff2;base64,{data}) format('woff2')}}"
+        )
+    return "".join(rules)
 
 
 def svg(width: int, height: int, body: str, p: Palette, title: str) -> str:
+    faces = font_faces(_USED)
+    _USED.clear()
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
         f'viewBox="0 0 {width} {height}" role="img" aria-label="{escape(title)}">\n'
-        f"<title>{escape(title)}</title>\n"
+        f"<title>{escape(title)}</title>\n<defs><style>{faces}</style></defs>\n"
         f'<rect width="{width}" height="{height}" fill="{p.bg}"/>\n{body}</svg>\n'
     )
 
@@ -46,6 +94,7 @@ def text(
     spacing: float = 0,
 ) -> str:
     ls = f' letter-spacing="{spacing}"' if spacing else ""
+    _USED.setdefault(_family(font), set()).update(s)
     return (
         f'<text x="{x}" y="{y}" font-family="{font}" font-size="{size}" font-weight="{weight}" '
         f'fill="{fill}" text-anchor="{anchor}"{ls}>{escape(s)}</text>\n'
@@ -85,43 +134,43 @@ def badge(x: float, y: float, ok: bool, p: Palette, size: float = 13) -> str:
 
 def banner(p: Palette, width: int = 1280, height: int = 400) -> str:
     b = mark(64, 74, 56, p)
-    b += text(140, 122, "precedent", size=76, fill=p.ink, font=SERIF, weight=400, spacing=-1)
-    b += text(66, 186, "Pull requests for AI judgment", size=32, fill=p.ink, weight=500)
+    b += text(140, 124, "precedent", size=84, fill=p.ink, font=SERIF, weight=400, spacing=-1)
+    b += text(66, 190, "Pull requests for AI judgment", size=38, fill=p.ink, weight=500)
     b += text(
         66,
         232,
         "A human correction to an LLM judge becomes a scoped rule.",
-        size=20,
+        size=23,
         fill=p.muted,
     )
     b += text(
         66,
-        262,
-        "It is tested on every case, approved by a second person, and reversible.",
-        size=20,
+        268,
+        "Tested on every case, approved by a second person, reversible.",
+        size=23,
         fill=p.muted,
     )
-    b += text(66, 330, "gate · four-eyes · hash-chained log · offline", size=15,
+    b += text(66, 336, "gate · four-eyes · hash-chained log · offline", size=18,
               fill=p.faint, font=MONO)  # fmt: skip
 
     # the story in two lines
-    cx, cy, cw, ch = 760, 70, 456, 260
+    cx, cy, cw, ch = 742, 64, 484, 276
     b += (
         f'<rect x="{cx}" y="{cy}" width="{cw}" height="{ch}" rx="14" fill="{p.panel}" '
         f'stroke="{p.line}"/>\n'
     )
-    b += text(cx + 24, cy + 40, "one correction, two rules", size=14, fill=p.faint, font=MONO)
+    b += text(cx + 26, cy + 42, "one correction, two rules", size=17, fill=p.faint, font=MONO)
     rows = [
         ("v1", "when mentions_repayment", False, "fixes 2 · breaks 3"),
         ("v2", "when supervisor_callback", True, "fixes 3 · breaks 0"),
     ]
     for i, (ver, cond, ok, stats) in enumerate(rows):
-        y = cy + 92 + i * 92
-        b += text(cx + 24, y, ver, size=16, fill=p.accent, font=MONO, weight=700)
-        b += text(cx + 64, y, cond, size=16, fill=p.ink, font=MONO)
-        b += text(cx + 64, y + 30, "→ escalation = pass", size=16, fill=p.muted, font=MONO)
-        b += badge(cx + cw - 128, y + 2, ok, p, size=13)
-        b += text(cx + cw - 24, y + 30, stats, size=13, fill=p.faint, font=MONO, anchor="end")
+        y = cy + 100 + i * 100
+        b += text(cx + 26, y, ver, size=19, fill=p.accent, font=MONO, weight=700)
+        b += text(cx + 66, y, cond, size=19, fill=p.ink, font=MONO)
+        b += text(cx + 66, y + 34, "→ escalation = pass", size=19, fill=p.muted, font=MONO)
+        b += badge(cx + cw - 26 - 14 * 6.4, y, ok, p, size=14)
+        b += text(cx + cw - 26, y + 34, stats, size=15, fill=p.faint, font=MONO, anchor="end")
     return svg(width, height, b, p, "precedent — pull requests for AI judgment")
 
 
@@ -292,8 +341,26 @@ def flips(p: Palette, reports: list[tuple[str, str, GateReport]]) -> str:
     return svg(width, ly + 64, b, p, "Flip map: cases each rule fixes or breaks, per judge")
 
 
+def embed_terminal_font(path: Path) -> None:
+    """Swap the CDN font in rich's terminal SVG for embedded Geist Mono (idempotent)."""
+    svg_text = path.read_text(encoding="utf-8")
+    if "Fira Code" not in svg_text:
+        return
+    glyphs = set(unescape(re.sub(r"<[^>]+>", "", svg_text.split("</style>", 1)[1])))
+    faces = font_faces({"Geist Mono": glyphs, "Geist": set("precedent demo")})
+    svg_text = re.sub(r"@font-face \{.*?\}\s*", "", svg_text, flags=re.S)
+    svg_text = svg_text.replace("<style>", f"<style>{faces}", 1)
+    svg_text = svg_text.replace(
+        "font-family: Fira Code, monospace", "font-family: 'Geist Mono', monospace"
+    )
+    svg_text = svg_text.replace("font-family: arial", "font-family: Geist, arial")
+    path.write_text(svg_text, encoding="utf-8")
+
+
 def main() -> int:
     ASSETS.mkdir(parents=True, exist_ok=True)
+    if (ASSETS / "demo.svg").exists():
+        embed_terminal_font(ASSETS / "demo.svg")
     reports = gate_reports()
     for p in (LIGHT, DARK):
         (ASSETS / f"banner-{p.name}.svg").write_text(banner(p), encoding="utf-8")
