@@ -53,8 +53,8 @@ def test_cli_lifecycle(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> No
         == 0
     )
     assert main(["gate", "escalation-callback@2", "--db", db, *pack]) == 0
-    assert main(["approve", "escalation-callback@2", "--db", db, "--actor", "maria"]) == 2
-    assert main(["approve", "escalation-callback@2", "--db", db, "--actor", "alex"]) == 0
+    assert main(["approve", "escalation-callback@2", "--db", db, *pack, "--actor", "maria"]) == 2
+    assert main(["approve", "escalation-callback@2", "--db", db, *pack, "--actor", "alex"]) == 0
     assert main(["rules", "--db", db]) == 0
     assert main(["eval", *pack, "--db", db]) == 0
     assert (
@@ -83,3 +83,10 @@ def test_cli_errors(tmp_path: Path) -> None:
         )
         == 2
     )  # fmt: skip
+
+
+def test_demo_exports_a_terminal_svg(tmp_path: Path) -> None:
+    svg = tmp_path / "demo.svg"
+    assert main(["demo", "--out", str(tmp_path / "d"), "--svg", str(svg)]) == 0
+    body = svg.read_text()
+    assert body.startswith("<svg") and "BLOCKED" in body and "PASSED" in body

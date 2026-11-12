@@ -17,3 +17,20 @@ jobs:
           enable-cache: true
       - run: uv python install 3.12
       - run: ./scripts/verify_all.sh
+
+  figures-in-sync:
+    runs-on: ubuntu-latest
+    env:
+      UV_PYTHON: "3.12"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync
+      - name: Regenerate results and figures
+        run: |
+          uv run python scripts/results.py collections-conduct > /dev/null
+          uv run python scripts/figures.py > /dev/null
+      - name: Committed numbers and figures match the code
+        run: git diff --exit-code -- docs/results docs/assets

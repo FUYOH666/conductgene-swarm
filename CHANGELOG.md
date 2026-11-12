@@ -18,6 +18,19 @@ Why: [docs/what-v1-got-wrong.md](docs/what-v1-got-wrong.md).
 - `precedent demo`: the v1 keyword rule is blocked with three broken cases; the same correction stated as its real reason passes.
 - A recorded run of Gemma 4 26B (local, LM Studio) on the pack, replayed offline; `scripts/results.py` regenerates `docs/results/collections-conduct.md`. Both judges' disagreements are pinned in tests.
 
+### Hardened after an independent review (Codex)
+
+- Approval is refused if the labelled cases, the judge or the recorded corrections changed since the gate ran (the active rule set was already checked).
+- A gate report whose decision contradicts its own blocking checks is refused.
+- The gate rejects judge outputs whose case hash does not match their case, outputs from more than one judge, and any accepted correction whose case was removed or changed.
+- Counter-examples mean "must not change"; they are compared before and after, not with the label.
+- A predicate about one speaker must be quoted from that speaker's lines.
+- Lifecycle commands verify the chain first and run read-check-append inside one SQLite write transaction; `audit verify --anchor` checks against an externally recorded head.
+
+### Presentation
+
+- README rewritten as a project page; banner, lifecycle and flip-map figures drawn by `scripts/figures.py` (light and dark), the demo exported as a terminal SVG (`precedent demo --svg`), a social preview rendered from HTML, an essay on the design (`docs/essay.md`), `CITATION.cff`. CI fails if committed numbers or figures drift from the code.
+
 ### Removed
 
 - Keyword "Policy Genes", the prosecutor/defender/arbiter mock agents, the FastAPI and Streamlit apps, Qdrant/BGE retrieval, the MCP stub, A2A card and SKILL export, and the hackathon documents.

@@ -104,7 +104,39 @@ def test_stale_correction_does_not_count(
 ) -> None:
     stale = correction.model_copy(update={"case_hash": "0" * 64})
     report = run_gate(pack, outputs, [], rules["escalation-callback@2"], [stale])
-    assert _checks(report)["source_fixed"] is False
+    assert report.decision == "BLOCKED"
+    assert "changed since it was corrected" in report.checks[0].detail
+
+
+def test_outputs_must_belong_to_their_cases(
+    pack: Pack, outputs: dict[str, JudgeOutput], rules: dict[str, Rule], correction: Correction
+) -> None:
+    """Codex review: swapping in another case's output made the v1 rule pass."""
+    forged = dict(outputs)
+    for cid in ("CASE-005", "CASE-012", "CASE-023"):
+        forged[cid] = outputs["CASE-001"]
+    report = run_gate(pack, forged, [], rules["escalation-callback@1"], [correction])
+    assert report.decision == "BLOCKED"
+    assert "do not belong to their case" in report.checks[0].detail
+
+
+def test_corrections_stay_tests_even_if_their_case_is_removed(
+    pack: Pack, outputs: dict[str, JudgeOutput], rules: dict[str, Rule], correction: Correction
+) -> None:
+    orphan = correction.model_copy(update={"id": "C-0002", "case_id": "CASE-999"})
+    report = run_gate(pack, outputs, [], rules["escalation-callback@2"], [correction, orphan])
+    assert report.decision == "BLOCKED"
+    assert "no longer in the pack" in report.checks[0].detail
+
+
+def test_counter_examples_must_not_change_at_all(
+    pack: Pack, outputs: dict[str, JudgeOutput], rules: dict[str, Rule], correction: Correction
+) -> None:
+    """A counter-example is "must not change", even when the change would be right."""
+    rule = rules["escalation-callback@2"].model_copy(update={"counter_examples": ["CASE-024"]})
+    report = run_gate(pack, outputs, [], rule, [correction])
+    assert report.decision == "BLOCKED"
+    assert _checks(report)["counter_examples_hold"] is False
 
 
 def test_missing_judge_outputs_block(

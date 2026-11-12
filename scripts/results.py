@@ -7,6 +7,7 @@ Every number in that file comes from this script, offline:
 
 from __future__ import annotations
 
+import statistics
 import sys
 from pathlib import Path
 
@@ -84,6 +85,29 @@ def main(pack_name: str) -> int:
             f"| `{judge.judge_id}` | {_rate(_pairs(pack, outputs))} | "
             f"{_rate(_pairs(pack, outputs, split='heldout'))} | {per_item} |"
         )
+
+    cost_rows = []
+    for jid, outputs in all_outputs.items():
+        lat = [o.meta["latency_ms"] for o in outputs.values() if "latency_ms" in o.meta]
+        tok = [
+            o.meta["usage"]["total_tokens"]
+            for o in outputs.values()
+            if o.meta.get("usage", {}).get("total_tokens")
+        ]
+        if lat:
+            cost_rows.append(
+                f"| `{jid}` | {statistics.median(lat) / 1000:.1f} s | "
+                f"{max(lat) / 1000:.1f} s | {statistics.median(tok):.0f} |"
+            )
+    if cost_rows:
+        lines += [
+            "",
+            "## Cost of a recorded run",
+            "",
+            "| judge | median latency per case | slowest case | median tokens per case |",
+            "|---|---|---|---|",
+            *cost_rows,
+        ]
 
     lines += ["", "## Disagreements", ""]
     for jid, outputs in all_outputs.items():

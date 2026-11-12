@@ -1,10 +1,12 @@
 """Structured LLM judge over any OpenAI-compatible endpoint.
 
 One call per case returns a label per rubric item and an answer per predicate.
-Nothing is taken on trust: every quote is checked against the case text, every
-label against the pack, every clause id against the policy corpus. A claim that
-fails a check is downgraded (label → review label, predicate → ``unknown``)
-and the reason is kept in ``notes``.
+Every quote is checked against the case text (and, for predicates about one
+speaker, against that speaker's lines) and every label against the pack. A
+claim whose quote fails is downgraded (label → review label, predicate →
+``unknown``); unknown clause ids are dropped. Each such event is kept in
+``notes``. A verified quote proves the words exist, not that they support the
+claim.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ from typing import Any
 import httpx
 
 from precedent.hashing import sha256_hex
-from precedent.models import Case, ItemVerdict, JudgeOutput, PredicateAnswer
+from precedent.models import Case, ItemVerdict, JudgeOutput, PredicateAnswer, Span
 from precedent.pack import Pack
 from precedent.spans import find_quote
 
@@ -48,6 +50,16 @@ Return only one JSON object, no prose, no markdown:
 
 class JudgeError(RuntimeError):
     pass
+
+
+def _spoken_by(text: str, span: Span, speaker: str) -> bool:
+    """True if the quoted span lies in a line that starts with ``speaker:``."""
+    line_start = text.rfind("\n", 0, span.start) + 1
+    line_end = text.find("\n", span.start)
+    line_end = len(text) if line_end < 0 else line_end
+    if span.end > line_end:
+        return False
+    return text[line_start:line_end].lstrip().lower().startswith(speaker.lower() + ":")
 
 
 def build_system_prompt(pack: Pack) -> str:
@@ -175,6 +187,9 @@ class LLMJudge:
                 notes.append(f"predicate {pred.id}: invalid value {value!r}")
                 value = "unknown"
             span = find_quote(case.text, entry.get("quote"))
+            if span is not None and pred.speaker and not _spoken_by(case.text, span, pred.speaker):
+                notes.append(f"predicate {pred.id}: quote is not from {pred.speaker}")
+                span = None
             if value == "yes" and span is None:
                 notes.append(f"predicate {pred.id}: 'yes' without a verifiable quote")
                 value = "unknown"

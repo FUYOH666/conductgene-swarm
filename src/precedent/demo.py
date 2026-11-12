@@ -59,14 +59,16 @@ def run_demo(console: Console, out_dir: Path, judge_spec: str = "heuristic") -> 
     n_held = sum(c.split == "heldout" for c in pack.cases)
 
     console.print(
-        f"[bold]Precedent[/] · pull requests for AI judgment\n"
-        f"[dim]pack {pack.id}: {len(pack.cases)} calls ({n_held} held out) · "
+        f"[bold]precedent[/] [dim]·[/] pull requests for AI judgment\n"
+        f"[dim]{pack.id}: {len(pack.cases)} calls, {n_held} held out · "
         f"judge {judge.judge_id}[/]\n"
     )
 
     outputs = judge_all(judge, pack.cases)
     ok, total = _agreement(pack, outputs, [])
-    console.print(f"[bold]1[/] Judge agrees with the labels on [bold]{ok}/{total}[/] verdicts.")
+    console.print(
+        f"[bold]1[/]  The judge agrees with the labels on [bold]{ok}/{total}[/] verdicts."
+    )
 
     case = pack.case(CASE)
     ai_label = decide(pack, outputs[CASE], [])[ITEM].label
@@ -85,48 +87,50 @@ def run_demo(console: Console, out_dir: Path, judge_spec: str = "heuristic") -> 
     )
     registry.record_correction("maria", correction)
     console.print(
-        f"[bold]2[/] maria corrects {CASE}: {ITEM} [red]{ai_label}[/] → [green]pass[/]"
-        + (f'\n  [dim]"…{quote.text}…"[/]' if quote else "")
+        f"[bold]2[/]  maria corrects {CASE}: {ITEM} [red]{ai_label}[/] → [green]pass[/]"
+        + (f'\n   [dim]"…{quote.text}…"[/]' if quote else "")
     )
 
     console.print(
-        "\n[bold]3[/] She turns it into a rule, the way v1 did "
-        "[dim](v1 stored this and reported improved: True)[/]"
+        "\n[bold]3[/]  She turns it into a rule the way v1 did "
+        "[dim](v1 shipped this rule and reported improved: True)[/]"
     )
     v1 = registry.propose("maria", rules["escalation-callback@1"])
-    console.print(f"  [cyan]{v1.key}[/] {rule_summary(v1)}")
+    console.print(f"   [cyan]{v1.key}[/]  [green]+[/] {rule_summary(v1)}")
     report1 = run_gate(pack, outputs, registry.active_rules(pack.id), v1, [correction])
     registry.record_gate("ci", report1)
     print_gate(console, report1)
     (reports_dir / "escalation-callback@1.md").write_text(gate_markdown(report1, v1))
 
-    console.print("\n[bold]4[/] She states the real reason instead")
+    console.print("\n[bold]4[/]  She states the real reason instead")
     v2 = registry.propose("maria", rules["escalation-callback@2"])
-    console.print(f"  [cyan]{v2.key}[/] {rule_summary(v2)}")
+    console.print(f"   [cyan]{v2.key}[/]  [green]+[/] {rule_summary(v2)}")
     report2 = run_gate(pack, outputs, registry.active_rules(pack.id), v2, [correction])
     registry.record_gate("ci", report2)
-    print_gate(console, report2)
+    print_gate(console, report2, compact=True)
     (reports_dir / "escalation-callback@2.md").write_text(gate_markdown(report2, v2))
 
-    console.print("\n[bold]5[/] Approval needs a second person")
+    console.print("\n[bold]5[/]  Approval needs a second person")
     try:
-        registry.approve("maria", v2.key)
+        registry.approve("maria", v2.key, dataset_hash=pack.dataset_hash(), judge_id=judge.judge_id)
     except RegistryError as exc:
-        console.print(f"  [red]✗[/] maria: {exc}")
-    registry.approve("alex", v2.key)
+        console.print(f"   [red]✗[/] maria: {exc}")
+    registry.approve("alex", v2.key, dataset_hash=pack.dataset_hash(), judge_id=judge.judge_id)
     ok2, _ = _agreement(pack, outputs, registry.active_rules(pack.id))
     console.print(
-        f"  [green]✓[/] alex approves {v2.key}: agreement {ok}/{total} → [bold]{ok2}/{total}[/]"
+        f"   [green]✓[/] alex approves {v2.key}: agreement {ok}/{total} → [bold]{ok2}/{total}[/]"
     )
 
     registry.revert("alex", v2.key, "demo: show that one command undoes it")
     ok3, _ = _agreement(pack, outputs, registry.active_rules(pack.id))
-    console.print(f"\n[bold]6[/] alex reverts it: agreement back to {ok3}/{total}")
+    console.print(
+        f"\n[bold]6[/]  alex reverts it with one command: agreement back to {ok3}/{total}"
+    )
 
     result = store.verify()
     status = "[green]✓ intact[/]" if result.ok else f"[red]✗ {result.reason}[/]"
     console.print(
-        f"[bold]7[/] Audit log: {result.count} hash-chained events, {status}, "
+        f"[bold]7[/]  Audit log: {result.count} hash-chained events, {status}, "
         f"head [dim]{result.head[:16]}[/]"
     )
     console.print(f"\n[dim]Gate reports: {reports_dir} · event log: {db}[/]")

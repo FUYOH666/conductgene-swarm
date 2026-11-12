@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- Source of docs/assets/social-preview.png (1280×640). Render:
+     chrome --headless=new --window-size=1280,640 --screenshot=social-preview.png social-preview.html -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=block" rel="stylesheet">
+<style>
+  :root { --bg:#0d1117; --panel:#161b22; --ink:#e6edf3; --muted:#9198a1; --faint:#6e7681;
+          --line:#30363d; --accent:#8b8bff; --green:#3fb950; --gbg:#12261e; --red:#f85149; --rbg:#2d1517; }
+  * { box-sizing: border-box; margin: 0; }
+  body { width:1280px; height:640px; background:var(--bg); color:var(--ink); font-family:Inter, sans-serif;
+         display:grid; grid-template-columns: 1fr 520px; gap:56px; padding:72px 72px 64px; overflow:hidden; }
+  .mark { display:flex; flex-direction:column; gap:7px; margin-right:20px; }
+  .bar { width:58px; height:24px; border-radius:7px; position:relative; }
+  .bar.r { background:var(--rbg); border:2px solid var(--red); }
+  .bar.g { background:var(--gbg); border:2px solid var(--green); }
+  .bar::after { content:""; position:absolute; left:8px; top:9px; width:12px; height:3px; border-radius:2px; }
+  .bar.r::after { background:var(--red); }
+  .bar.g::after { background:var(--green); }
+  .bar.g::before { content:""; position:absolute; left:12.5px; top:4.5px; width:3px; height:12px; border-radius:2px; background:var(--green); }
+  .brand { display:flex; align-items:center; }
+  h1 { font-size:76px; font-weight:800; letter-spacing:-2.5px; line-height:1; }
+  h2 { font-size:40px; font-weight:700; letter-spacing:-0.8px; margin-top:44px; line-height:1.15; }
+  p { color:var(--muted); font-size:23px; line-height:1.45; margin-top:22px; max-width:560px; }
+  .tags { font-family:'JetBrains Mono', monospace; color:var(--faint); font-size:17px; position:absolute; bottom:56px; left:72px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:30px 32px;
+          font-family:'JetBrains Mono', monospace; font-size:18px; line-height:1.65; align-self:center; }
+  .k { color:var(--accent); } .m { color:var(--muted); } .f { color:var(--faint); }
+  .del { background:var(--rbg); color:var(--red); margin:0 -32px; padding:0 32px; }
+  .add { background:var(--gbg); color:var(--green); margin:0 -32px; padding:0 32px; }
+  .gate { margin-top:20px; padding-top:18px; border-top:1px solid var(--line); display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font-size:16px; }
+  .b { font-weight:700; border-radius:999px; padding:1px 12px; border:1px solid; justify-self:start; }
+  .b.x { color:var(--red); background:var(--rbg); } .b.ok { color:var(--green); background:var(--gbg); }
+</style></head><body>
+<div>
+  <div class="brand"><div class="mark"><div class="bar r"></div><div class="bar g"></div></div><h1>precedent</h1></div>
+  <h2>Pull requests for<br>AI judgment</h2>
+  <p>Human corrections to an LLM judge become scoped rules, tested on every case, approved by a second person, reversible.</p>
+  <div class="tags">gate · four-eyes · hash-chained log · runs offline</div>
+</div>
+<div class="card">
+  <div><span class="k">item</span>: escalation_offered</div>
+  <div><span class="k">when</span>:</div>
+  <div class="del">-  mentions_repayment</div>
+  <div class="add">+  supervisor_contact_offered</div>
+  <div><span class="k">then</span>: pass</div>
+  <div><span class="k">counter_examples</span>: <span class="m">[CASE-005, …]</span></div>
+  <div class="gate">
+    <span class="b x">✗ BLOCKED</span><span class="f">v1 · fixes 2 · breaks 3</span>
+    <span class="b ok">✓ PASSED</span><span class="f">v2 · fixes 3 · breaks 0</span>
+  </div>
+</div>
+</body></html>

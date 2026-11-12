@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -62,12 +63,39 @@ def _event_hash(prev_hash: str, seq: int, ts: str, actor: str, type_: str, paylo
 
 
 class EventStore:
-    def __init__(self, path: Path | str) -> None:
+    def __init__(self, path: Path | str, *, timeout: float = 10.0) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn = sqlite3.connect(self.path, isolation_level=None)
+        self._conn = sqlite3.connect(self.path, isolation_level=None, timeout=timeout)
         self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.executescript(_SCHEMA)
+        self._depth = 0
+
+    @contextmanager
+    def locked(self) -> Iterator[None]:
+        """Hold the write lock: read state, check it and append as one transaction.
+
+        Two processes cannot both validate against the same state and then
+        both write; the second waits, then sees the first one's event.
+        """
+        if self._depth:
+            self._depth += 1
+            try:
+                yield
+            finally:
+                self._depth -= 1
+            return
+        self._conn.execute("BEGIN IMMEDIATE")
+        self._depth = 1
+        try:
+            yield
+        except BaseException:
+            self._conn.execute("ROLLBACK")
+            raise
+        else:
+            self._conn.execute("COMMIT")
+        finally:
+            self._depth = 0
 
     def close(self) -> None:
         self._conn.close()
@@ -83,22 +111,18 @@ class EventStore:
             raise ValueError("every event needs an actor")
         body = canonical_json(payload)
         ts = datetime.now(tz=UTC).isoformat(timespec="microseconds")
-        cur = self._conn.cursor()
-        cur.execute("BEGIN IMMEDIATE")
-        try:
-            row = cur.execute("SELECT seq, hash FROM events ORDER BY seq DESC LIMIT 1").fetchone()
+        with self.locked():
+            row = self._conn.execute(
+                "SELECT seq, hash FROM events ORDER BY seq DESC LIMIT 1"
+            ).fetchone()
             seq = (row[0] + 1) if row else 1
             prev = row[1] if row else GENESIS
             digest = _event_hash(prev, seq, ts, actor, type_, body)
-            cur.execute(
+            self._conn.execute(
                 "INSERT INTO events (seq, ts, actor, type, payload, prev_hash, hash) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (seq, ts, actor, type_, body, prev, digest),
             )
-            cur.execute("COMMIT")
-        except BaseException:
-            cur.execute("ROLLBACK")
-            raise
         return Event(seq, ts, actor, type_, payload, prev, digest)
 
     def _rows(self) -> Iterator[tuple[int, str, str, str, str, str, str]]:
@@ -116,10 +140,13 @@ class EventStore:
         row = self._conn.execute("SELECT hash FROM events ORDER BY seq DESC LIMIT 1").fetchone()
         return str(row[0]) if row else GENESIS
 
-    def verify(self) -> VerifyResult:
+    def verify(self, anchor: str | None = None) -> VerifyResult:
+        """Recompute the chain. ``anchor`` is a head hash recorded elsewhere earlier;
+        if it is no longer in the chain, events were rewritten or cut off."""
         prev = GENESIS
         count = 0
         expected_seq = 1
+        seen_anchor = anchor is None
         for seq, ts, actor, type_, payload, prev_hash, digest in self._rows():
             count += 1
             if seq != expected_seq:
@@ -130,4 +157,9 @@ class EventStore:
                 return VerifyResult(False, count, prev, seq, "content does not match its hash")
             prev = digest
             expected_seq += 1
+            seen_anchor = seen_anchor or digest == anchor
+        if not seen_anchor:
+            return VerifyResult(
+                False, count, prev, None, "anchor not found: log was cut or rewritten"
+            )
         return VerifyResult(True, count, prev)

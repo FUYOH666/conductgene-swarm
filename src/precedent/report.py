@@ -3,10 +3,38 @@
 from __future__ import annotations
 
 from rich.console import Console
+from rich.padding import Padding
 from rich.table import Table
+from rich.terminal_theme import TerminalTheme
 from rich.text import Text
 
 from precedent.models import GateReport, Rule
+
+#: Palette for exported terminal SVGs; matches docs/assets (GitHub dark).
+TERMINAL_THEME = TerminalTheme(
+    (13, 17, 23),
+    (230, 237, 243),
+    [
+        (22, 27, 34),
+        (248, 81, 73),
+        (63, 185, 80),
+        (210, 153, 34),
+        (121, 192, 255),
+        (190, 150, 255),
+        (139, 148, 255),
+        (201, 209, 217),
+    ],
+    [
+        (110, 118, 129),
+        (255, 123, 114),
+        (86, 211, 100),
+        (227, 179, 65),
+        (165, 214, 255),
+        (210, 168, 255),
+        (165, 172, 255),
+        (240, 246, 252),
+    ],
+)
 
 
 def rule_summary(rule: Rule) -> str:
@@ -22,8 +50,10 @@ def decision_text(report: GateReport) -> Text:
     return Text(f"{mark} {report.decision}", style=style)
 
 
-def print_gate(console: Console, report: GateReport, *, flips: bool = True) -> None:
-    line = Text("  gate ")
+def print_gate(
+    console: Console, report: GateReport, *, flips: bool = True, compact: bool = False
+) -> None:
+    line = Text("   gate ")
     line.append_text(decision_text(report))
     if report.heldout_delta is not None and report.heldout_ci is not None:
         lo, hi = report.heldout_ci
@@ -31,16 +61,27 @@ def print_gate(console: Console, report: GateReport, *, flips: bool = True) -> N
             f"   held-out Δ {report.heldout_delta:+.3f} [{lo:+.3f}, {hi:+.3f}]", style="dim"
         )
     console.print(line)
-    for check in report.checks:
+    if compact and report.decision == "PASSED":
+        n_blocking = sum(c.blocking for c in report.checks)
+        fixed = sum(f.kind == "fixed" for f in report.flips)
+        broken = sum(f.kind == "broken" for f in report.flips)
+        console.print(
+            f"     [green]✓[/] all {n_blocking} blocking checks pass "
+            f"[dim]· fixes {fixed} · breaks {broken}[/]"
+        )
+    checks = [] if compact and report.decision == "PASSED" else report.checks
+    for check in checks:
         if check.passed:
             mark, style = "✓", "green"
         elif check.blocking:
             mark, style = "✗", "red"
         else:
             mark, style = "!", "yellow"
-        console.print(f"    [{style}]{mark}[/] {check.name:<22} [dim]{check.detail}[/]")
+        console.print(f"     [{style}]{mark}[/] {check.name:<22} [dim]{check.detail}[/]")
     if flips and report.flips:
-        table = Table(box=None, padding=(0, 1), show_header=True, header_style="dim")
+        table = Table(
+            box=None, padding=(0, 1), show_header=True, header_style="dim", pad_edge=False
+        )
         for col in ("case", "split", "item", "before", "after", "golden", ""):
             table.add_column(col)
         for f in report.flips:
@@ -54,7 +95,7 @@ def print_gate(console: Console, report: GateReport, *, flips: bool = True) -> N
                 f.golden or "—",
                 f"[{kind_style}]{f.kind}[/]",
             )
-        console.print(table, style="")
+        console.print(Padding(table, (0, 0, 0, 5)))
 
 
 def gate_markdown(report: GateReport, rule: Rule) -> str:

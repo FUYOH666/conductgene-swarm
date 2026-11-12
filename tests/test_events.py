@@ -69,3 +69,42 @@ def test_every_event_needs_an_actor(store: EventStore) -> None:
 def test_empty_log_verifies(store: EventStore) -> None:
     result = store.verify()
     assert result.ok and result.count == 0 and store.head() == GENESIS
+
+
+def test_anchor_detects_a_cut_off_tail(tmp_path: Path) -> None:
+    path = tmp_path / "events.db"
+    with EventStore(path) as store:
+        store.append("maria", "x", {"i": 1})
+        anchor = store.append("maria", "x", {"i": 2}).hash
+        store.append("maria", "x", {"i": 3})
+        assert store.verify(anchor=anchor).ok
+    conn = sqlite3.connect(path)
+    conn.execute("DROP TRIGGER events_no_delete")
+    conn.execute("DELETE FROM events WHERE seq >= 2")
+    conn.commit()
+    conn.close()
+    with EventStore(path) as store:
+        assert store.verify().ok  # a clean prefix still verifies on its own...
+        result = store.verify(anchor=anchor)  # ...but not against the recorded anchor
+    assert not result.ok and "anchor" in result.reason
+
+
+def test_write_lock_serialises_writers(tmp_path: Path) -> None:
+    path = tmp_path / "events.db"
+    a = EventStore(path)
+    b = EventStore(path, timeout=0.2)
+    with a.locked():
+        a.append("maria", "x", {})
+        with pytest.raises(sqlite3.OperationalError, match="locked"):
+            b.append("alex", "x", {})
+    b.append("alex", "x", {})
+    assert [e.seq for e in b.events()] == [1, 2] and b.verify().ok
+    a.close()
+    b.close()
+
+
+def test_failed_transaction_rolls_back(store: EventStore) -> None:
+    with pytest.raises(RuntimeError), store.locked():
+        store.append("maria", "x", {})
+        raise RuntimeError("boom")
+    assert store.events() == []

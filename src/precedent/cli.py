@@ -33,7 +33,7 @@ from precedent.judge.factory import make_judge
 from precedent.models import Correction, JudgeOutput
 from precedent.pack import Pack, builtin_packs, load_pack, load_rule
 from precedent.registry import Registry, RegistryError
-from precedent.report import gate_markdown, print_gate, rule_summary
+from precedent.report import TERMINAL_THEME, gate_markdown, print_gate, rule_summary
 
 console = Console(highlight=False)
 
@@ -50,7 +50,15 @@ def _outputs(pack: Pack, spec: str, db: Path | None) -> dict[str, JudgeOutput]:
 def cmd_demo(args: argparse.Namespace) -> int:
     from precedent.demo import run_demo
 
-    return run_demo(console, Path(args.out), args.judge)
+    if not args.svg:
+        return run_demo(console, Path(args.out), args.judge)
+    recorder = Console(
+        record=True, width=100, force_terminal=True, color_system="truecolor", highlight=False
+    )
+    code = run_demo(recorder, Path(args.out), args.judge)
+    recorder.save_svg(args.svg, title="precedent demo", theme=TERMINAL_THEME)
+    console.print(f"[dim]wrote {args.svg}[/]")
+    return code
 
 
 def cmd_packs(_: argparse.Namespace) -> int:
@@ -176,8 +184,12 @@ def cmd_gate(args: argparse.Namespace) -> int:
 
 
 def cmd_approve(args: argparse.Namespace) -> int:
+    pack = load_pack(args.pack)
+    judge = _judge(pack, args.judge, None)
     with EventStore(Path(args.db)) as store:
-        rule = Registry(store).approve(args.actor, args.rule_key)
+        rule = Registry(store).approve(
+            args.actor, args.rule_key, dataset_hash=pack.dataset_hash(), judge_id=judge.judge_id
+        )
     console.print(f"[green]✓[/] {rule.key} is active")
     return 0
 
@@ -211,13 +223,14 @@ def cmd_rules(args: argparse.Namespace) -> int:
 def cmd_audit(args: argparse.Namespace) -> int:
     with EventStore(Path(args.db)) as store:
         if args.action == "verify":
-            result = store.verify()
+            result = store.verify(anchor=args.anchor)
             if result.ok:
                 console.print(
                     f"[green]✓[/] {result.count} events, chain intact, head {result.head}"
                 )
                 return 0
-            console.print(f"[red]✗ event {result.first_bad_seq}: {result.reason}[/]")
+            where = f"event {result.first_bad_seq}: " if result.first_bad_seq else ""
+            console.print(f"[red]✗ {where}{result.reason}[/]")
             return 1
         for ev in store.events():
             console.print(
@@ -240,6 +253,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("demo", help="the v1 bug, caught by the gate")
     p.add_argument("--out", default="precedent-demo")
+    p.add_argument("--svg", help="also export the run as a terminal SVG")
     judge_opt(p)
     p.set_defaults(func=cmd_demo)
 
@@ -300,7 +314,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("approve", help="approve a rule that passed the gate")
     p.add_argument("rule_key")
     p.add_argument("--db", required=True)
+    p.add_argument("--pack", required=True)
     p.add_argument("--actor", required=True)
+    judge_opt(p)
     p.set_defaults(func=cmd_approve)
 
     p = sub.add_parser("revert", help="deactivate an active rule")
@@ -317,6 +333,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("audit", help="verify or print the event log")
     p.add_argument("action", choices=["verify", "log"])
     p.add_argument("--db", required=True)
+    p.add_argument("--anchor", help="a head hash recorded earlier outside the log")
     p.set_defaults(func=cmd_audit)
     return parser
 

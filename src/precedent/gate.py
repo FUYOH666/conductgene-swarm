@@ -104,6 +104,29 @@ def run_gate(
     missing = [c.id for c in pack.cases if c.id not in outputs]
     if missing:
         problems.append(f"no judge output for {len(missing)} case(s): {', '.join(missing[:5])}")
+    hashes = {c.id: c.hash for c in pack.cases}
+    foreign = [
+        cid
+        for cid, out in outputs.items()
+        if hashes.get(cid) != out.case_hash or out.case_id != cid
+    ]
+    if foreign:
+        problems.append(
+            f"{len(foreign)} judge output(s) do not belong to their case: {', '.join(foreign[:5])}"
+        )
+    if len(judge_ids) > 1:
+        problems.append(f"outputs come from more than one judge: {judge_ids}")
+    # every accepted correction stays a test: its case must still exist, unchanged
+    for corr in corrections:
+        if corr.pack != pack.id:
+            continue
+        if corr.case_id not in hashes:
+            problems.append(f"correction {corr.id}: case {corr.case_id} is no longer in the pack")
+        elif hashes[corr.case_id] != corr.case_hash:
+            problems.append(
+                f"correction {corr.id}: case {corr.case_id} changed since it was corrected; "
+                "re-confirm the correction"
+            )
     not_asked = sorted(
         {
             cond.predicate
@@ -148,7 +171,7 @@ def run_gate(
                     golden=g,
                     kind=kind,
                     split=split.get(cid, "dev"),
-                )  # fmt: skip
+                )
             )
 
     # 1. the correction the rule came from is fixed
@@ -179,13 +202,12 @@ def run_gate(
         )
     )
 
-    # 3. declared counter-examples keep their answer
+    # 3. declared counter-examples must not change at all (right or wrong)
     moved: list[str] = []
     for cid in candidate.counter_examples:
-        expected = golden.get((cid, candidate.item), before[cid][candidate.item].label)
-        got = after[cid][candidate.item].label
-        if got != expected:
-            moved.append(f"{cid}: {got} (expected {expected})")
+        was, now = before[cid][candidate.item].label, after[cid][candidate.item].label
+        if now != was:
+            moved.append(f"{cid}: {was} → {now}")
     checks.append(
         GateCheck(
             name="counter_examples_hold",
@@ -202,8 +224,7 @@ def run_gate(
             name="no_regressions",
             passed=not broken,
             detail=(
-                f"breaks {len(broken)}: "
-                + ", ".join(f"{f.case_id} {f.before}→{f.after}" for f in broken[:6])
+                f"breaks {len(broken)}: " + ", ".join(sorted({f.case_id for f in broken})[:8])
                 if broken
                 else f"fixes {len(fixed)}, breaks 0"
             ),

@@ -149,3 +149,16 @@ def test_factory(pack: Pack, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert isinstance(judge, RecordingJudge)
     with pytest.raises(ValueError):
         make_judge(pack, "oracle")
+
+
+@respx.mock
+def test_agent_predicate_cannot_be_proven_with_customer_words(pack: Pack) -> None:
+    data = _answer(pack)
+    data["predicates"]["supervisor_contact_offered"] = {
+        "value": "yes",
+        "quote": "I can't pay all of it this month",  # the customer's line
+    }
+    respx.post(f"{BASE}/chat/completions").mock(return_value=_reply(json.dumps(data)))
+    out = LLMJudge(pack, base_url=BASE, model="m").judge(pack.case("CASE-019"))
+    assert out.predicates["supervisor_contact_offered"].value == "unknown"
+    assert any("not from Agent" in n for n in out.notes)

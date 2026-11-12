@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use Precedent or the ideas behind it, please cite it as below."
+title: "Precedent: pull requests for AI judgment"
+abstract: >
+  Human corrections to an LLM judge become scoped, versioned rules that must
+  pass a blocking gate (no regressions, counter-examples, held-out agreement),
+  need a second approver, and can be reverted; every step is recorded in a
+  hash-chained event log.
+authors:
+  - family-names: Mordvinov
+    given-names: Aleksandr
+type: software
+license: MIT
+repository-code: "https://github.com/FUYOH666/conductgene-swarm"
+url: "https://scanovich.ai"
+version: 2.0.0.dev0
+date-released: "2026-11-12"
+keywords:
+  - llm-as-a-judge
+  - human-in-the-loop
+  - ai-governance
+  - evaluation
+  - audit-trail
