@@ -157,7 +157,7 @@ def banner(p: Palette, width: int = 1280, height: int = 400) -> str:
 # --- lifecycle -------------------------------------------------------------------
 
 
-def lifecycle(p: Palette, width: int = 1280, height: int = 430) -> str:
+def lifecycle(p: Palette, width: int = 1280, height: int = 446) -> str:
     nodes = [
         ("correction", "a reviewer disagrees", "C-0001"),
         ("rule", "a reason, as predicates", "when … then …"),
@@ -165,7 +165,7 @@ def lifecycle(p: Palette, width: int = 1280, height: int = 430) -> str:
         ("approval", "a second person", "author ≠ approver"),
         ("active", "until reverted", "revert = 1 event"),
     ]
-    nw, nh, gap, x0, y0 = 196, 118, 58, 52, 70
+    nw, nh, gap, x0, y0 = 214, 126, 42, 26, 64
     b = ""
     centers = []
     for i, (title, sub, mono) in enumerate(nodes):
@@ -177,9 +177,9 @@ def lifecycle(p: Palette, width: int = 1280, height: int = 430) -> str:
             f'<rect x="{x}" y="{y0}" width="{nw}" height="{nh}" rx="12" fill="{p.panel}" '
             f'stroke="{stroke}" stroke-width="{sw}"/>\n'
         )
-        b += text(x + 20, y0 + 40, title, size=22, fill=p.ink, weight=700)
-        b += text(x + 20, y0 + 70, sub, size=15, fill=p.muted)
-        b += text(x + 20, y0 + 98, mono, size=13, fill=p.accent if is_gate else p.faint, font=MONO)
+        b += text(x + 18, y0 + 40, title, size=26, fill=p.ink, weight=700)
+        b += text(x + 18, y0 + 74, sub, size=17, fill=p.muted)
+        b += text(x + 18, y0 + 104, mono, size=15, fill=p.accent if is_gate else p.faint, font=MONO)
         centers.append(x + nw / 2)
         if i < len(nodes) - 1:
             ax, ay = x + nw + 8, y0 + nh / 2
@@ -198,14 +198,14 @@ def lifecycle(p: Palette, width: int = 1280, height: int = 430) -> str:
         f'stroke="{p.red}" stroke-width="2" stroke-dasharray="6 5"/>\n'
         f'<path d="M{rx - 6} {ly + 20} L{rx} {ly + 8} L{rx + 6} {ly + 20} Z" fill="{p.red}"/>\n'
     )
-    b += text((gx + rx) / 2, ly + 78, "BLOCKED → new version", size=14, fill=p.red, font=MONO,
+    b += text((gx + rx) / 2, ly + 80, "BLOCKED → new version", size=17, fill=p.red, font=MONO,
               anchor="middle", weight=700)  # fmt: skip
 
     # event log band
-    by = 312
-    b += text(x0, by - 14, "hash-chained event log", size=14, fill=p.faint, font=MONO)
+    by = 318
+    b += text(x0, by - 14, "hash-chained event log", size=16, fill=p.faint, font=MONO)
     b += (
-        f'<rect x="{x0}" y="{by}" width="{width - 2 * x0}" height="62" rx="10" fill="none" '
+        f'<rect x="{x0}" y="{by}" width="{width - 2 * x0}" height="66" rx="10" fill="none" '
         f'stroke="{p.line}"/>\n'
         f'<line x1="{centers[0]}" y1="{by + 22}" x2="{centers[-1]}" y2="{by + 22}" '
         f'stroke="{p.faint}" stroke-width="1"/>\n'
@@ -223,9 +223,9 @@ def lifecycle(p: Palette, width: int = 1280, height: int = 430) -> str:
             f'stroke-dasharray="2 4"/>\n'
         )
         b += f'<circle cx="{cx}" cy="{by + 22}" r="5.5" fill="{p.accent}"/>\n'
-        b += text(cx, by + 48, lab, size=12.5, fill=p.muted, font=MONO, anchor="middle")
+        b += text(cx, by + 50, lab, size=15, fill=p.muted, font=MONO, anchor="middle")
     b += text(x0, by + 94, "sha256(prev ‖ event) · UPDATE/DELETE refused · audit verify recomputes the chain",
-              size=13, fill=p.faint, font=MONO)  # fmt: skip
+              size=15, fill=p.faint, font=MONO)  # fmt: skip
     return svg(width, height, b, p, "Rule lifecycle: correction, rule, gate, approval, active")
 
 
@@ -255,8 +255,8 @@ def gate_reports() -> list[tuple[str, str, GateReport]]:
     out = []
     for jname, judge in judges:
         outputs = judge_all(judge, pack.cases)
-        for key, label in (("escalation-callback@1", "v1  mentions_repayment"),
-                           ("escalation-callback@2", "v2  supervisor_contact")):  # fmt: skip
+        for key, label in (("escalation-callback@1", "v1 mentions_repayment"),
+                           ("escalation-callback@2", "v2 supervisor_contact")):  # fmt: skip
             out.append((jname, label, run_gate(pack, outputs, [], rules[key], [corr])))
     return out
 
@@ -264,31 +264,33 @@ def gate_reports() -> list[tuple[str, str, GateReport]]:
 def flips(p: Palette, reports: list[tuple[str, str, GateReport]]) -> str:
     pack = load_pack("collections-conduct")
     cases = pack.cases
-    cell, pitch, x0, y0 = 18, 23, 436, 112
-    width = x0 + len(cases) * pitch + 190
-    height = y0 + len(reports) * 44 + 120
-    b = text(40, 44, "What each rule changes, case by case", size=22, fill=p.ink, weight=700)
+    cell, pitch, x0, y0 = 20, 25, 300, 128
+    row, group_gap = 44, 40
+    width = x0 + len(cases) * pitch + 150
+    b = text(40, 48, "What each rule changes, case by case", size=30, fill=p.ink, weight=700)
     b += text(
         40,
-        72,
-        "28 calls · columns marked ▾ are held out · gate run against each judge separately",
-        size=14,
+        78,
+        "28 calls · ▾ held out · each judge gated separately",
+        size=18,
         fill=p.muted,
     )
     for j, case in enumerate(cases):
         cx = x0 + j * pitch + cell / 2
-        b += text(cx, y0 - 10, case.id[-2:], size=10, fill=p.faint, font=MONO, anchor="middle")
+        b += text(cx, y0 - 10, case.id[-2:], size=12, fill=p.faint, font=MONO, anchor="middle")
         if case.split == "heldout":
-            b += text(cx, y0 - 24, "▾", size=10, fill=p.accent, font=MONO, anchor="middle")
+            b += text(cx, y0 - 28, "▾", size=14, fill=p.accent, font=MONO, anchor="middle")
+    y = y0
     last_judge = None
-    for i, (jname, rlabel, rep) in enumerate(reports):
-        y = y0 + i * 44
+    for jname, rlabel, rep in reports:
         if jname != last_judge:
             if last_judge is not None:
-                b += f'<line x1="40" y1="{y - 8}" x2="{width - 40}" y2="{y - 8}" stroke="{p.line}"/>\n'
-            b += text(40, y + 14, jname, size=14, fill=p.ink, weight=600)
+                b += f'<line x1="40" y1="{y + 6}" x2="{width - 40}" y2="{y + 6}" stroke="{p.line}"/>\n'
+                y += 12
+            b += text(40, y + 22, jname, size=18, fill=p.ink, weight=700)
+            y += group_gap
             last_judge = jname
-        b += text(210, y + 14, rlabel, size=13, fill=p.muted, font=MONO)
+        b += text(40, y + 16, rlabel, size=16, fill=p.muted, font=MONO)
         kinds = {f.case_id: f.kind for f in rep.flips}
         for j, case in enumerate(cases):
             x = x0 + j * pitch
@@ -303,19 +305,20 @@ def flips(p: Palette, reports: list[tuple[str, str, GateReport]]) -> str:
                 f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" rx="4" fill="{fill}" '
                 f'stroke="{stroke}"/>\n'
             )
-        b += badge(x0 + len(cases) * pitch + 22, y + 14, rep.decision == "PASSED", p, size=11)
-    ly = y0 + len(reports) * 44 + 30
-    items = [(p.green, p.green, "fixed: was wrong, now matches the label"),
+        b += badge(x0 + len(cases) * pitch + 18, y + 16, rep.decision == "PASSED", p, size=13)
+        y += row
+    ly = y + 30
+    items = [(p.green, p.green, "fixed: was wrong, now right"),
              (p.red, p.red, "broken: was right, now wrong"),
              ("none", p.line, "unchanged")]  # fmt: skip
     lx = 40
     for fill, stroke, lab in items:
-        b += f'<rect x="{lx}" y="{ly - 13}" width="16" height="16" rx="4" fill="{fill}" stroke="{stroke}"/>\n'
-        b += text(lx + 26, ly, lab, size=13, fill=p.muted)
-        lx += 26 + len(lab) * 7.2 + 34
-    b += text(40, ly + 36, "Generated by scripts/figures.py from the pack and recorded judge runs.",
-              size=12, fill=p.faint, font=MONO)  # fmt: skip
-    return svg(width, height, b, p, "Flip map: cases each rule fixes or breaks, per judge")
+        b += f'<rect x="{lx}" y="{ly - 15}" width="18" height="18" rx="4" fill="{fill}" stroke="{stroke}"/>\n'
+        b += text(lx + 28, ly, lab, size=17, fill=p.muted)
+        lx += 28 + len(lab) * 9.2 + 40
+    b += text(40, ly + 40, "Generated by scripts/figures.py from the pack and recorded judge runs.",
+              size=14, fill=p.faint, font=MONO)  # fmt: skip
+    return svg(width, ly + 64, b, p, "Flip map: cases each rule fixes or breaks, per judge")
 
 
 def main() -> int:
