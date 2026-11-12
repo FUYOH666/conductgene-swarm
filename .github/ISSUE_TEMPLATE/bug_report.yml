@@ -22,7 +22,7 @@ body:
       label: Steps to reproduce
       placeholder: |
         1. uv sync --extra dev
-        2. uv run conductgene demo
+        2. uv run precedent demo
         3. ...
     validations:
       required: true
@@ -31,17 +31,19 @@ body:
     id: version
     attributes:
       label: Version
-      placeholder: "0.2.1"
+      placeholder: "precedent --version"
     validations:
       required: true
 
   - type: dropdown
     id: mode
     attributes:
-      label: Mode
+      label: Judge
       options:
-        - mock
-        - live
+        - heuristic
+        - replay (cassette)
+        - llm (local endpoint)
+        - llm (hosted API)
     validations:
       required: true
 

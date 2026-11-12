@@ -1,78 +1,76 @@
 [project]
-name = "conductgene-swarm"
-version = "1.0.1"
-description = "Supervisor-approved conduct QA with auditable Policy Genes — UCWS Singapore 2026"
+name = "precedent-llm"
+version = "2.0.0.dev0"
+description = "Pull requests for AI judgment: human corrections to an LLM judge become scoped, versioned, eval-gated, reversible rules with an audit trail."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "Aleksandr Mordvinov" }]
+keywords = [
+    "llm-as-a-judge",
+    "llm-evaluation",
+    "human-in-the-loop",
+    "ai-governance",
+    "audit-trail",
+    "policy-as-code",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
-    "fastapi>=0.115.0",
-    "uvicorn[standard]>=0.32.0",
     "pydantic>=2.9.0",
-    "pydantic-settings>=2.6.0",
-    "httpx>=0.27.0",
     "pyyaml>=6.0.2",
-    "python-multipart>=0.0.12",
+    "httpx>=0.27.0",
+    "rich>=13.9.0",
 ]
 
 [project.optional-dependencies]
-live = [
-    "openai>=1.55.0",
-]
 dev = [
     "pytest>=8.3.0",
-    "pytest-asyncio>=0.24.0",
     "pytest-cov>=6.0.0",
     "respx>=0.21.0",
     "ruff>=0.8.0",
     "mypy>=1.13.0",
-]
-ui = [
-    "streamlit>=1.40.0",
-    "pandas>=2.2.0",
-]
-retrieval = [
-    "qdrant-client>=1.12.0",
-]
-mcp = [
-    "mcp>=1.12.0",
+    "types-PyYAML>=6.0.12",
 ]
 
 [project.scripts]
-conductgene = "conductgene.main:cli_main"
-conductgene-serve = "conductgene.__main__:serve"
-conductgene-ui = "conductgene.ui.app:main"
-conductgene-mcp = "conductgene.mcp.server:main"
+precedent = "precedent.cli:main"
+
+[project.urls]
+Repository = "https://github.com/FUYOH666/conductgene-swarm"
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
 testpaths = ["tests"]
-markers = [
-    "integration: requires real external services (e.g. Qdrant); skipped when env unset",
-]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
 
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# The judge prompt is prose; wrapping it would change what the model reads.
+"src/precedent/judge/llm.py" = ["E501"]
+# SVG markup in f-strings reads better unwrapped.
+"scripts/figures.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.12"
-files = ["src/conductgene"]
+files = ["src/precedent"]
+strict = true
 ignore_missing_imports = true
-check_untyped_defs = true
-warn_unused_ignores = true
-warn_redundant_casts = true
-no_implicit_optional = true
 
 [tool.coverage.run]
-source = ["src/conductgene"]
-omit = ["src/conductgene/ui/*"]
+source = ["src/precedent"]
+omit = ["src/precedent/__main__.py"]
 
 [tool.coverage.report]
-# Baseline ratchet: offline CI cannot exercise live-stack modules (qdrant, discovery).
-# Raise as live-path tests are added; do not lower.
-fail_under = 77
+fail_under = 85
 show_missing = false
 precision = 1
 
@@ -82,3 +80,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+precedent = ["packs/**/*"]

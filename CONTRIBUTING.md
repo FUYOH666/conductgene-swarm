@@ -1,48 +1,30 @@
-# Contributing to ConductGene Swarm
+# Contributing
 
-Thank you for your interest in contributing. This open-source project welcomes improvements to governance, eval coverage, retrieval quality, and agent collaboration.
-
-## Development setup
+## Setup
 
 ```bash
 git clone https://github.com/FUYOH666/conductgene-swarm.git
 cd conductgene-swarm
-cp .env.example .env
-uv sync --extra dev --extra ui
+uv sync --extra dev
+./scripts/verify_all.sh
 ```
 
-## Before submitting a PR
+`verify_all.sh` is what CI runs: ruff, mypy `--strict`, pytest with a coverage
+gate, and the demo. It needs no network and no model.
 
-1. Run the full verification gate:
+## Ground rules
 
-   ```bash
-   ./scripts/verify_all.sh
-   ```
+- **No number without a script.** Any figure in the README or docs must be
+  reproducible from a command in this repository, with the data it ran on.
+- **Pin judge errors, not just rates.** If you change a judge or a pack, update
+  the exact list of disagreements in the tests; an aggregate can hide a swap.
+- **Offline by default.** Tests and the demo must not call a model. Use the
+  heuristic judge or a recorded cassette.
+- **Packs document their labels.** Who labelled, against which policy, what changed.
 
-2. For broader QA (optional):
+## Pull requests
 
-   ```bash
-   ./scripts/qa_matrix.sh
-   ```
-
-3. Update [`CHANGELOG.md`](CHANGELOG.md) under `[Unreleased]` or the current version section.
-
-4. Keep **mock mode** as the default — demos and CI must not depend on external LLM services.
-
-## Code conventions
-
-- Python 3.12+, managed with **uv** (not pip)
-- Structured logging via `conductgene.logutil` — no bare `print` in library code
-- Pydantic schemas in `src/conductgene/schemas.py`
-- Positioning: **supervisor-approved institutional memory** — avoid "autonomous self-evolution" in public-facing copy
-
-## Pull request checklist
-
-- [ ] `./scripts/verify_all.sh` passes locally
-- [ ] New behavior has pytest coverage where meaningful
+- [ ] `./scripts/verify_all.sh` passes
+- [ ] New behaviour has a test that would fail without it
 - [ ] CHANGELOG updated
-- [ ] No secrets, IPs, or `.env` files committed
-
-## Questions
-
-Open a [Discussion](https://github.com/FUYOH666/conductgene-swarm/discussions) or an issue with the `question` label.
+- [ ] No secrets, `.env` files, addresses or personal data

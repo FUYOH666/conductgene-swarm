@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.0.0.dev0] - unreleased
+
+A rebuild. The project is renamed **Precedent** ("pull requests for AI judgment")
+and the hackathon code is removed; v1 stays available under the tag `v1-ucws-2026`.
+Why: [docs/what-v1-got-wrong.md](docs/what-v1-got-wrong.md).
+
+### Added
+
+- Domain packs (`pack.yaml`, policy clauses with content-hash ids, labelled cases with a held-out split).
+- Structured LLM judge for any OpenAI-compatible endpoint; every quote is verified against the case; unverifiable claims are downgraded.
+- Heuristic baseline judge with a negation window; record/replay cassettes for real model runs.
+- Rules as predicate conditions, applied by code; conflicting rules send the item to review.
+- Blocking gate: source correction fixed, examples fire, counter-examples hold, zero regressions, no conflicts, held-out agreement not worse (paired bootstrap CI).
+- Rule lifecycle with four-eyes approval, stale-gate detection, versions, revert; append-only SQLite event log with a hash chain and `precedent audit verify`.
+- `collections-conduct` pack: 28 calls (18 from v1, 10 new), complete labels, 9 held out.
+- `precedent demo`: the v1 keyword rule is blocked with three broken cases; the same correction stated as its real reason passes.
+- A recorded run of Gemma 4 26B (local, LM Studio) on the pack, replayed offline; `scripts/results.py` regenerates `docs/results/collections-conduct.md`. Both judges' disagreements are pinned in tests.
+
+### Hardened after an independent review (Codex)
+
+- Approval is refused if the labelled cases, the judge or the recorded corrections changed since the gate ran (the active rule set was already checked).
+- A gate report whose decision contradicts its own blocking checks is refused.
+- The gate rejects judge outputs whose case hash does not match their case, outputs from more than one judge, and any accepted correction whose case was removed or changed.
+- Counter-examples mean "must not change"; they are compared before and after, not with the label.
+- A predicate about one speaker must be quoted from that speaker's lines.
+- Lifecycle commands verify the chain first and run read-check-append inside one SQLite write transaction; `audit verify --anchor` checks against an externally recorded head.
+
+### Presentation
+
+- README rewritten as a project page; banner, lifecycle and flip-map figures drawn by `scripts/figures.py` (light and dark), the demo exported as a terminal SVG (`precedent demo --svg`), a social preview rendered from HTML, an essay on the design (`docs/essay.md`), `CITATION.cff`. CI fails if committed numbers or figures drift from the code.
+
+### Removed
+
+- Keyword "Policy Genes", the prosecutor/defender/arbiter mock agents, the FastAPI and Streamlit apps, Qdrant/BGE retrieval, the MCP stub, A2A card and SKILL export, and the hackathon documents.
+
+### Changed
+
+- Labels in the ported v1 cases were revised where they matched the v1 rules rather than the policy (see the pack's LABELING.md).
+
 ## [1.0.1] - 2026-06-12
 
 ### Fixed
@@ -8,7 +47,7 @@
 
 ## [1.0.0] - 2026-06-12
 
-Final open-source release. The project is reframed as a standalone product for
+Last hackathon-era release. The project is reframed as a standalone product for
 regulated-industry conduct QA; the UCWS Singapore 2026 hackathon remains as origin story.
 
 ### Added

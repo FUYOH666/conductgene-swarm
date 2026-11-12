@@ -17,3 +17,9 @@ data/audit/*.jsonl
 .DS_Store
 LINKEDIN_POST.md
 linkedin-post-card.png
+
+# Local strategy notes (never published)
+notes/
+
+# Local demo output
+precedent-demo/

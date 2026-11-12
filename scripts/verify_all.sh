@@ -1,46 +1,23 @@
 #!/usr/bin/env bash
-# Full virtual verification for ConductGene Swarm
+# Offline verification gate: everything CI runs, nothing that needs a network or a model.
 set -euo pipefail
+cd "$(dirname "$0")/.."
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT"
+echo "==> Sync"
+uv sync --extra dev
 
-export CONDUCTGENE_MODE=mock
-export CONDUCTGENE_LLM_PROVIDER=mock
-export CONDUCTGENE_RETRIEVAL_MODE=memory
-export CONDUCTGENE_EMBEDDING_BASE_URL=
-export CONDUCTGENE_RERANKER_BASE_URL=
-export CONDUCTGENE_QDRANT_URL=
-export CONDUCTGENE_ENABLE_RERANKER=false
-export CONDUCTGENE_GENE_STORE_PATH="${ROOT}/reports/.verify_genes.jsonl"
-export CONDUCTGENE_AUDIT_STORE_PATH="${ROOT}/reports/.verify_audit.jsonl"
-export CONDUCTGENE_GENE_AUDIT_STORE_PATH="${ROOT}/reports/.verify_gene_events.jsonl"
+echo "==> Lint"
+uv run ruff check src tests scripts
+uv run ruff format --check src tests scripts
 
-rm -f "$CONDUCTGENE_GENE_STORE_PATH" "$CONDUCTGENE_AUDIT_STORE_PATH" "$CONDUCTGENE_GENE_AUDIT_STORE_PATH"
-mkdir -p reports
-
-echo "==> Sync dependencies"
-uv sync --extra dev --extra ui --extra retrieval --extra live --extra mcp
-
-echo ""
-echo "==> Ruff"
-uv run ruff check src tests
-
-echo ""
-echo "==> Mypy"
+echo "==> Types (mypy --strict)"
 uv run mypy
 
-echo ""
-echo "==> Pytest (with coverage, fail-under from pyproject)"
+echo "==> Tests (coverage gate in pyproject)"
 uv run pytest -q --cov --cov-report=term
 
-echo ""
-echo "==> Eval suite"
-uv run conductgene eval --suite all --out reports/eval_latest.json
-
-echo ""
-echo "==> Demo path (CASE-002 → gene → CASE-005)"
-uv run conductgene demo
-
-echo ""
-echo "==> Verification complete — see reports/eval_latest.json"
+echo "==> Demo: the v1 rule must be BLOCKED, the narrow rule PASSED, the log intact"
+out="$(mktemp -d)"
+uv run precedent demo --out "$out" > "$out/demo.txt"
+uv run precedent audit verify --db "$out/demo.db"
+echo "==> All checks passed"

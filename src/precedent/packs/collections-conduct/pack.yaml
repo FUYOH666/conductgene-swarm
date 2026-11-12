@@ -1,0 +1,127 @@
+id: collections-conduct
+version: "2.0"
+title: Call conduct QA for collections and outbound financial calls
+description: >
+  Reviews call transcripts against a small conduct policy: threats, escalation
+  offers, company identification, recording disclosure. Synthetic data; see
+  LABELING.md for how the labels were made and what changed since v1.
+abstain_label: abstain
+review_label: needs_review
+
+items:
+  - id: threat_language
+    question: Did the agent threaten the customer or use coercive pressure?
+    labels:
+      - {id: pass, meaning: no threat and no vague coercive pressure}
+      - {id: needs_review, meaning: "vague coercive pressure, e.g. 'serious consequences'"}
+      - {id: fail, meaning: threat of arrest, jail, police, prosecution or seizure}
+    default_label: pass
+    evidence_required: [fail]
+
+  - id: escalation_offered
+    question: Did the agent offer contact with a supervisor, manager or team lead?
+    labels:
+      - {id: pass, meaning: "the agent offered a transfer, a call or a scheduled callback from a supervisor, manager or team lead"}
+      - {id: needs_review, meaning: no such offer; a reviewer checks whether policy required one}
+    default_label: needs_review
+    evidence_required: [pass]
+
+  - id: company_disclosure
+    question: Did the agent state the company name and the purpose of the call?
+    labels:
+      - {id: pass, meaning: company name and purpose both stated}
+      - {id: needs_review, meaning: name or purpose missing or unclear}
+    default_label: needs_review
+    evidence_required: [pass]
+
+  - id: recording_disclosure
+    question: If recording is mentioned, did the agent clearly disclose it?
+    labels:
+      - {id: pass, meaning: the agent clearly said the call is or may be recorded}
+      - {id: needs_review, meaning: recording mentioned but the disclosure is unclear}
+      - {id: not_applicable, meaning: recording is not mentioned}
+    default_label: not_applicable
+    evidence_required: [pass]
+
+predicates:
+  - id: collections_call
+    question: Is this a call between an agent and a customer about an account, balance, payment, debt, policy or premium?
+    patterns: ['\b(account|balance|payment|overdue|past due|debt|collections?|policy|premium|repay\w*)\b']
+    negation: false
+
+  - id: threat_of_arrest
+    question: Does the agent threaten arrest, jail, police action, criminal prosecution or similar?
+    speaker: Agent
+    patterns: ['\barrest(ed)?\b', '\bjail\b', '\bprison\b', '\bpolice\b', 'criminal (charges|prosecution)']
+
+  - id: coercive_consequences
+    question: Does the agent warn of vague "serious consequences" to pressure payment?
+    speaker: Agent
+    patterns: ['serious consequences', 'consequences for your account', 'you will regret']
+
+  - id: mentions_repayment
+    question: Does the agent offer a repayment plan, a payment plan or paying over time?
+    speaker: Agent
+    patterns: ['\brepayment\b', 'payment plan', 'pay over time', '\binstall?ments?\b']
+
+  - id: explicit_transfer_offer
+    question: Does the agent offer to transfer or connect the customer to a supervisor, manager or escalation team now?
+    speaker: Agent
+    patterns:
+      - '(transfer|connect) you (to|with) [\w ]{0,20}\b(supervisor|manager)'
+      - 'speak (with|to) (a|our|my) [\w ]{0,12}\b(supervisor|manager)'
+      - 'escalation to a supervisor'
+      - 'escalation team'
+
+  - id: supervisor_contact_offered
+    question: Does the agent offer any contact with a supervisor, manager or team lead, such as a transfer, a call or a scheduled callback?
+    speaker: Agent
+    patterns:
+      - '(transfer|connect) you (to|with) [\w ]{0,20}\b(supervisor|manager)'
+      - 'speak (with|to) (a|our|my) [\w ]{0,12}\b(supervisor|manager)'
+      - 'escalation to a supervisor'
+      - 'escalation team'
+      - '(supervisor|manager|team lead)\b[^.]{0,40}\b(call you back|callback|contact you|reach out)'
+      - 'ask (my|our|a) (supervisor|manager|team lead) to (call|contact) you'
+
+  - id: company_identified
+    question: Does the agent state the company name and the purpose of the call?
+    speaker: Agent
+    patterns:
+      - 'agent:\s*(hello, |good \w+, )?(this is )?\w[\w ]{0,30}\b(collections|insurance|fintech)\b'
+
+  - id: recording_mentioned
+    question: Does the agent mention that the call is or may be recorded?
+    speaker: Agent
+    patterns: ['\brecord(ed|ing)?\b']
+    negation: false
+
+  - id: recording_disclosed
+    question: Does the agent clearly tell the customer that the call is or may be recorded?
+    speaker: Agent
+    patterns:
+      - 'call (is|may be|will be|is being) record'
+      - 'inform you[^.]{0,40}record'
+      - 'recorded for (quality|training|compliance)'
+
+# Deterministic baseline judge: offline test double and the "keyword rules"
+# benchmark arm. It is deliberately narrow on escalation (only explicit
+# transfers count), which is the blind spot the demo correction is about.
+heuristic:
+  abstain_when:
+    - {predicate: collections_call, equals: "no"}
+  items:
+    threat_language:
+      - {when: [{predicate: threat_of_arrest}], then: fail}
+      - {when: [{predicate: coercive_consequences}], then: needs_review}
+      - {then: pass}
+    escalation_offered:
+      - {when: [{predicate: explicit_transfer_offer}], then: pass}
+      - {then: needs_review}
+    company_disclosure:
+      - {when: [{predicate: company_identified}], then: pass}
+      - {then: needs_review}
+    recording_disclosure:
+      - {when: [{predicate: recording_disclosed}], then: pass}
+      - {when: [{predicate: recording_mentioned}], then: needs_review}
+      - {then: not_applicable}

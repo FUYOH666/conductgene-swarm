@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="446" viewBox="0 0 1280 446" role="img" aria-label="Rule lifecycle: correction, rule, gate, approval, active">
+<title>Rule lifecycle: correction, rule, gate, approval, active</title>
+<rect width="1280" height="446" fill="#ffffff"/>
+<rect x="26" y="64" width="214" height="126" rx="12" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="44" y="104" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#0b0d12" text-anchor="start">correction</text>
+<text x="44" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="400" fill="#57606a" text-anchor="start">a reviewer disagrees</text>
+<text x="44" y="168" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#8c959f" text-anchor="start">C-0001</text>
+<line x1="248" y1="127.0" x2="272" y2="127.0" stroke="#57606a" stroke-width="2"/>
+<path d="M272 121.0 L282 127.0 L272 133.0 Z" fill="#57606a"/>
+<rect x="282" y="64" width="214" height="126" rx="12" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="300" y="104" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#0b0d12" text-anchor="start">rule</text>
+<text x="300" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="400" fill="#57606a" text-anchor="start">a reason, as predicates</text>
+<text x="300" y="168" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#8c959f" text-anchor="start">when … then …</text>
+<line x1="504" y1="127.0" x2="528" y2="127.0" stroke="#57606a" stroke-width="2"/>
+<path d="M528 121.0 L538 127.0 L528 133.0 Z" fill="#57606a"/>
+<rect x="538" y="64" width="214" height="126" rx="12" fill="#f6f8fa" stroke="#4f46e5" stroke-width="2"/>
+<text x="556" y="104" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#0b0d12" text-anchor="start">gate</text>
+<text x="556" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="400" fill="#57606a" text-anchor="start">tested on every case</text>
+<text x="556" y="168" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#4f46e5" text-anchor="start">0 regressions</text>
+<line x1="760" y1="127.0" x2="784" y2="127.0" stroke="#57606a" stroke-width="2"/>
+<path d="M784 121.0 L794 127.0 L784 133.0 Z" fill="#57606a"/>
+<rect x="794" y="64" width="214" height="126" rx="12" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="812" y="104" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#0b0d12" text-anchor="start">approval</text>
+<text x="812" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="400" fill="#57606a" text-anchor="start">a second person</text>
+<text x="812" y="168" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#8c959f" text-anchor="start">author ≠ approver</text>
+<line x1="1016" y1="127.0" x2="1040" y2="127.0" stroke="#57606a" stroke-width="2"/>
+<path d="M1040 121.0 L1050 127.0 L1040 133.0 Z" fill="#57606a"/>
+<rect x="1050" y="64" width="214" height="126" rx="12" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1"/>
+<text x="1068" y="104" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#0b0d12" text-anchor="start">active</text>
+<text x="1068" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="400" fill="#57606a" text-anchor="start">until reverted</text>
+<text x="1068" y="168" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#8c959f" text-anchor="start">revert = 1 event</text>
+<path d="M645.0 196 C645.0 260, 389.0 260, 389.0 202" fill="none" stroke="#cf222e" stroke-width="2" stroke-dasharray="6 5"/>
+<path d="M383.0 210 L389.0 198 L395.0 210 Z" fill="#cf222e"/>
+<text x="517.0" y="270" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" font-weight="700" fill="#cf222e" text-anchor="middle">BLOCKED → new version</text>
+<text x="26" y="304" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="16" font-weight="400" fill="#8c959f" text-anchor="start">hash-chained event log</text>
+<rect x="26" y="318" width="1228" height="66" rx="10" fill="none" stroke="#d0d7de"/>
+<line x1="133.0" y1="340" x2="1157.0" y2="340" stroke="#8c959f" stroke-width="1"/>
+<line x1="133.0" y1="190" x2="133.0" y2="334" stroke="#d0d7de" stroke-dasharray="2 4"/>
+<circle cx="133.0" cy="340" r="5.5" fill="#4f46e5"/>
+<text x="133.0" y="368" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#57606a" text-anchor="middle">correction.recorded</text>
+<line x1="389.0" y1="190" x2="389.0" y2="334" stroke="#d0d7de" stroke-dasharray="2 4"/>
+<circle cx="389.0" cy="340" r="5.5" fill="#4f46e5"/>
+<text x="389.0" y="368" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#57606a" text-anchor="middle">rule.proposed</text>
+<line x1="645.0" y1="190" x2="645.0" y2="334" stroke="#d0d7de" stroke-dasharray="2 4"/>
+<circle cx="645.0" cy="340" r="5.5" fill="#4f46e5"/>
+<text x="645.0" y="368" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#57606a" text-anchor="middle">rule.gated</text>
+<line x1="901.0" y1="190" x2="901.0" y2="334" stroke="#d0d7de" stroke-dasharray="2 4"/>
+<circle cx="901.0" cy="340" r="5.5" fill="#4f46e5"/>
+<text x="901.0" y="368" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#57606a" text-anchor="middle">rule.approved</text>
+<line x1="1157.0" y1="190" x2="1157.0" y2="334" stroke="#d0d7de" stroke-dasharray="2 4"/>
+<circle cx="1157.0" cy="340" r="5.5" fill="#4f46e5"/>
+<text x="1157.0" y="368" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#57606a" text-anchor="middle">rule.reverted</text>
+<text x="26" y="412" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="400" fill="#8c959f" text-anchor="start">sha256(prev ‖ event) · UPDATE/DELETE refused · audit verify recomputes the chain</text>
+</svg>
