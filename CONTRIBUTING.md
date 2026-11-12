@@ -3,8 +3,8 @@
 ## Setup
 
 ```bash
-git clone https://github.com/FUYOH666/conductgene-swarm.git
-cd conductgene-swarm
+git clone https://github.com/FUYOH666/precedent.git
+cd precedent
 uv sync --extra dev
 ./scripts/verify_all.sh
 ```

@@ -57,13 +57,13 @@ Python 3.12+ and [uv](https://docs.astral.sh/uv/). No network, no model, under a
 second once installed:
 
 ```bash
-uvx --from git+https://github.com/FUYOH666/conductgene-swarm precedent demo
+uvx --from git+https://github.com/FUYOH666/precedent precedent demo
 ```
 
 From a clone:
 
 ```bash
-git clone https://github.com/FUYOH666/conductgene-swarm.git && cd conductgene-swarm
+git clone https://github.com/FUYOH666/precedent.git && cd precedent
 uv sync --extra dev
 uv run precedent demo
 ./scripts/verify_all.sh          # ruff, mypy --strict, tests, the demo; offline

@@ -1,6 +1,6 @@
 # Security policy
 
-Report vulnerabilities through a [private security advisory](https://github.com/FUYOH666/conductgene-swarm/security/advisories/new),
+Report vulnerabilities through a [private security advisory](https://github.com/FUYOH666/precedent/security/advisories/new),
 not a public issue. Expect an acknowledgement within 72 hours.
 
 ## What the design does and does not protect

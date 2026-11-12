@@ -41,7 +41,7 @@ dev = [
 precedent = "precedent.cli:main"
 
 [project.urls]
-Repository = "https://github.com/FUYOH666/conductgene-swarm"
+Repository = "https://github.com/FUYOH666/precedent"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

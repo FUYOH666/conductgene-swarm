@@ -127,4 +127,4 @@ result than not run the test.
 ---
 
 *Aleksandr Mordvinov, [Scanovich](https://scanovich.ai). Precedent is open source:
-[github.com/FUYOH666/conductgene-swarm](https://github.com/FUYOH666/conductgene-swarm).*
+[github.com/FUYOH666/precedent](https://github.com/FUYOH666/precedent).*
