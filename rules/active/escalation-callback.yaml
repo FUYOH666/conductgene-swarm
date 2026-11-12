@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/FUYOH666/precedent/main/src/precedent/schemas/rule.schema.json
+# The v1 "Policy Gene", rewritten as a rule: a repayment plan counts as an
+# escalation offer. It fixes the case it came from and breaks three others.
+id: escalation-callback
+version: 1
+pack: collections-conduct
+item: escalation_offered
+title: A repayment plan counts as an escalation offer
+rationale: The reviewer saw a repayment plan in the corrected call and generalised from it.
+when:
+  - {predicate: mentions_repayment, equals: "yes"}
+then: pass
+source_corrections: [C-0001]
+examples: [CASE-019]
+counter_examples: [CASE-001]
