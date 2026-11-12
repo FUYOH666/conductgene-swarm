@@ -74,6 +74,7 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 # HTML templating reads better unwrapped.
 "src/precedent/evidence.py" = ["E501"]
 "scripts/site.py" = ["E501"]
+"scripts/social.py" = ["E501"]
 "benchmarks/**" = ["E501"]
 
 [tool.mypy]
